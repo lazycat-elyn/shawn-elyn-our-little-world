@@ -1,0 +1,91 @@
+{
+  "project": {
+    "title": "Shawn & Elyn: Our Little World",
+    "genre": [
+      "cozy life sim",
+      "couple sim",
+      "home decorating",
+      "minigames"
+    ],
+    "platforms": [
+      "desktop web",
+      "mobile web"
+    ],
+    "setting": "high-rise city apartment",
+    "camera": "2.5D/isometric-inspired"
+  },
+  "locked_rooms": [
+    "Entrance",
+    "Living Room",
+    "Kitchen & Dining",
+    "Master Bedroom",
+    "Bathroom with freestanding bathtub",
+    "Study Room",
+    "Walk-in Closet",
+    "Balcony",
+    "Pet Corner",
+    "Laundry/Utility"
+  ],
+  "players": [
+    "Elyn",
+    "Shawn"
+  ],
+  "pets": [
+    {
+      "species": "cat",
+      "placeholder_name": "Momo"
+    },
+    {
+      "species": "dachshund",
+      "placeholder_name": "Mochi"
+    }
+  ],
+  "primary_resources": [
+    "Love EXP/Level",
+    "Coins"
+  ],
+  "core_partner_interactions": [
+    "Talk",
+    "Hug",
+    "Pat Head",
+    "Hold Hands",
+    "Carry",
+    "Give Gift"
+  ],
+  "v1_minigames": [
+    "Cooking",
+    "Baking",
+    "Racing",
+    "Claw Machine",
+    "Photo Booth",
+    "Cat Play"
+  ],
+  "visual_source_of_truth": "REF_01_MAIN_GAMEPLAY_TARGET.png",
+  "discarded_main_setting": "lake house",
+  "prototype_0_1": [
+    "Start Screen",
+    "Choose Elyn/Shawn",
+    "City Apartment Scene",
+    "Movement",
+    "Collision",
+    "Both Characters",
+    "Cat/Dachshund Roaming",
+    "Hug",
+    "Pat Head",
+    "Love EXP",
+    "Coins",
+    "Pet Interaction",
+    "Navigation Placeholders",
+    "Responsive Controls",
+    "Basic Save"
+  ],
+  "preferred_tech": {
+    "game": "Phaser 3",
+    "build": "Vite + TypeScript",
+    "backend": "Supabase",
+    "deployment": [
+      "Vercel",
+      "Netlify"
+    ]
+  }
+}

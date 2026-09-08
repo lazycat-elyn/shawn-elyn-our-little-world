@@ -1,0 +1,39 @@
+SHAWN & ELYN — MASTER FULL GAME 2.4
+
+这是从现在能够恢复到的完整游戏内容整理出来的单一 MASTER 基准版。
+
+以后：
+- 不需要再记 Part 1 / Part 2 / 2.1 / 2.2 / 2.3 / 2.4 的上传顺序。
+- 以后所有修改都从这个 MASTER FULL GAME 继续。
+- 每次大更新后，请重新 Export / Download Project ZIP，并保留旧版本备份。
+
+当前整合基准包含现阶段可恢复的主要系统：
+- 房间与世界地图
+- Shawn / Elyn
+- Dudu / Bubu
+- Needs
+- Kitchen / Cooking Mama
+- Fridge
+- Custom Cooking
+- Dining / dishes / washing
+- Fishing 80 fish
+- Garden
+- Wardrobe / Shopping foundation
+- Tasks / Coins / EXP / Love
+- Typed Chat
+- Co-op foundation
+- Lexus W 8331 M
+- Lexus SLWR 0309
+- Car Gameplay 1.0
+
+重要说明：
+这是“当前恢复并整合后的 MASTER”，不是丢失的 Work 云端原始源码逐字节还原。
+但是从现在开始，我们只认这个 MASTER 为唯一基准，避免再出现 patch 顺序混乱。
+
+STACKBLITZ：
+1. 下载这个 ZIP。
+2. 解压。
+3. 把里面全部内容拖进 StackBlitz 左边 FILES。
+4. 出现 Replace / Overwrite → 全部覆盖。
+5. 成功运行以后立刻 Export / Download Project ZIP，再保存一份：
+   SHAWN-ELYN-MASTER-FULL-GAME-2.4-BACKUP.zip

@@ -1,0 +1,11 @@
+{
+  "name": "shawn-elyn-world-rebuild-1",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "serve . -l 8080"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

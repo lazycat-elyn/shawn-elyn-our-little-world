@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="190" viewBox="0 0 340 190">
+        <defs><linearGradient id="body" x1="0" x2="1"><stop stop-color="hsl(245 62% 55%)"/><stop offset="1" stop-color="hsl(291 67% 42%)"/></linearGradient><filter id="g"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <g filter="url(#g)">
+          <path d="M67 90 L24 55 Q34 91 24 127 Z" fill="hsl(291 67% 42%)" stroke="#35434b" stroke-width="3"/>
+          <path d="M68 91 C110 32 202 36 257 90 C210 151 112 151 68 91 Z" fill="url(#body)" stroke="#35434b" stroke-width="3"/>
+          <path d="M139 55 Q165 22 191 58" fill="hsl(291 67% 42%)" stroke="#35434b" stroke-width="3"/>
+          <path d="M155 122 Q177 151 202 121" fill="hsl(291 67% 42%)" stroke="#35434b" stroke-width="3"/>
+          <circle cx="162" cy="69" r="5" fill="rgba(255,255,255,.45)"/><circle cx="172" cy="66" r="6" fill="rgba(255,255,255,.45)"/><circle cx="169" cy="81" r="6" fill="rgba(255,255,255,.45)"/><circle cx="210" cy="88" r="7" fill="rgba(255,255,255,.45)"/><circle cx="109" cy="95" r="4" fill="rgba(255,255,255,.45)"/><circle cx="137" cy="70" r="9" fill="rgba(255,255,255,.45)"/><circle cx="170" cy="97" r="7" fill="rgba(255,255,255,.45)"/>
+          <circle cx="237" cy="78" r="8" fill="#fff"/><circle cx="239" cy="79" r="4.5" fill="#111"/>
+          <path d="M259 93 Q281 101 298 91" fill="none" stroke="#35434b" stroke-width="3" stroke-linecap="round"/>
+          <path d="M96 92 Q112 105 124 105" fill="none" stroke="#35434b" stroke-width="2" opacity=".6"/>
+        </g>
+        </svg>

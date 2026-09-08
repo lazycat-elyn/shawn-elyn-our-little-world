@@ -1,0 +1,24 @@
+SHAWN & ELYN — MASTER 2.5 ORIGINAL WARDROBE REBUILD
+
+这版只重做衣橱，不删除其他已经完成的游戏系统。
+
+重点：
+1. Elyn / Shawn 继续使用原本 Q 版角色。
+2. 衣服来源改回用户提供的 Elyn / Shawn 原版衣橱图。
+3. 单件衣服重新裁切到透明素材目录：
+   assets/wardrobe_original/clean_pieces/
+4. 游戏实际穿衣时不使用 DOM / CSS 衣服叠层。
+   每套衣服已经预先烘焙成完整角色 PNG：
+   assets/wardrobe_original/outfits/
+5. 每套包含 idle / down / left / right / up / back。
+6. 仍保留 Elyn 40 套、Shawn 40 套、My Closet / Fashion Shop、Coins购买。
+7. 原本存档里的 er01-er40 / sr01-sr40 ID 保留，避免旧存档失效。
+
+下一里程碑：
+MASTER 2.6 — CAR GAMEPLAY 2.0
+
+安装 StackBlitz：
+- 解压 ZIP
+- 把里面全部内容拖进项目最外层 FILES
+- Replace / Merge All
+- Ctrl + Shift + R 强制刷新 Preview

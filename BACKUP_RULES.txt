@@ -1,0 +1,11 @@
+BACKUP RULES
+
+每次做完一个大功能：
+1. 先在 StackBlitz 确认游戏能打开。
+2. 测试刚修改的功能。
+3. Export / Download Project ZIP。
+4. 文件名一定写版本，例如：
+   SHAWN-ELYN-MASTER-2.4.zip
+   SHAWN-ELYN-MASTER-2.5.zip
+   SHAWN-ELYN-MASTER-2.6.zip
+5. 永远至少保留上一个可以玩的 ZIP，不要覆盖掉唯一备份。

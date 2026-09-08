@@ -1,0 +1,14 @@
+SHAWN & ELYN — MASTER 2.4.1 CORE RESTORE FIX
+
+This fix addresses the reported current failures without removing existing gameplay:
+- protagonists no longer disappear if outfit images fail; base sprites are used as fallback
+- wardrobe assets included again
+- 80 fish assets included again
+- fishing gets a larger hotspot plus a direct lake quick button
+- Tasks gets an always-visible quick button; task panel no longer disappears on medium desktop widths
+- Custom Cooking gets a large direct button in the recipe screen and a kitchen quick button
+- recipe cards no longer place emoji on top of real food images
+- preserves 40 recipes, Cooking Mama, fridge, custom cooking, tasks, chat, cars, pets, map, and existing systems
+
+UPLOAD: unzip this patch, then drag ALL CONTENTS into the ROOT of the existing StackBlitz project and choose Replace/Overwrite/Merge All.
+Do NOT place the whole folder inside another folder.

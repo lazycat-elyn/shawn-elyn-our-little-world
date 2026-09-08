@@ -1,0 +1,10 @@
+{
+  "project": "Shawn & Elyn — Our Little World",
+  "master_version": "2.5",
+  "milestone": "Original Wardrobe Rebuild",
+  "baseline": "MASTER 2.4.1",
+  "runtime_clothing_layers": false,
+  "elyn_outfits": 40,
+  "shawn_outfits": 40,
+  "next": "MASTER 2.6 — Car Gameplay 2.0"
+}

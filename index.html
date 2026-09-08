@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shawn & Elyn · Our Little World</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main id="app">
+    <section id="titleScreen" class="screen title-screen">
+      <div class="title-overlay">
+        <div class="title-copy">
+          <div class="eyebrow">SHAWN & ELYN</div>
+          <h1>我们的小小世界</h1>
+          <p>家 · 日常 · Dudu · Bubu · 更多未来</p>
+        </div>
+        <div class="title-menu glass">
+          <button id="continueBtn" class="primary">继续游戏</button>
+          <button id="newBtn">新游戏</button>
+          <button id="albumBtn">相册</button>
+          <button id="settingsBtn">设置</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen hidden">
+      <div class="topbar glass">
+        <div class="datebox"><b>4月8日 · 星期二</b><span id="clockText">07:30 早上</span></div>
+        <div class="roomtabs" id="roomTabs"></div>
+        <button id="taskBookBtn" class="iconbtn taskbook-top" title="任务手册">📖 任务</button><button id="musicBtn" class="iconbtn" title="背景音乐">🎵</button><button id="mapBtn" class="iconbtn" title="远景地图">🗺️</button>
+      </div>
+
+      <aside id="needsPanel" class="status glass"></aside>
+
+      <section id="scene" class="scene">
+        <div id="interactionLayer"></div>
+        <div id="dudu" class="pet-sprite dudu"><img src="./assets/sprites/dudu-idle.png"><span class="emotion-bubble" id="duduEmotion">😊</span></div>
+        <div id="bubu" class="pet-sprite bubu"><img src="./assets/sprites/bubu-idle.png"><span class="emotion-bubble" id="bubuEmotion">😊</span></div>
+        <div id="shawn" class="actor shawn"><img class="base-sprite" src="./assets/sprites/shawn-idle.png"><span class="typed-bubble hidden" id="shawnChatBubble"></span><span class="emotion-bubble" id="shawnEmotion">😊</span><label>Shawn</label></div>
+        <div id="elyn" class="actor elyn active"><img class="base-sprite" src="./assets/sprites/elyn-idle.png"><span class="typed-bubble hidden" id="elynChatBubble"></span><span class="emotion-bubble" id="elynEmotion">😊</span><label>Elyn</label></div>
+        <div id="destination"></div>
+      </section>
+
+      <div class="tasks glass">
+        <div class="task-head">
+          <b>今日任务 ♡</b>
+          <span id="progressionText">Lv.1 · 🪙 0 · ✨ 0/250</span>
+        </div>
+        <div id="dailyTaskList" class="task-list"></div>
+        <div id="specialTaskWrap"></div>
+      </div>
+
+      <div class="bottom glass social-bottom">
+        <div class="dialog-and-chat">
+          <div class="dialog-line"><b id="dialogName">Elyn</b><span id="dialogText">回家啦 ♡</span></div>
+          <div class="type-chat-row"><input id="chatInput" maxlength="120" placeholder="💬 Type 你想说的话… Enter发送"><button id="sendChatBtn">发送</button></div>
+        </div>
+        <div class="bottom-actions">
+          <button id="switchBtn">切换人物</button><button id="coopBtn">👥 双人</button><button id="phoneBtn">聊天记录</button><button id="bagBtn">背包</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="mapScreen" class="screen map-screen hidden">
+      <div class="map-bg"></div>
+      <div class="map-header glass">
+        <button id="closeMapBtn">← 返回</button>
+        <b>我们的家 · 远景地图</b>
+        <span>点击房间直接进入</span>
+      </div>
+      <div id="mapPins" class="map-pins"></div>
+      <aside id="mapHud" class="map-hud glass"></aside>
+    </section>
+
+    <div id="modalRoot"></div>
+    <div id="toast"></div>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>

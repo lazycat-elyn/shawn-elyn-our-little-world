@@ -1,0 +1,25 @@
+SHAWN & ELYN — MASTER 2.5.1 VISUAL FIT FIX
+
+This is a targeted visual patch on top of MASTER 2.5.
+
+Fixed:
+1. Lake fishing hotspot no longer renders as a giant white rounded rectangle.
+2. Elyn original wardrobe outfit sprites are re-fitted to chibi body proportions.
+3. Shawn original wardrobe outfit sprites are re-fitted to chibi body proportions.
+4. Tops are moved below the face instead of covering the mouth/eyes.
+5. Bottoms and shoes are resized/repositioned.
+6. All 40 Elyn + 40 Shawn outfits still use baked whole-character sprites at runtime.
+7. Each outfit still has idle/down/left/right/up/back.
+8. No fishing, kitchen, tasks, car, economy, social, or save systems were intentionally removed.
+
+GitHub workflow:
+- Extract this ZIP.
+- Copy everything inside into your local GitHub repository folder.
+- Replace files when Windows asks.
+- In GitHub Desktop: Summary = "Fix wardrobe visual fit 2.5.1"
+- Commit to main.
+- Push origin.
+- Refresh/reopen the StackBlitz GitHub project.
+
+Important:
+This is a fit-normalization repair of the existing original-catalog baked sprites. It is not claiming every outfit has final hand-drawn production-quality tailoring yet. The main broken face-covering/block placement is corrected first.

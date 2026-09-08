@@ -1,10 +1,17 @@
 {
   "project": "Shawn & Elyn — Our Little World",
-  "master_version": "2.5",
-  "milestone": "Original Wardrobe Rebuild",
-  "baseline": "MASTER 2.4.1",
+  "master_version": "2.5.1",
+  "milestone": "Visual Fit + Lake Hotspot Fix",
+  "baseline": "MASTER 2.5",
   "runtime_clothing_layers": false,
   "elyn_outfits": 40,
   "shawn_outfits": 40,
-  "next": "MASTER 2.6 — Car Gameplay 2.0"
+  "outfit_pose_sprites": 480,
+  "fixes": [
+    "Lake fishing hotspot is transparent again",
+    "Original wardrobe baked sprites are re-fitted lower on the body so tops no longer cover faces",
+    "Bottoms and shoes are resized/repositioned for chibi proportions",
+    "Existing gameplay systems remain unchanged"
+  ],
+  "next": "Continue wardrobe visual polish, then MASTER 2.6 — Car Gameplay 2.0"
 }

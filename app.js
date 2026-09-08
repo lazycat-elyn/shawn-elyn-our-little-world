@@ -22,7 +22,7 @@ const ROOMS = {
   garden:{label:'院子',bg:'garden.jpg',spawn:[48,78],partner:[58,78],dudu:[72,78],bubu:[35,72],hotspots:[
     {x:30,y:58,label:'种花',action:'plant'},{x:46,y:62,label:'种菜',action:'vegetable'},{x:67,y:49,label:'浇水',action:'water'}]},
   lake:{label:'湖边',bg:'lake.jpg',spawn:[45,78],partner:[57,78],dudu:[30,78],bubu:[70,73],hotspots:[
-    {x:57,y:55,w:22,h:22,label:'🎣 钓鱼',action:'fish'}]}
+    {x:57,y:55,w:22,h:22,label:'🎣 钓鱼',action:'fish',objectHit:true}]}
 };
 const ROOM_ORDER=['living','kitchen','bedroom','bathroom','study','closet','balcony','garage','garden','lake'];
 const MAP_POS={living:[52,48],kitchen:[68,45],bedroom:[44,23],bathroom:[59,24],study:[73,24],closet:[52,24],balcony:[24,22],garage:[23,48],garden:[38,72],lake:[9,86]};

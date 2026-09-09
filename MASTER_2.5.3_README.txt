@@ -1,0 +1,17 @@
+MASTER 2.5.3 — TRUE CLEAN WARDROBE SPRITE REPLACEMENT
+
+Purpose:
+- Replace the broken/glitched wardrobe_real outfit sprites used by MASTER 2.5.2.
+- Keep the same er01-er40 and sr01-sr40 IDs so existing saves continue to work.
+- Every outfit uses a complete full-character PNG for idle/down/up/left/right/back.
+- No clothing PNG is composited on the character at runtime.
+
+Included:
+- Elyn 40 outfits x 6 poses = 240 PNG files
+- Shawn 40 outfits x 6 poses = 240 PNG files
+- Total = 480 PNG files
+
+Important:
+- This patch fixes the visible double clothes / duplicated shoes / rectangular overlay glitches.
+- It does not change fishing, fridge, outing map, cooking, cars, tasks, pets, or other gameplay.
+- These are clean complete-character sprite sets already present in the master source; this patch maps them into the exact wardrobe folders the current code reads.

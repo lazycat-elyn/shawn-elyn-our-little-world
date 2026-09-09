@@ -1,0 +1,13 @@
+SHAWN & ELYN — MASTER 2.5.2
+
+This patch continues from MASTER 2.5.1.
+
+Changes:
+1) Wardrobe runtime now uses the existing complete baked character outfit sprites in assets/wardrobe_real (40 Elyn + 40 Shawn, 6 directions each). The dirty individual clothing-part strip is no longer shown in the wardrobe preview.
+2) Fridge upgraded to 40 ingredient IDs with 40 separate image files in assets/fridge/unique40. No duplicated file hashes. Fridge layout is migrated once to a fuller 8x5 arrangement.
+3) Added Go Out / Outing city map with 10 destinations: supermarket, gym, park, cinema, ski resort, amusement park, restaurant, cafe, shopping mall, convenience store.
+4) Added destination activities and a simple ski timing minigame.
+5) Added car-route integration for outing destinations so the map can launch an existing Lexus driving trip.
+6) Fishing code was not modified.
+
+Install: copy the CONTENTS of this patch into the existing GitHub project folder and replace files, then Commit + Push origin.

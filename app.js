@@ -166,6 +166,9 @@ const RECIPES={
  strawberryMilk:{label:'草莓牛奶',cat:'饮料',emoji:'🍓',img:FOOD_IMG.latte,difficulty:'简单',ingredients:{milk:1,strawberries:2,sugar:1},steps:['chop','blend','pour']}
 };
 
+const RECIPE_ART={"aglioOlio":"./assets/food/recipes40/aglioOlio.jpg","avocadoToast":"./assets/food/recipes40/avocadoToast.jpg","bibimbap":"./assets/food/recipes40/bibimbap.jpg","breakfastPlate":"./assets/food/recipes40/breakfastPlate.jpg","brownies":"./assets/food/recipes40/brownies.jpg","carbonara":"./assets/food/recipes40/carbonara.jpg","chickenChop":"./assets/food/recipes40/chickenChop.jpg","chickenSoup":"./assets/food/recipes40/chickenSoup.jpg","chickenWings":"./assets/food/recipes40/chickenWings.jpg","coffee":"./assets/food/recipes40/coffee.jpg","cookies":"./assets/food/recipes40/cookies.jpg","cornSoup":"./assets/food/recipes40/cornSoup.jpg","creamPasta":"./assets/food/recipes40/creamPasta.jpg","crepes":"./assets/food/recipes40/crepes.jpg","cupcakes":"./assets/food/recipes40/cupcakes.jpg","curryRice":"./assets/food/recipes40/curryRice.jpg","eggSandwich":"./assets/food/recipes40/eggSandwich.jpg","frenchToast":"./assets/food/recipes40/frenchToast.jpg","friedRice":"./assets/food/recipes40/friedRice.jpg","fries":"./assets/food/recipes40/fries.jpg","grilledSalmon":"./assets/food/recipes40/grilledSalmon.jpg","hashBrowns":"./assets/food/recipes40/hashBrowns.jpg","hotChocolate":"./assets/food/recipes40/hotChocolate.jpg","kimchiFriedRice":"./assets/food/recipes40/kimchiFriedRice.jpg","latte":"./assets/food/recipes40/latte.jpg","macCheese":"./assets/food/recipes40/macCheese.jpg","mushroomRisotto":"./assets/food/recipes40/mushroomRisotto.jpg","mushroomSoup":"./assets/food/recipes40/mushroomSoup.jpg","nuggets":"./assets/food/recipes40/nuggets.jpg","omelette":"./assets/food/recipes40/omelette.jpg","pancakes":"./assets/food/recipes40/pancakes.jpg","ramen":"./assets/food/recipes40/ramen.jpg","scrambledEggs":"./assets/food/recipes40/scrambledEggs.jpg","strawberryCake":"./assets/food/recipes40/strawberryCake.jpg","strawberryMilk":"./assets/food/recipes40/strawberryMilk.jpg","teriyakiChicken":"./assets/food/recipes40/teriyakiChicken.jpg","tomatoEgg":"./assets/food/recipes40/tomatoEgg.jpg","tomatoPasta":"./assets/food/recipes40/tomatoPasta.jpg","tomatoSoup":"./assets/food/recipes40/tomatoSoup.jpg","udon":"./assets/food/recipes40/udon.jpg"};
+Object.entries(RECIPE_ART).forEach(([id,img])=>{if(RECIPES[id])RECIPES[id].img=img});
+
 const STEP_LABELS={
  crack:'敲鸡蛋 · 力度',chop:'切菜 · 手势',whisk:'打蛋 / 搅拌',stir:'搅拌',
  heat:'火候 · 熟度',season:'调味',plate:'摆盘',flip:'翻锅 Timing',pour:'倒入',
@@ -709,43 +712,41 @@ function playKitchenSfx(type){
 
 function openFridgeLegacy(){
  recordEvent('openFridge',1);
- const layout={
-  milk:[18,23],orangeJuice:[91,34],berryYogurt:[36,20],plainYogurt:[49,20],butter:[66,20],
-  cheese:[75,38],eggs:[31,41],strawberries:[49,41],mushrooms:[64,42],tomatoes:[28,63],
-  carrots:[48,64],onions:[67,64],sauces:[91,57],chicken:[49,81],lettuce:[26,82],
-  cream:[77,80],bacon:[62,80],salmon:[76,61],kimchi:[16,62],lemon:[84,44],greenOnion:[57,61],avocado:[81,80]
- };
- const ids=REFRIGERATED_IDS.filter(id=>INGREDIENTS[id]);
- const visualIds=ids.filter(id=>INGREDIENT_ART[id]);
- const itemHtml=visualIds.map(id=>{
-  const it=INGREDIENTS[id],p=state.fridgePositions[id]||layout[id]||DEFAULT_FRIDGE_POSITIONS[id]||[50,50];
+ const allIds=Object.keys(INGREDIENTS);
+ const coldIds=REFRIGERATED_IDS.filter(id=>INGREDIENTS[id]);
+ const pantryIds=allIds.filter(id=>!REFRIGERATED_IDS.includes(id));
+ const itemHtml=allIds.map(id=>{
+  const it=INGREDIENTS[id],p=state.fridgePositions[id]||DEFAULT_FRIDGE_POSITIONS[id]||[50,50];
   return `<button class="real-fridge-item" data-id="${id}" data-cat="${it.cat}" style="left:${p[0]}%;top:${p[1]}%" title="${it.label}">
     ${ingredientVisual(id)}<small>${state.fridge[id]||0}</small></button>`;
  }).join('');
- const pantryIds=Object.keys(INGREDIENTS).filter(id=>!REFRIGERATED_IDS.includes(id));
  kitchenOverlay(`
- <div class="real-fridge-shell">
-  <header class="fp-top"><div><span class="fp-kicker">第一人称 · 冰箱</span><h1>真正打开冰箱</h1><p>像真实冰箱一样看架子里的食材。没有一堆白色卡片挡住画面。</p></div><div class="fp-mini-help">🔎 搜索 · 🖐️ 整理 · 🐟 鱼获</div></header>
+ <div class="real-fridge-shell approved-fridge-ui">
+  <header class="fp-top fridge-approved-head">
+   <div><span class="fp-kicker">FRIDGE · 40 UNIQUE INGREDIENTS</span><h1>冰箱 · Refrigerator</h1><p>40 种不同食材 · 每个食材独立图片 · 可查看、搜索和整理。</p></div>
+   <div class="fridge-head-actions"><button class="mama-btn" id="toggleFridgeOrganize">🖐️ 整理食材</button><button class="mama-btn custom-cook-btn" id="goCookFromFridge">🍳 Recipe Book</button></div>
+  </header>
   <div class="real-fridge-layout">
    <div class="real-fridge-stage">
-    <div class="real-fridge-board" id="fridgeBoard">${itemHtml}</div>
+    <img class="fridge-showcase-img" id="fridgeShowcaseImg" src="./assets/fridge/fridge-showcase-40.jpg" alt="40 unique ingredients fridge">
+    <div class="real-fridge-board hidden" id="fridgeBoard">${itemHtml}</div>
    </div>
    <aside class="real-fridge-side">
-    <input id="fridgeSearch2" class="fp-search" placeholder="搜索冰箱 / 储藏柜 / 鱼获…">
-    <div class="fridge-tabs"><button class="active" data-fridge-tab="cold">冰箱</button><button data-fridge-tab="pantry">储藏柜</button><button data-fridge-tab="fish">鱼获</button></div>
-    <div id="fridgeInfo" class="fridge-info"><b>点击食材</b><p>查看库存，或直接拖动改变摆放位置。</p></div>
+    <input id="fridgeSearch2" class="fp-search" placeholder="搜索 40 种食材 / 鱼获…">
+    <div class="fridge-tabs"><button class="active" data-fridge-tab="all">全部40种</button><button data-fridge-tab="cold">冷藏</button><button data-fridge-tab="pantry">储藏</button><button data-fridge-tab="fish">鱼获</button></div>
+    <div id="fridgeInfo" class="fridge-info"><b>40 Unique Ingredients</b><p>默认展示模式跟参考图一样整齐；按“整理食材”可进入拖拽模式。</p></div>
     <div id="fridgeInventoryList" class="inventory-real-list"></div>
-    <div class="fridge-actions"><button class="fp-action secondary" id="quickRestock">🛒 补货 · 80 coins</button><button class="fp-action" id="goCookFromFridge">🍳 去料理台</button></div>
+    <div class="fridge-actions"><button class="fp-action secondary" id="quickRestock">🛒 补货 · 80 coins</button><button class="fp-action" id="goCookFromFridge2">🍳 去料理台</button></div>
    </aside>
   </div>
+  <div class="fridge-ingredient-strip">${allIds.map(id=>`<button data-fridge-strip="${id}" title="${INGREDIENTS[id].label}">${ingredientVisual(id)}<small>${INGREDIENTS[id].label}</small></button>`).join('')}</div>
  </div>`,'fridge-mode real-fridge-mode');
- let tab='cold',drag=null,q='';
+ let tab='all',drag=null,q='',organize=false;
  const listRoot=$('#fridgeInventoryList');
  const renderSide=()=>{
-  if(tab==='cold'){
-   listRoot.innerHTML=ids.filter(id=>!q||INGREDIENTS[id].label.includes(q)).map(id=>`<button class="inventory-real-row" data-pick="${id}">${ingredientVisual(id)}<span><b>${INGREDIENTS[id].label}</b><small>${INGREDIENTS[id].cat}</small></span><em>×${state.fridge[id]||0}</em></button>`).join('');
-  }else if(tab==='pantry'){
-   listRoot.innerHTML=pantryIds.filter(id=>!q||INGREDIENTS[id].label.includes(q)).map(id=>`<button class="inventory-real-row" data-pick="${id}">${ingredientVisual(id)}<span><b>${INGREDIENTS[id].label}</b><small>储藏柜</small></span><em>×${state.fridge[id]||0}</em></button>`).join('');
+  let src=tab==='all'?allIds:tab==='cold'?coldIds:tab==='pantry'?pantryIds:[];
+  if(tab!=='fish'){
+   listRoot.innerHTML=src.filter(id=>!q||INGREDIENTS[id].label.includes(q)).map(id=>`<button class="inventory-real-row" data-pick="${id}">${ingredientVisual(id)}<span><b>${INGREDIENTS[id].label}</b><small>${INGREDIENTS[id].cat}</small></span><em>×${state.fridge[id]||0}</em></button>`).join('');
   }else{
    const caught=FISH_DATA.filter(f=>(state.fishInventory[f.id]?.count||0)>0 && (!q||f.name.includes(q)));
    listRoot.innerHTML=caught.length?caught.map(f=>`<button class="inventory-real-row fish-row" data-fish="${f.id}"><img src="${f.img}"><span><b>${f.name}</b><small style="color:${FISH_RARITY_COLORS[f.rarity]}">${f.rarity} · 最重 ${state.fishInventory[f.id].best.toFixed(2)}kg</small></span><em>×${state.fishInventory[f.id].count}</em></button>`).join(''):'<div class="empty-note">还没有鱼获。去湖边钓鱼吧 🎣</div>';
@@ -754,44 +755,79 @@ function openFridgeLegacy(){
   listRoot.querySelectorAll('[data-fish]').forEach(b=>{b.onclick=()=>{const f=FISH_DATA.find(x=>x.id===b.dataset.fish);$('#fridgeInfo').innerHTML=`<div class="fish-info-mini"><img src="${f.img}"><div><b>${f.name}</b><p>${f.rarity} · 可拿来做自定义料理</p></div></div>`}});
  };
  const showIngredient=id=>{const it=INGREDIENTS[id];$('#fridgeInfo').innerHTML=`<div class="selected-big">${ingredientVisual(id)}<div><b>${it.label}</b><p>${it.cat} · 库存 ${state.fridge[id]||0}</p></div></div>`};
- $('#fridgeSearch2').oninput=e=>{q=e.target.value.trim();renderSide();document.querySelectorAll('.real-fridge-item').forEach(el=>el.style.opacity=(!q||INGREDIENTS[el.dataset.id].label.includes(q))?'1':'.18')};
+ $('#fridgeSearch2').oninput=e=>{q=e.target.value.trim();renderSide();if(organize)document.querySelectorAll('.real-fridge-item').forEach(el=>el.style.opacity=(!q||INGREDIENTS[el.dataset.id].label.includes(q))?'1':'.13')};
  document.querySelectorAll('[data-fridge-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.fridgeTab;document.querySelectorAll('[data-fridge-tab]').forEach(x=>x.classList.toggle('active',x===b));renderSide()});
+ document.querySelectorAll('[data-fridge-strip]').forEach(b=>b.onclick=()=>showIngredient(b.dataset.fridgeStrip));
  document.querySelectorAll('.real-fridge-item').forEach(el=>{
   el.onclick=()=>showIngredient(el.dataset.id);
-  el.onpointerdown=e=>{showIngredient(el.dataset.id);const r=$('#fridgeBoard').getBoundingClientRect();drag={el,r};el.setPointerCapture?.(e.pointerId);e.preventDefault()};
-  el.onpointermove=e=>{if(!drag||drag.el!==el)return;const r=drag.r;let x=(e.clientX-r.left)/r.width*100,y=(e.clientY-r.top)/r.height*100;x=Math.max(6,Math.min(94,x));y=Math.max(8,Math.min(92,y));el.style.left=x+'%';el.style.top=y+'%';state.fridgePositions[el.dataset.id]=[+x.toFixed(1),+y.toFixed(1)]};
+  el.onpointerdown=e=>{if(!organize)return;showIngredient(el.dataset.id);const r=$('#fridgeBoard').getBoundingClientRect();drag={el,r};el.setPointerCapture?.(e.pointerId);e.preventDefault()};
+  el.onpointermove=e=>{if(!organize||!drag||drag.el!==el)return;const r=drag.r;let x=(e.clientX-r.left)/r.width*100,y=(e.clientY-r.top)/r.height*100;x=Math.max(5,Math.min(95,x));y=Math.max(7,Math.min(93,y));el.style.left=x+'%';el.style.top=y+'%';state.fridgePositions[el.dataset.id]=[+x.toFixed(1),+y.toFixed(1)]};
   el.onpointerup=()=>{drag=null;save()};
  });
- $('#quickRestock').onclick=()=>{if(state.coins<80){toast('Coins 不够');return}state.coins-=80;Object.entries(DEFAULT_FRIDGE).forEach(([id,n])=>state.fridge[id]=Math.max(state.fridge[id]||0,Math.ceil(n*.7)));save();toast('补货完成 ♡');renderSide()};
- $('#goCookFromFridge').onclick=openCookingLegacy;renderSide();
+ $('#toggleFridgeOrganize').onclick=()=>{
+  organize=!organize;
+  $('#fridgeShowcaseImg').classList.toggle('hidden',organize);
+  $('#fridgeBoard').classList.toggle('hidden',!organize);
+  $('#toggleFridgeOrganize').textContent=organize?'✨ 返回展示模式':'🖐️ 整理食材';
+  $('#fridgeInfo').innerHTML=organize?'<b>整理模式</b><p>拖动 40 种食材改变摆放位置，位置会自动保存。</p>':'<b>展示模式</b><p>40 种不同食材以整齐满冰箱方式展示。</p>';
+ };
+ $('#quickRestock').onclick=()=>{if(state.coins<80){toast('Coins 不够');return}state.coins-=80;Object.entries(DEFAULT_FRIDGE).forEach(([id,n])=>state.fridge[id]=Math.max(state.fridge[id]||0,Math.ceil(n*.7)));save();toast('40种食材补货完成 ♡');renderSide()};
+ $('#goCookFromFridge').onclick=openCookingLegacy;$('#goCookFromFridge2').onclick=openCookingLegacy;renderSide();
 }
 function openCookingLegacy(){
  const cats=['全部',...new Set(Object.values(RECIPES).map(r=>r.cat))];
+ const recipeIds=Object.keys(RECIPES).filter(id=>id!=='__custom');
+ let cat='全部',selectedId=recipeIds[0];
  kitchenOverlay(`
-  <div class="recipe-fp-shell">
-    <header class="fp-top"><div><span class="fp-kicker">COOKING MAMA MODE</span><h1>今天想煮什么？</h1><p>40 道食谱 · 每道料理有不同的第一人称小游戏。</p></div>
-    <div class="chef-stats">🍳 ${state.cookingStats.total} 次料理 · ⭐ ${state.cookingStats.perfect} PERFECT</div></header>
-    <div class="recipe-toolbar"><button class="mama-btn custom-cook-hero" id="customCookHero">✨ 自定义煮菜 · 自己选食材 + 鱼获</button><div class="recipe-toolbar-top"><input id="recipeSearch" class="fp-search" placeholder="搜索食谱…"><button class="mama-btn custom-cook-btn" id="customCookBtn">✨ 自定义煮菜</button></div><div class="fp-chips" id="recipeCats">${cats.map((c,i)=>`<button class="${i===0?'active':''}" data-cat="${c}">${c}</button>`).join('')}</div></div>
-    <div class="fp-recipe-grid" id="fpRecipeGrid"></div>
-  </div>`, 'recipe-mode');
- let cat='全部';
- const render=()=>{
-   const q=$('#recipeSearch').value.trim();
-   $('#fpRecipeGrid').innerHTML=Object.entries(RECIPES).filter(([id,r])=>(cat==='全部'||r.cat===cat)&&(!q||r.label.toLowerCase().includes(q.toLowerCase()))).map(([id,r])=>{
-     const miss=missingIngredients(r.ingredients),ok=!miss.length;
-     return `<button class="fp-recipe-card ${ok?'':'locked'}" data-recipe="${id}">
-       ${recipeVisual(r)}<div class="recipe-copy"><span>${r.cat} · ${r.difficulty}</span><b>${r.emoji} ${r.label}</b>
-       <small>${r.steps.map(x=>STEP_LABELS[x]||x).slice(0,4).join(' → ')}${r.steps.length>4?'…':''}</small>
-       <em>${ok?'食材齐全 · 开始料理':'缺：'+miss.slice(0,3).join('、')}</em></div></button>`;
-   }).join('');
-   document.querySelectorAll('[data-recipe]').forEach(b=>b.onclick=()=>{
-     const id=b.dataset.recipe,r=RECIPES[id];const miss=missingIngredients(r.ingredients);
-     if(miss.length){toast('缺少食材：'+miss.join('、'));return}startCookingLegacy(id);
-   });
+  <div class="approved-cooking-shell">
+   <header class="approved-cooking-top">
+    <div><span class="fp-kicker">RECIPE BOOK · 40 UNIQUE DISH PHOTOS</span><h1>今天想煮什么？</h1><p>每一道食谱使用自己的料理照片；选择食谱后在右边查看详细食材与步骤。</p></div>
+    <button class="mama-btn custom-cook-hero" id="customCookHero">✨ 自定义煮菜</button>
+   </header>
+   <div class="approved-cooking-layout">
+    <section class="approved-recipe-book">
+     <div class="recipe-toolbar-top"><input id="recipeSearch" class="fp-search" placeholder="搜索食谱…"></div>
+     <div class="fp-chips" id="recipeCats">${cats.map((c,i)=>`<button class="${i===0?'active':''}" data-cat="${c}">${c}</button>`).join('')}</div>
+     <div class="approved-recipe-grid" id="fpRecipeGrid"></div>
+    </section>
+    <section class="approved-fridge-preview">
+     <div class="mini-panel-title"><span>🧊</span><div><b>Fridge</b><small>40 Unique Ingredients</small></div><button id="openRealFridgeFromCook">打开冰箱</button></div>
+     <img src="./assets/fridge/fridge-showcase-40.jpg" alt="40 unique ingredients">
+     <div class="cook-ingredient-strip">${Object.keys(INGREDIENTS).map(id=>`<span title="${INGREDIENTS[id].label}">${ingredientVisual(id)}</span>`).join('')}</div>
+    </section>
+    <aside class="approved-recipe-detail" id="recipeDetail"></aside>
+   </div>
+  </div>`,'recipe-mode approved-recipe-mode');
+ const filtered=()=>{
+  const q=$('#recipeSearch').value.trim().toLowerCase();
+  return recipeIds.filter(id=>{const r=RECIPES[id];return(cat==='全部'||r.cat===cat)&&(!q||r.label.toLowerCase().includes(q))});
  };
- $('#customCookBtn').onclick=openCustomCooking;$('#customCookHero').onclick=openCustomCooking;$('#recipeSearch').oninput=render;document.querySelectorAll('#recipeCats button').forEach(b=>b.onclick=()=>{cat=b.dataset.cat;document.querySelectorAll('#recipeCats button').forEach(x=>x.classList.toggle('active',x===b));render()});render();
+ const renderDetail=()=>{
+  const r=RECIPES[selectedId];if(!r)return;
+  const miss=missingIngredients(r.ingredients),ok=!miss.length;
+  const ingHtml=Object.entries(r.ingredients).map(([id,n])=>`<div class="detail-ing ${((state.fridge[id]||0)>=n)?'ok':'miss'}">${ingredientVisual(id)}<span><b>${INGREDIENTS[id]?.label||id}</b><small>${state.fridge[id]||0}/${n}</small></span></div>`).join('');
+  $('#recipeDetail').innerHTML=`
+   <div class="detail-hero">${recipeVisual(r)}<button class="detail-heart">♡</button></div>
+   <h2>${r.label}</h2><p class="detail-desc">${r.cat} · ${r.difficulty} · ${r.steps.length} 个料理步骤</p>
+   <div class="detail-stat-row"><span>👩‍🍳 ${r.difficulty}</span><span>⏱️ ${Math.max(10,r.steps.length*5)} min</span><span>${ok?'✅ 食材齐全':'⚠️ 缺食材'}</span></div>
+   <div class="detail-tabs"><b>Ingredients</b><span>Cooking Steps</span></div>
+   <div class="detail-ingredients">${ingHtml}</div>
+   <div class="detail-steps">${r.steps.map((s,i)=>`<span><i>${i+1}</i>${STEP_LABELS[s]||s}</span>`).join('')}</div>
+   <button class="start-recipe-btn ${ok?'':'disabled'}" id="startSelectedRecipe">🍳 ${ok?'Start Cooking':'缺：'+miss.slice(0,2).join('、')}</button>`;
+  $('#startSelectedRecipe').onclick=()=>{if(!ok){toast('缺少食材：'+miss.join('、'));return}startCookingLegacy(selectedId)};
+ };
+ const render=()=>{
+  const ids=filtered();if(ids.length&&!ids.includes(selectedId))selectedId=ids[0];
+  $('#fpRecipeGrid').innerHTML=ids.map(id=>{const r=RECIPES[id],miss=missingIngredients(r.ingredients),ok=!miss.length;return `<button class="approved-recipe-card ${id===selectedId?'selected':''} ${ok?'':'locked'}" data-recipe="${id}">${recipeVisual(r)}<div><b>${r.label}</b><small>${r.cat} · ${r.difficulty}</small><em>${ok?'♡ 食材齐全':'缺 '+miss.length+' 种'}</em></div></button>`}).join('')||'<div class="empty-note">没有找到食谱。</div>';
+  document.querySelectorAll('[data-recipe]').forEach(b=>b.onclick=()=>{selectedId=b.dataset.recipe;render();renderDetail()});
+  renderDetail();
+ };
+ $('#customCookHero').onclick=openCustomCooking;
+ $('#openRealFridgeFromCook').onclick=openFridgeLegacy;
+ $('#recipeSearch').oninput=render;
+ document.querySelectorAll('#recipeCats button').forEach(b=>b.onclick=()=>{cat=b.dataset.cat;document.querySelectorAll('#recipeCats button').forEach(x=>x.classList.toggle('active',x===b));render()});
+ render();
 }
-
 function customIngredientPool(){
  const pool=[];
  Object.keys(INGREDIENTS).forEach(id=>{if((state.fridge[id]||0)>0)pool.push({key:'ing:'+id,label:INGREDIENTS[id].label,type:'ing',id,visual:ingredientVisual(id),count:state.fridge[id]||0})});

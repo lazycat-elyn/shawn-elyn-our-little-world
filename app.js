@@ -3246,3 +3246,290 @@ function openHomeUnload32(carId){
    }
  };
 }
+
+
+/* MASTER 3.2.1 — IMMERSIVE SUPERMARKET VISUAL REBUILD */
+function openSupermarket32(opts={}){
+  ensureSupermarket32State();
+  document.querySelector('.outing-location-overlay')?.remove();
+  document.querySelector('.sm321-overlay')?.remove();
+  try{closeOuting?.()}catch(e){}
+
+  const arrivedByCar=!!opts.arrivedByCar;
+  const carId=opts.carId&&state.cars?.[opts.carId]?opts.carId:null;
+  const driver=opts.driver||state.active;
+  const together=opts.together!==false;
+  const partner=driver==='elyn'?'shawn':'elyn';
+
+  const list=sm32BuildList();
+  state.supermarket32.shoppingList=list;
+  state.supermarket32.visits=(state.supermarket32.visits||0)+1;
+  save();
+
+  const stock=Object.fromEntries(SM32_PRODUCTS.map((p,i)=>[p.id,3+((i*7+p.id.length*3)%9)]));
+  const cart={};
+  let hasCart=false,alive=true,last=performance.now(),target=null,targetAction=null,activeAisle=null;
+  let player={x:48,y:88};
+  const keys={};
+
+  const aisles=[
+    {id:'produce',x:22,y:36,sign:'🥬',name:'Fresh Produce',cn:'水果蔬菜'},
+    {id:'dairy',x:48,y:36,sign:'🥛',name:'Dairy & Eggs',cn:'冷藏乳品'},
+    {id:'meat',x:74,y:36,sign:'🥩',name:'Meat & Seafood',cn:'肉类海鲜'},
+    {id:'pantry',x:22,y:60,sign:'🍚',name:'Pantry & Sauces',cn:'粮油调味'},
+    {id:'snacks',x:48,y:60,sign:'🥐',name:'Bakery & Drinks',cn:'零食饮料'},
+    {id:'frozen',x:74,y:60,sign:'❄️',name:'Frozen Foods',cn:'冷冻食品'},
+    {id:'household',x:72,y:80,sign:'🐾',name:'Pet & Household',cn:'宠物日用'}
+  ];
+  const aisleById=id=>aisles.find(a=>a.id===id);
+  const near=(a,b,c,d,r=10)=>Math.hypot(a-c,b-d)<=r;
+  const cartCount=()=>Object.values(cart).reduce((s,n)=>s+n,0);
+  const totalCost=()=>Object.entries(cart).reduce((s,[id,n])=>s+sm32Price(SM32_BY_ID[id])*n,0);
+  const listDone=()=>list.filter(li=>(cart[li.id]||0)>=li.qty).length;
+
+  const el=document.createElement('section');
+  el.className='sm321-overlay';
+  el.innerHTML=`
+  <div class="sm321-shell">
+    <header class="sm321-header">
+      <div class="sm321-title">
+        <button id="sm321Back">←</button>
+        <div><b>Little World Market</b><small>Immersive Store · ${arrivedByCar&&carId?`🚗 ${state.cars[carId].plate}`:'Walk-in'} · ${together?`${carPersonName(partner)} 一起逛 ♡`:'Solo'}</small></div>
+      </div>
+      <div class="sm321-hud">
+        <span>LIST <b id="sm321List">0/${list.length}</b></span>
+        <span>CART <b id="sm321Count">0/18</b></span>
+        <span>TOTAL <b id="sm321Total">0 🪙</b></span>
+        <span>COINS <b id="sm321Coins">${state.coins} 🪙</b></span>
+      </div>
+      <button id="sm321Sound">🔊</button>
+    </header>
+
+    <div class="sm321-layout">
+      <aside class="sm321-list">
+        <div><b>Shopping List</b><em id="sm321Badge">0/${list.length}</em></div>
+        <p>点商品，我会带你去正确货架。</p>
+        <div id="sm321ListItems"></div>
+        <small id="sm321Tip">先到入口左边拿购物车。</small>
+      </aside>
+
+      <main class="sm321-view" id="sm321View">
+        <div class="sm321-world" id="sm321World">
+          <div class="sm321-wall">
+            <div class="sm321-logo">LITTLE WORLD <i>MARKET</i></div>
+            <div class="sm321-chillers">
+              <div><b>Fresh Dairy</b><span></span><span></span><span></span></div>
+              <div><b>Frozen</b><span></span><span></span><span></span></div>
+              <div><b>Cold Drinks</b><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="sm321-floor"></div>
+          <div class="sm321-light l1"></div><div class="sm321-light l2"></div>
+
+          <button class="sm321-trolley-zone" id="sm321Trolley"><span>🛒 🛒 🛒</span><b>TROLLEYS</b><small>Tap to take one</small></button>
+
+          ${aisles.map(a=>{
+            const ps=SM32_PRODUCTS.filter(p=>p.cat===a.id).slice(0,8);
+            return `<button class="sm321-shelf shelf-${a.id}" data-sm321-aisle="${a.id}" style="left:${a.x}%;top:${a.y}%">
+              <div class="sm321-sign"><span>${a.sign}</span><b>${a.cn}</b><small>${a.name}</small></div>
+              <div class="sm321-top"></div>
+              <div class="sm321-front">
+                <div>${ps.slice(0,4).map(p=>`<img src="${p.asset}" alt="${p.label}">`).join('')}</div>
+                <div>${ps.slice(4,8).map(p=>`<img src="${p.asset}" alt="${p.label}">`).join('')}</div>
+              </div>
+              <div class="sm321-side"></div>
+            </button>`;
+          }).join('')}
+
+          <div class="sm321-produce-table">${SM32_PRODUCTS.filter(p=>p.cat==='produce').slice(0,6).map(p=>`<img src="${p.asset}" alt="${p.label}">`).join('')}<b>FRESH TODAY</b></div>
+          <div class="sm321-promo"><b>20% OFF</b><small>Weekend Special</small></div>
+
+          <button class="sm321-checkout" id="sm321Checkout">
+            <div class="belt"></div><div class="screen">03</div><div class="counter"></div>
+            <b>CHECKOUT</b><small>Scan · Bag · Pay</small>
+          </button>
+          <div class="sm321-cashier">👩🏻‍💼</div>
+
+          <div class="sm321-npc n1">👩🏻 <i>🛒</i></div>
+          <div class="sm321-npc n2">🧑🏻 <i>🛒</i></div>
+          <div class="sm321-npc n3">👵🏻</div>
+
+          <div class="sm321-cart" id="sm321Cart"><span></span><div id="sm321CartVisual"></div></div>
+          <img class="sm321-partner ${together?'':'hide'}" id="sm321Partner" src="${carActorImg(partner)}" alt="${carPersonName(partner)}">
+          <img class="sm321-player" id="sm321Player" src="${carActorImg(driver)}" alt="${carPersonName(driver)}">
+          <div class="sm321-context" id="sm321Context">🛒 Take trolley</div>
+        </div>
+
+        <div class="sm321-mobile">
+          <div class="sm321-dpad">
+            <button data-sm321-move="up">▲</button>
+            <div><button data-sm321-move="left">◀</button><button data-sm321-move="down">▼</button><button data-sm321-move="right">▶</button></div>
+          </div>
+          <button id="sm321Action">🛒 拿购物车</button>
+        </div>
+      </main>
+
+      <aside class="sm321-cartpanel">
+        <div><b>My Trolley</b><button id="sm321Clear">Clear</button></div>
+        <div id="sm321CartItems"><p>购物车还是空的。</p></div>
+        <button id="sm321CheckoutBtn" disabled>去结账</button>
+      </aside>
+    </div>
+
+    <div class="sm321-sheet" id="sm321Sheet">
+      <header><div><span id="sm321ShelfIcon">🥬</span><b id="sm321ShelfName">Fresh Produce</b><small id="sm321ShelfSub"></small></div><button id="sm321Close">×</button></header>
+      <div class="sm321-products" id="sm321Products"></div>
+    </div>
+    <div class="sm321-event" id="sm321Event"></div>
+  </div>`;
+  document.body.appendChild(el);
+
+  SM32_AUDIO.on=true;SM32_AUDIO.start();
+
+  const $s=q=>el.querySelector(q),$$s=q=>[...el.querySelectorAll(q)];
+  const world=$s('#sm321World'),view=$s('#sm321View');
+
+  function blocked(x,y){
+    if(x<5||x>95||y<16||y>95)return true;
+    for(const a of aisles) if(x>a.x-10&&x<a.x+10&&y>a.y-7&&y<a.y+7)return true;
+    if(x>77&&x<96&&y>75&&y<92)return true;
+    return false;
+  }
+  function setTarget(x,y,action=null){
+    x=Math.max(6,Math.min(94,x)); y=Math.max(17,Math.min(94,y));
+    if(blocked(x,y)) return;
+    target={x,y}; targetAction=action;
+  }
+  function showEvent(text,actions=[]){
+    const box=$s('#sm321Event');
+    box.innerHTML=`<div>${text}</div>${actions.map((a,i)=>`<button data-e="${i}">${a.label}</button>`).join('')}`;
+    box.classList.add('show');
+    actions.forEach((a,i)=>box.querySelector(`[data-e="${i}"]`).onclick=()=>{a.run();box.classList.remove('show')});
+    if(!actions.length)setTimeout(()=>box?.classList.remove('show'),1200);
+  }
+  function takeCart(){
+    if(hasCart)return;
+    if(!near(player.x,player.y,12,88,12)){setTarget(14,87,takeCart);$s('#sm321Tip').textContent='正在走去购物车区…';return}
+    hasCart=true;$s('#sm321Cart').classList.add('show');$s('#sm321Trolley').classList.add('taken');
+    $s('#sm321Tip').textContent='购物车拿好了。走近货架再浏览。';SM32_AUDIO.tone(650,.08,.035);render();
+  }
+  function moveToAisle(id){
+    const a=aisleById(id); if(!a)return;
+    setTarget(a.x,a.y+10,()=>openShelf(id));
+  }
+  function openShelf(id){
+    if(!hasCart){showEvent('先拿购物车，商品才有地方放。',[{label:'去拿购物车',run:()=>setTarget(14,87,takeCart)}]);return}
+    const a=aisleById(id); if(!a)return;
+    activeAisle=id;
+    $s('#sm321ShelfIcon').textContent=a.sign;$s('#sm321ShelfName').textContent=a.name;$s('#sm321ShelfSub').textContent=a.cn;
+    renderShelf();$s('#sm321Sheet').classList.add('open');
+  }
+  function renderShelf(){
+    const needed=new Set(list.filter(li=>(cart[li.id]||0)<li.qty).map(li=>li.id));
+    $s('#sm321Products').innerHTML=SM32_PRODUCTS.filter(p=>p.cat===activeAisle).map(p=>sm32ProductCard(p,stock[p.id],cart[p.id]||0,needed.has(p.id))).join('');
+    $$s('[data-sm32-product]').forEach(b=>b.onclick=()=>pick(b.dataset.sm32Product));
+  }
+  function pick(id){
+    const p=SM32_BY_ID[id]; if(!p||stock[id]<=0)return;
+    if(cartCount()>=18){showEvent('购物车已经满了（18件）。');return}
+    cart[id]=(cart[id]||0)+1;stock[id]--;SM32_AUDIO.tone(780,.06,.035);
+    showEvent(`<b>${p.emoji} ${p.label}</b> 放进购物车 · ${sm32Price(p)} 🪙`);
+    render();renderShelf();
+  }
+  function render(){
+    const done=listDone(),count=cartCount(),total=totalCost();
+    $s('#sm321List').textContent=`${done}/${list.length}`;$s('#sm321Badge').textContent=`${done}/${list.length}`;
+    $s('#sm321Count').textContent=`${count}/18`;$s('#sm321Total').textContent=total+' 🪙';$s('#sm321Coins').textContent=state.coins+' 🪙';
+    $s('#sm321ListItems').innerHTML=list.map(li=>{const p=SM32_BY_ID[li.id],ok=(cart[li.id]||0)>=li.qty;return `<button data-sm321-list="${li.id}" class="${ok?'done':''}"><img src="${p.asset}"><span><b>${p.label}</b><small>${p.catLabel}</small></span><em>${ok?'✓':'×1'}</em></button>`}).join('');
+    $$s('[data-sm321-list]').forEach(b=>b.onclick=()=>{const p=SM32_BY_ID[b.dataset.sm321List];$s('#sm321Tip').textContent=`${p.label} 在 ${p.catLabel}`;moveToAisle(p.cat)});
+    const entries=Object.entries(cart).filter(([,n])=>n>0);
+    $s('#sm321CartItems').innerHTML=entries.length?entries.map(([id,n])=>{const p=SM32_BY_ID[id];return `<div><img src="${p.asset}"><span><b>${p.label}</b><small>${sm32Price(p)}🪙 ×${n}</small></span><button data-sm321-minus="${id}">−</button></div>`}).join(''):'<p>购物车还是空的。</p>';
+    $$s('[data-sm321-minus]').forEach(b=>b.onclick=()=>{const id=b.dataset.sm321Minus;if(cart[id]>0){cart[id]--;stock[id]++;if(!cart[id])delete cart[id];render();if(activeAisle)renderShelf()}});
+    $s('#sm321CheckoutBtn').disabled=!count;$s('#sm321CheckoutBtn').textContent=done===list.length?'✓ List 完成 · 去结账':`去结账 · ${done}/${list.length}`;
+    $s('#sm321CartVisual').innerHTML=entries.slice(-6).map(([id])=>`<img src="${SM32_BY_ID[id].asset}">`).join('');
+  }
+  function checkout(){
+    if(!cartCount()){showEvent('购物车还是空的。');return}
+    setTarget(86,86,()=>openCheckout32({cart,stock,list,arrivedByCar,carId,driver,together,partner,onBack:()=>{}}));
+  }
+  function action(){
+    if(!hasCart)return takeCart();
+    if(near(player.x,player.y,86,86,14)&&cartCount())return checkout();
+    const n=aisles.map(a=>({a,d:Math.hypot(player.x-a.x,player.y-(a.y+10))})).sort((a,b)=>a.d-b.d)[0];
+    if(n&&n.d<17)return moveToAisle(n.a.id);
+    showEvent('再靠近一点货架。');
+  }
+
+  $$s('[data-sm321-aisle]').forEach(b=>b.onclick=e=>{e.stopPropagation();moveToAisle(b.dataset.sm321Aisle)});
+  $s('#sm321Trolley').onclick=e=>{e.stopPropagation();setTarget(14,87,takeCart)};
+  $s('#sm321Checkout').onclick=e=>{e.stopPropagation();checkout()};
+  $s('#sm321CheckoutBtn').onclick=checkout;$s('#sm321Action').onclick=action;
+  $s('#sm321Close').onclick=()=>$s('#sm321Sheet').classList.remove('open');
+  $s('#sm321Clear').onclick=()=>{for(const[id,n]of Object.entries(cart))stock[id]+=n;Object.keys(cart).forEach(k=>delete cart[k]);render();if(activeAisle)renderShelf()};
+  $s('#sm321Sound').onclick=()=>{SM32_AUDIO.on=!SM32_AUDIO.on;$s('#sm321Sound').textContent=SM32_AUDIO.on?'🔊':'🔇';if(SM32_AUDIO.on)SM32_AUDIO.start();else SM32_AUDIO.stop()};
+
+  function cleanup(){alive=false;SM32_AUDIO.stop();window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
+  $s('#sm321Back').onclick=()=>{cleanup();el.remove();openOutingMap('supermarket')};
+
+  function kd(e){const k=e.key.toLowerCase();if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){keys[k]=true;e.preventDefault()}}
+  function ku(e){keys[e.key.toLowerCase()]=false}
+  window.addEventListener('keydown',kd);window.addEventListener('keyup',ku);
+
+  $$s('[data-sm321-move]').forEach(b=>{
+    const k=b.dataset.sm321Move;
+    b.onpointerdown=e=>{e.preventDefault();keys['touch_'+k]=true;b.setPointerCapture?.(e.pointerId)};
+    b.onpointerup=()=>keys['touch_'+k]=false;b.onpointercancel=()=>keys['touch_'+k]=false;
+  });
+
+  view.addEventListener('pointerdown',e=>{
+    if(e.target.closest('button,.sm321-mobile'))return;
+    const r=view.getBoundingClientRect();
+    const dx=(e.clientX-(r.left+r.width/2))/r.width*34;
+    const dy=(e.clientY-(r.top+r.height*.58))/r.height*30;
+    setTarget(player.x+dx,player.y+dy);
+  });
+
+  function frame(now){
+    if(!alive)return;
+    const dt=Math.min(.04,Math.max(.001,(now-last)/1000));last=now;
+    let dx=((keys.d||keys.arrowright||keys.touch_right)?1:0)-((keys.a||keys.arrowleft||keys.touch_left)?1:0);
+    let dy=((keys.s||keys.arrowdown||keys.touch_down)?1:0)-((keys.w||keys.arrowup||keys.touch_up)?1:0);
+
+    if(dx||dy){
+      target=null;targetAction=null;const m=Math.hypot(dx,dy)||1;dx/=m;dy/=m;
+      const nx=player.x+dx*dt*18,ny=player.y+dy*dt*18;
+      if(!blocked(nx,player.y))player.x=nx;if(!blocked(player.x,ny))player.y=ny;
+    }
+    if(target){
+      const dx=target.x-player.x,dy=target.y-player.y,d=Math.hypot(dx,dy);
+      if(d<.8){player={...target};target=null;const fn=targetAction;targetAction=null;fn?.()}
+      else{
+        const st=Math.min(d,dt*20),nx=player.x+dx/d*st,ny=player.y+dy/d*st;
+        if(!blocked(nx,player.y))player.x=nx;if(!blocked(player.x,ny))player.y=ny;
+      }
+    }
+
+    const scale=.78+player.y*.0045;
+    const pl=$s('#sm321Player');pl.style.left=player.x+'%';pl.style.top=player.y+'%';pl.style.transform=`translate(-50%,-88%) scale(${scale})`;
+    if(together){const pa=$s('#sm321Partner');pa.style.left=(player.x+3.3)+'%';pa.style.top=(player.y+1.2)+'%';pa.style.transform=`translate(-50%,-88%) scale(${scale*.96})`}
+    if(hasCart){const ca=$s('#sm321Cart');ca.style.left=(player.x-3)+'%';ca.style.top=(player.y+2.3)+'%';ca.style.transform=`translate(-50%,-50%) scale(${scale})`}
+
+    const vx=Math.max(0,Math.min(42,player.x-29));
+    const vy=Math.max(0,Math.min(34,player.y-36));
+    world.style.transform=`translate(${-vx*1.25}%,${-vy*1.35}%)`;
+
+    const ctx=$s('#sm321Context');
+    if(!hasCart&&near(player.x,player.y,12,88,13)){ctx.textContent='🛒 Take trolley';ctx.classList.add('show');$s('#sm321Action').textContent='🛒 拿购物车'}
+    else if(hasCart&&near(player.x,player.y,86,86,14)&&cartCount()){ctx.textContent='💳 Checkout';ctx.classList.add('show');$s('#sm321Action').textContent='💳 Checkout'}
+    else{
+      const n=aisles.map(a=>({a,d:Math.hypot(player.x-a.x,player.y-(a.y+10))})).sort((a,b)=>a.d-b.d)[0];
+      if(hasCart&&n?.d<15){ctx.textContent=`${n.a.sign} Browse ${n.a.cn}`;ctx.classList.add('show');$s('#sm321Action').textContent=`${n.a.sign} Browse`}
+      else{ctx.classList.remove('show');if(hasCart)$s('#sm321Action').textContent='🛍 Browse Shelf'}
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  render();
+  requestAnimationFrame(frame);
+}

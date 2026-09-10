@@ -1,0 +1,14 @@
+{
+  "node_syntax": "OK",
+  "override_openSupermarket32": true,
+  "camera_follow": true,
+  "depth_shelves": true,
+  "products_on_shelves": true,
+  "moving_npcs": true,
+  "mobile_controls": true,
+  "checkout_preserved": true,
+  "boot_flow_preserved": true,
+  "clean_character_mode_preserved": true,
+  "racing_preserved": true,
+  "fishing_preserved": true
+}

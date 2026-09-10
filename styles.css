@@ -631,3 +631,35 @@
 .car291-challenge span{font-size:12px!important;display:block!important}.car291-challenge b{font-size:8px!important;z-index:2}.car291-challenge i{position:absolute!important;left:0!important;bottom:0!important;height:3px!important;width:0;background:linear-gradient(90deg,#ff9aad,#ffd46b)!important;transition:width .12s linear!important}
 .car291-final-points{margin:10px 0;padding:12px 15px;border-radius:15px;background:#fff5dc;border:1px solid #f0dfaf;display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap}.car291-final-points b{font-size:24px;color:#8a5a13}.car291-final-points span{font-size:11px;color:#765f48}
 .car29-live-world .car10-traffic.hit{animation:hitShake .45s;filter:grayscale(.3);opacity:.72}
+
+/* MASTER 2.9.2 — EASY + FUN DRIVING */
+.car292-points-float{
+ position:absolute;z-index:34;top:92px;left:50%;transform:translateX(-50%);
+ padding:8px 16px;border-radius:999px;background:rgba(255,250,245,.94);
+ color:#3a2925;font-weight:900;font-size:15px;box-shadow:0 6px 20px rgba(50,35,30,.13);
+ pointer-events:none;
+}
+.car292-crash{
+ position:absolute;z-index:70;left:50%;top:43%;transform:translate(-50%,-50%) scale(.8);
+ opacity:0;pointer-events:none;padding:18px 28px;border-radius:22px;
+ background:rgba(42,27,27,.92);color:#fff;font-weight:1000;font-size:28px;
+ letter-spacing:.5px;transition:.18s ease;
+}
+.car292-crash.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.car292-bonus-layer{position:absolute;inset:0;z-index:14;pointer-events:none;overflow:hidden}
+.car292-bonus{
+ position:absolute;left:50%;top:20%;font-size:30px;filter:drop-shadow(0 4px 5px rgba(0,0,0,.18));
+ transition:opacity .18s ease;will-change:left,top,transform;
+}
+.car292-bonus.collected{opacity:0;transform:translate(-50%,-50%) scale(1.7)!important}
+.car292-goals{display:flex;gap:6px;flex-wrap:wrap;padding:4px 8px 0}
+.car292-goals span{
+ background:#fff8f4;border:1px solid rgba(110,80,70,.12);border-radius:999px;
+ padding:4px 8px;font-size:10px;font-weight:800;color:#5b4640;
+}
+.car292-goals span.bad{background:#fff0f0;color:#b94646}
+.car291-final-points strong{display:block;margin-top:5px;color:#9a6a00}
+.drive10-mode.car28-mode[data-difficulty="easy"] .car28-steering button,
+.drive10-mode.car28-mode[data-difficulty="normal"] .car28-steering button{font-size:0}
+.drive10-mode.car28-mode[data-difficulty="easy"] .car28-steering button::after,
+.drive10-mode.car28-mode[data-difficulty="normal"] .car28-steering button::after{content:"换道";font-size:12px;font-weight:900}

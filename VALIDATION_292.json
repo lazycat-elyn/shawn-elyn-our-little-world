@@ -1,0 +1,10 @@
+{
+  "node_syntax": "OK",
+  "lane_assist": true,
+  "smart_limit": true,
+  "bonus_collectibles": true,
+  "crash_full_stop": true,
+  "trip_goals": true,
+  "star_rewards": true,
+  "car_2_6_clean_character_marker_preserved": true
+}

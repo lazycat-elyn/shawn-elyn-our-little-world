@@ -749,3 +749,57 @@
  .race30-track-grid{grid-template-columns:1fr}.race30-track.locked{display:none}
  .race30-result-stats{grid-template-columns:repeat(2,1fr)}
 }
+
+
+/* MASTER 3.1 — SUPER RACING 2.0 */
+.race31-garage-btn{background:linear-gradient(135deg,#151a22,#4b2431)!important;color:#fff!important;border:1px solid #e66d86!important}
+.r31-hub{display:grid;gap:14px}
+.r31-hero{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,#202732,#3c2630);color:#fff;padding:18px}
+.r31-hero-copy small{letter-spacing:2px;opacity:.65;font-weight:900}.r31-hero-copy h2{font-size:23px;margin:5px 0}.r31-hero-copy p{margin:0;opacity:.78}
+.r31-hero-car{display:grid;grid-template-columns:1fr;justify-items:center}.r31-hero-car img{width:220px;height:105px;object-fit:contain}.r31-hero-car strong{font-size:18px}.r31-hero-car span{font-size:11px;opacity:.7}
+.r31-options{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.r31-segment{display:flex;gap:5px;align-items:center;background:#f3efeb;padding:5px;border-radius:14px}.r31-segment>b{font-size:11px;padding:0 6px}
+.r31-segment button{border:0;background:transparent;border-radius:10px;padding:8px 11px;font-weight:900}.r31-segment button.active{background:#26313f;color:#fff}
+.r31-sound{margin-left:auto;background:#f3efeb;border-radius:12px;padding:9px 12px;font-weight:800;font-size:11px}
+.r31-track-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.r31-track-card{display:grid;gap:5px;padding:8px;text-align:left;background:#fbf8f5;border:2px solid transparent;border-radius:18px}.r31-track-card.active{border-color:#e96d83;background:#fff}
+.r31-track-poster{height:125px;border-radius:14px;position:relative;overflow:hidden;display:flex;align-items:flex-start;padding:10px;color:#fff;text-shadow:0 2px 5px #0008}.r31-track-poster.lake{background:linear-gradient(#79c7ed 0 45%,#74a675 45% 58%,#333840 58%)}.r31-track-poster.mountain{background:linear-gradient(#8fc8e6 0 42%,#657a6b 42% 59%,#3b3c40 59%)}.r31-track-poster.night{background:linear-gradient(#151b39 0 47%,#7b3c77 47% 59%,#252631 59%)}
+.r31-track-poster>span{font-size:34px}.r31-track-poster>b{position:absolute;left:12px;bottom:28px;font-size:15px}.r31-track-poster>i{position:absolute;left:12px;bottom:10px;font-size:9px;font-style:normal;font-weight:900}
+.r31-road-art{position:absolute;left:35%;bottom:-42px;width:90px;height:140px;background:#31353b;transform:perspective(180px) rotateX(58deg);border-left:5px solid #fff;border-right:5px solid #e55}
+.r31-track-card>strong{font-size:14px}.r31-track-card>small{min-height:30px}.r31-track-card>em{font-style:normal;font-size:9px;font-weight:900;color:#9b6470}
+.r31-control-guide{display:flex;flex-wrap:wrap;gap:6px}.r31-control-guide span{padding:6px 9px;background:#f4f2f0;border-radius:10px;font-size:10px}.r31-control-guide b{color:#a44156}.r31-start-btn{width:100%}
+
+.car10-overlay.race31-mode{z-index:20000;background:#0d1117;overflow:hidden}
+.r31-race{position:absolute;inset:0;background:#10141a;color:#fff;display:flex;flex-direction:column;font-family:inherit}
+.r31-top{height:72px;display:grid;grid-template-columns:260px 1fr 165px;gap:10px;align-items:center;padding:8px 14px;background:#111720;border-bottom:1px solid #ffffff18;z-index:20}
+.r31-brand{display:flex;gap:9px;align-items:center}.r31-brand>span{font-size:27px}.r31-brand div{display:grid}.r31-brand b{font-size:16px}.r31-brand small{font-size:9px;opacity:.6}
+.r31-hud-main{max-width:670px;width:100%;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.r31-hud-main>div{text-align:center;border-left:1px solid #ffffff17}.r31-hud-main small{display:block;font-size:8px;opacity:.6;letter-spacing:1px}.r31-hud-main b{font-size:20px}.r31-hud-main .speed b{font-size:28px;color:#ffd85e}.r31-hud-main i{font-style:normal;font-size:8px;color:#fff;opacity:.6}
+.r31-top-actions{display:flex;justify-content:flex-end;gap:5px}.r31-top-actions button{border:1px solid #ffffff22;background:#252d38;color:#fff;border-radius:10px;padding:9px;font-weight:800}
+.r31-stage{position:relative;flex:1;min-height:0;overflow:hidden;background:#222;touch-action:none}
+#r31Canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#r31Map{position:absolute;right:13px;top:12px;width:168px;height:104px;border-radius:14px;border:1px solid #ffffff22;z-index:12}
+.r31-count{position:absolute;z-index:30;left:50%;top:39%;transform:translate(-50%,-50%);font-size:118px;font-weight:1000;text-shadow:0 8px 30px #000}.r31-count.go{color:#ffd75a}.r31-count.hide{opacity:0;pointer-events:none;transition:.35s;transform:translate(-50%,-50%) scale(1.45)}
+.r31-perfect{position:absolute;z-index:29;left:50%;top:29%;transform:translateX(-50%) scale(.7);opacity:0;background:#ffd75a;color:#26220f;border-radius:999px;padding:10px 18px;font-weight:1000;transition:.22s}.r31-perfect.show{opacity:1;transform:translateX(-50%) scale(1)}
+.r31-corner{position:absolute;z-index:13;left:50%;top:13px;transform:translateX(-50%);text-align:center;background:#18212bcf;border:1px solid #ffffff22;border-radius:13px;padding:7px 18px;min-width:200px}.r31-corner b{display:block;font-size:17px}.r31-corner span{font-size:9px;opacity:.7}.r31-corner.warn{background:#a84248e8;animation:r31Pulse .65s alternate infinite}@keyframes r31Pulse{to{transform:translateX(-50%) scale(1.04)}}
+.r31-left{position:absolute;z-index:12;left:12px;top:12px;width:125px;display:grid;gap:5px}.r31-left>div{background:#111820d9;border:1px solid #ffffff18;border-radius:10px;padding:7px 9px}.r31-left small{display:block;font-size:7px;opacity:.6}.r31-left b{font-size:12px}.r31-combo{position:relative}.r31-combo em{position:absolute;right:8px;bottom:8px;font-style:normal;color:#ffd75a;font-weight:900}
+.r31-rank{position:absolute;z-index:12;right:14px;top:124px;width:125px;display:grid;gap:3px}.r31-rank>div{display:grid;grid-template-columns:18px 9px 1fr;gap:5px;align-items:center;padding:4px 6px;border-radius:7px;background:#101720cc;font-size:9px}.r31-rank>div.you{background:#fff;color:#222;font-weight:900}.r31-rank i{width:7px;height:7px;border-radius:50%}
+.r31-event{position:absolute;z-index:25;left:50%;top:86px;transform:translateX(-50%) translateY(-8px);opacity:0;color:#fff;background:#151c24d9;border-radius:999px;padding:7px 14px;font-weight:900;transition:.2s}.r31-event.show{opacity:1;transform:translateX(-50%)}
+.r31-drift-pop{position:absolute;z-index:20;left:50%;bottom:155px;transform:translateX(-50%) rotate(-4deg);font-size:23px;font-weight:1000;color:#ffd85c;opacity:0;text-shadow:0 3px 8px #000}.r31-drift-pop.show{opacity:1}
+.r31-bars{position:absolute;z-index:13;left:50%;bottom:112px;transform:translateX(-50%);width:min(440px,42%);display:grid;gap:5px}.r31-bars>div{display:grid;grid-template-columns:45px 1fr 34px;align-items:center;gap:6px;font-size:8px;font-weight:900}.r31-bars span{height:8px;background:#ffffff30;border-radius:999px;overflow:hidden}.r31-bars i{display:block;height:100%;width:0;background:#53d8ff;border-radius:999px}.r31-drift i{background:#ffd75a}.r31-bars b{text-align:right}
+.r31-player-tag{position:absolute;z-index:12;left:50%;bottom:87px;transform:translateX(-50%);background:#121820c9;border-radius:999px;padding:4px 9px;display:flex;gap:6px;font-size:9px}.r31-player-tag span{opacity:.7}
+.r31-cheer{position:absolute;z-index:13;left:12px;bottom:105px;display:flex;gap:6px;align-items:center;background:#fff8f0e8;color:#47352f;border-radius:13px;padding:5px 8px;max-width:190px}.r31-cheer img{width:31px;height:38px;object-fit:contain}.r31-cheer span{font-size:9px;font-weight:800}.r31-cheer.hide{display:none}
+.r31-controls{position:absolute;z-index:18;left:0;right:0;bottom:0;display:grid;grid-template-columns:minmax(260px,1fr) 78px 84px 95px 105px;gap:7px;align-items:end;padding:8px 12px;background:linear-gradient(transparent,#0b1015e8)}
+.r31-steering{display:grid;grid-template-columns:70px 105px 70px;gap:7px;align-items:center}.r31-steering>button,.r31-controls>button{border:none;color:#fff;font-weight:1000;touch-action:none;user-select:none}
+.r31-steering>button{height:64px;border-radius:16px;background:#232b35;font-size:24px;border:1px solid #ffffff18}.r31-wheel{height:64px;border-radius:50%;border:8px solid #4c535d;position:relative;display:grid;place-items:center;background:#1b222b}.r31-wheel i{width:4px;height:46px;background:#ffd75a;border-radius:3px;transition:transform .05s}.r31-wheel span{position:absolute;font-size:7px;bottom:2px;opacity:.6}
+.r31-pedal{height:88px;border-radius:17px;font-size:13px}.r31-pedal small,.r31-hand small,.r31-nitro-btn small{display:block;font-size:7px;opacity:.7}.r31-pedal.gas{background:#e75f75}.r31-pedal.brake{background:#707984}.r31-hand{height:64px;border-radius:14px;background:#343c46}.r31-nitro-btn{height:74px;border-radius:16px;background:linear-gradient(#42c8ed,#3375db);box-shadow:0 0 18px #42c8ed55}.r31-controls button:active{filter:brightness(.78);transform:translateY(2px)}
+.r31-mobile-rotate{display:none}
+.r31-result{position:absolute;z-index:100;inset:0;background:#07090dc9;display:grid;place-items:center;padding:16px}.r31-result-card{width:min(580px,94%);background:#fbf7f2;color:#302826;border-radius:26px;padding:22px;text-align:center}.r31-result-card>span{font-size:55px}.r31-result-card>small{display:block;letter-spacing:3px;font-weight:900;opacity:.55}.r31-result-card h1{font-size:33px;margin:4px}.r31-result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0}.r31-result-grid>div{padding:9px;background:#eee9e3;border-radius:12px}.r31-result-grid small{display:block;font-size:7px;opacity:.55}.r31-result-grid b{font-size:12px}.r31-result-card>strong{display:block;margin:12px;color:#9a6700}.r31-result-card>div:last-child{display:flex;gap:6px;justify-content:center}.r31-result-card button{border:0;border-radius:11px;padding:9px 15px;background:#2e3742;color:#fff;font-weight:900}.r31-result-card button:first-child{background:#e66b82}
+
+@media(max-width:900px){
+ .r31-top{height:58px;grid-template-columns:1fr auto;padding:5px 8px}.r31-brand{display:none}.r31-hud-main{grid-column:1}.r31-hud-main b{font-size:14px}.r31-hud-main .speed b{font-size:20px}.r31-top-actions{grid-column:2}
+ #r31Map{width:112px;height:70px;top:7px;right:7px}.r31-rank{right:7px;top:82px;width:91px}.r31-left{left:6px;top:7px;width:90px}.r31-corner{top:6px;min-width:150px;padding:4px 9px}.r31-corner b{font-size:12px}.r31-cheer{display:none}
+ .r31-bars{bottom:86px;width:40%}.r31-player-tag{bottom:68px}.r31-drift-pop{bottom:115px}
+ .r31-controls{grid-template-columns:minmax(190px,1fr) 58px 65px 70px 77px;padding:5px;gap:4px}.r31-steering{grid-template-columns:55px 72px 55px;gap:4px}.r31-steering>button{height:54px}.r31-wheel{height:54px;border-width:6px}.r31-wheel i{height:36px}.r31-pedal{height:68px;font-size:9px}.r31-hand{height:52px;font-size:8px}.r31-nitro-btn{height:60px;font-size:8px}
+ .r31-track-list{grid-template-columns:1fr}.r31-track-poster{height:88px}.r31-hero{grid-template-columns:1fr}.r31-hero-car{display:none}.r31-options{gap:5px}.r31-sound{margin-left:0}
+}
+@media(max-width:700px) and (orientation:portrait){
+ .r31-mobile-rotate{display:grid;position:absolute;z-index:90;inset:0;place-items:center;text-align:center;background:#0d1218f5;color:#fff;font-size:20px;font-weight:900}.r31-mobile-rotate small{font-size:11px;opacity:.6}
+}

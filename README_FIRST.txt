@@ -1,51 +1,66 @@
-MASTER 3.0 — RACING GAME 1.0
+MASTER 3.1 — SUPER RACING 2.0
 
-This patch adds a SEPARATE real racing mode. It does not replace normal City Drive.
+This is a major racing upgrade, not another lane-switching mini game.
 
-Playable now:
-- Lakeside Sprint
-- 3 laps
-- 4 racers total: YOU + 3 AI opponents
-- ROOKIE / PRO / EXPERT AI difficulty
+PLAYABLE:
+- Lakeside Grand Prix
+- Mountain Rush
+- Neon City Circuit
+- Quick Race
+- Time Attack
+- ROOKIE / PRO / EXPERT
 
-Racing mechanics:
-- 3-2-1-GO countdown
-- continuous A/D steering (not lane snapping)
-- speed-sensitive steering: high speed has smaller steering angle
-- acceleration + real braking
-- corners require braking
-- track curvature pushes the car outward at high speed
-- off-road causes a strong slowdown
-- collision with AI causes immediate large speed loss
-- AI racers have their own pace, corner speed and lane choices
-- slipstream when directly behind an opponent
-- live position 1/4, lap 1/3, speed, race timer, lap timer
-- finish ranking
-- Coins + EXP rewards
-- best time is saved
+GAMEPLAY:
+- 6-car races (player + 5 AI)
+- continuous steering
+- speed-sensitive steering
+- meaningful braking before corners
+- centrifugal push / off-road slowdown
+- drift with Space
+- drift builds Nitro
+- Nitro with Shift / N
+- slipstream drafting
+- overtaking score + combo
+- collision speed loss + camera shake
+- perfect start mechanic
+- lap / best lap / gap / live position
+- mini-map
+- Coins + EXP + saved best times
 
-Where to enter:
-Garage -> select Black/White Lexus -> "🏁 赛车模式"
+FEEL:
+- procedural moving track scenery
+- stronger speed-line effect
+- dynamic FOV/horizon
+- engine sound whose pitch follows speed
+- countdown beeps
+- crash SFX
+- tire/drift noise
+- nitro visual flames
 
-Controls:
-W / Up = Accel
-S / Down = Brake
-A / D = continuous steering
-Space = Handbrake
+MOBILE:
+- landscape-first UI
+- large steering / brake / accelerator / nitro touch buttons
+- portrait rotate notice
+- optional fullscreen button
+
+FUTURE 2-PLAYER PK:
+- Race engine now uses stable racer IDs and records deterministic race events via emitMP().
+- No fake online multiplayer is claimed.
+- A real backend/WebRTC transport can later synchronize these racer states/events.
 
 IMPORTANT:
-- Normal City Drive is retained.
-- MASTER 2.6.2 clean-character logic is retained.
+- Existing normal City Drive stays in the game.
+- MASTER 2.6.2 clean character logic is preserved.
 - Fishing / Fridge / Recipe / Go Out / Kitchen / Pets / Tasks are not intentionally changed.
 
-Install:
+INSTALL:
 1. Extract ZIP.
-2. Open MASTER300_RACING_GAME_1_0.
-3. Ctrl+A -> Ctrl+C.
-4. Paste into shawn-elyn-our-little-world.
-5. Replace.
-6. GitHub Desktop Summary:
-   MASTER 3.0 racing game 1.0
-7. Commit to main.
-8. Push origin.
-9. Refresh StackBlitz.
+2. Open MASTER310_SUPER_RACING_2_0.
+3. Copy all contents into shawn-elyn-our-little-world.
+4. Replace.
+5. GitHub Desktop Summary:
+   MASTER 3.1 super racing 2.0
+6. Commit to main.
+7. Push origin.
+8. Refresh/reopen StackBlitz.
+9. Garage -> choose Lexus -> 超级赛车.

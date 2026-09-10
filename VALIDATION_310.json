@@ -1,0 +1,16 @@
+{
+  "node_syntax": "OK",
+  "new_racing_button": true,
+  "three_tracks": true,
+  "six_racer_quick_race": true,
+  "time_attack": true,
+  "continuous_steering": true,
+  "braking_and_corner_speed": true,
+  "drift": true,
+  "nitro": true,
+  "slipstream": true,
+  "engine_audio": true,
+  "mobile_controls": true,
+  "future_multiplayer_hook": true,
+  "clean_character_mode_preserved": true
+}

@@ -1,28 +1,29 @@
-MASTER 2.6.1 — CLEAN BASE SAFE TEST
+MASTER 2.6.2 — FORCE CLEAN CHARACTER FIX
 
-Purpose:
-- Replace the currently corrupted Elyn/Shawn live base sprites with clean, single-piece PNG characters.
-- Remove the visible center seams, clipped hair and alpha holes seen in the previous test.
+WHY 2.6.1 DID NOT WORK
+The game code was still loading:
+assets/wardrobe_real/outfits/.../<direction>.png
+for Elyn and Shawn, so replacing assets/sprites alone could not change the live actors.
 
-IMPORTANT:
-- This is a SAFE TEST build.
-- To isolate the corruption problem, all 6 movement states temporarily use the same clean FRONT sprite.
-- This means movement direction art is not final yet, but the character itself should stay visually clean.
-- Wardrobe outfit sprites are NOT rebuilt in this patch.
-- Fishing, Fridge, Recipes, Go Out, Cars, Kitchen, Pets and Tasks are not modified.
+WHAT 2.6.2 CHANGES
+- app.js now forces live Elyn/Shawn to use assets/sprites_clean_v262/
+- index.html also starts with the new uncached clean sprite path
+- old wardrobe data, purchases and selected outfit IDs are preserved
+- broken wardrobe_real PNGs are temporarily NOT rendered in the live character
+- wardrobe thumbnails/preview temporarily show the clean base character while the wardrobe art is rebuilt
+- no Fishing/Fridge/Recipe/Go Out/Car/Pet/Task logic is intentionally removed
 
-Install:
+INSTALL
 1. Extract this ZIP.
-2. Open MASTER261_CLEAN_BASE_SAFE_TEST.
-3. Copy the "assets" folder into your local shawn-elyn-our-little-world repository.
-4. Replace files when Windows asks.
-5. GitHub Desktop Summary: MASTER 2.6.1 clean base safe test
-6. Commit to main.
-7. Push origin.
-8. Refresh StackBlitz.
+2. Open MASTER262_FORCE_CLEAN_CHARACTER.
+3. Ctrl+A / Ctrl+C.
+4. Paste into shawn-elyn-our-little-world.
+5. Replace files.
+6. GitHub Desktop Summary:
+   FORCE clean characters 2.6.2
+7. Commit to main.
+8. Push origin.
+9. Reopen/refresh StackBlitz.
 
-Test:
-- Check Elyn and Shawn in the live room/lake scene.
-- Confirm Elyn has full hair on both sides.
-- Confirm Shawn has no white center strip.
-- Confirm both bodies are solid and clean.
+EXPECTED RESULT
+The live Elyn and Shawn must now use the clean base PNGs even if an old wardrobe outfit is saved.

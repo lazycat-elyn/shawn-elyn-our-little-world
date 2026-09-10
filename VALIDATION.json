@@ -1,5 +1,5 @@
 {
-  "elyn-left.png": {
+  "elyn-back.png": {
     "size": [
       180,
       230
@@ -10,46 +10,7 @@
       151,
       221
     ],
-    "touches_border": false
-  },
-  "shawn-down.png": {
-    "size": [
-      180,
-      230
-    ],
-    "bbox": [
-      28,
-      9,
-      151,
-      221
-    ],
-    "touches_border": false
-  },
-  "elyn-idle.png": {
-    "size": [
-      180,
-      230
-    ],
-    "bbox": [
-      28,
-      9,
-      151,
-      221
-    ],
-    "touches_border": false
-  },
-  "shawn-back.png": {
-    "size": [
-      180,
-      230
-    ],
-    "bbox": [
-      28,
-      9,
-      151,
-      221
-    ],
-    "touches_border": false
+    "touches_canvas_edge": false
   },
   "elyn-down.png": {
     "size": [
@@ -62,9 +23,9 @@
       151,
       221
     ],
-    "touches_border": false
+    "touches_canvas_edge": false
   },
-  "elyn-up.png": {
+  "elyn-idle.png": {
     "size": [
       180,
       230
@@ -75,9 +36,9 @@
       151,
       221
     ],
-    "touches_border": false
+    "touches_canvas_edge": false
   },
-  "shawn-up.png": {
+  "elyn-left.png": {
     "size": [
       180,
       230
@@ -88,20 +49,7 @@
       151,
       221
     ],
-    "touches_border": false
-  },
-  "elyn-back.png": {
-    "size": [
-      180,
-      230
-    ],
-    "bbox": [
-      28,
-      9,
-      151,
-      221
-    ],
-    "touches_border": false
+    "touches_canvas_edge": false
   },
   "elyn-right.png": {
     "size": [
@@ -114,9 +62,9 @@
       151,
       221
     ],
-    "touches_border": false
+    "touches_canvas_edge": false
   },
-  "shawn-right.png": {
+  "elyn-up.png": {
     "size": [
       180,
       230
@@ -127,7 +75,33 @@
       151,
       221
     ],
-    "touches_border": false
+    "touches_canvas_edge": false
+  },
+  "shawn-back.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_canvas_edge": false
+  },
+  "shawn-down.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_canvas_edge": false
   },
   "shawn-idle.png": {
     "size": [
@@ -140,7 +114,7 @@
       151,
       221
     ],
-    "touches_border": false
+    "touches_canvas_edge": false
   },
   "shawn-left.png": {
     "size": [
@@ -153,6 +127,32 @@
       151,
       221
     ],
-    "touches_border": false
+    "touches_canvas_edge": false
+  },
+  "shawn-right.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_canvas_edge": false
+  },
+  "shawn-up.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_canvas_edge": false
   }
 }

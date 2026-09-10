@@ -1085,13 +1085,24 @@ function openDishwashingLegacy(){
 
 
 function getOutfit(person,id){return OUTFITS[person].find(o=>o.id===id)||OUTFITS[person][0]}
-function humanSpriteSrc(person,dir='idle'){const o=getOutfit(person,state.outfits[person]);return `${o.spriteBase}/${dir}.png`}
-function baseHumanSpriteSrc(person,dir='idle'){const key=SPRITES[person]?.[dir]||SPRITES[person]?.idle;return `./assets/sprites/${key}`}
+// MASTER 2.6.2 SAFE CHARACTER MODE
+// The old wardrobe_real sprite set is visually corrupted, so live actors MUST NOT read it.
+// Keep wardrobe ownership/data intact, but temporarily render only clean flattened base characters.
+const SAFE_CHARACTER_MODE_262=true;
+function baseHumanSpriteSrc(person,dir='idle'){
+ const safeDir=['idle','down','up','left','right','back'].includes(dir)?dir:'idle';
+ return `./assets/sprites_clean_v262/${person}-${safeDir}.png?v=262`;
+}
+function humanSpriteSrc(person,dir='idle'){
+ if(SAFE_CHARACTER_MODE_262)return baseHumanSpriteSrc(person,dir);
+ const o=getOutfit(person,state.outfits[person]);
+ return `${o.spriteBase}/${dir}.png`;
+}
 function setHumanSprite(person,dir='idle'){
  const img=$('#'+person)?.querySelector('.base-sprite');if(!img)return;
- const fallback=baseHumanSpriteSrc(person,dir);
- img.onerror=()=>{img.onerror=null;img.src=fallback};
- img.src=humanSpriteSrc(person,dir);
+ const clean=baseHumanSpriteSrc(person,dir);
+ img.onerror=()=>{img.onerror=null;img.src=baseHumanSpriteSrc(person,'idle')};
+ img.src=clean;
 }
 function renderOutfitSprites(){['shawn','elyn'].forEach(p=>setHumanSprite(p,'idle'))}
 function renderOutfitOverlays(){renderOutfitSprites()}
@@ -1105,12 +1116,12 @@ function openWardrobe(){
   const cur=getOutfit(person,selected),owned=outfitOwned(person,selected);
   modal('衣帽间 · 原版整套换装',`<div class="wardrobe-v4">
    <div class="wardrobe-v4-top"><div class="person-tabs"><button data-person="elyn" class="${person==='elyn'?'active':''}">Elyn · 40套</button><button data-person="shawn" class="${person==='shawn'?'active':''}">Shawn · 40套</button></div><div class="wardrobe-mode-tabs"><button data-mode="closet" class="${mode==='closet'?'active':''}">👗 我的衣橱</button><button data-mode="shop" class="${mode==='shop'?'active':''}">🛍️ 服装商店</button></div><div class="wardrobe-balance">🪙 ${state.coins}</div></div>
-   <div class="wardrobe-baked-note">✓ 原版衣橱素材 · 整套角色 PNG 换装 · 游戏运行时不叠加衣服图层</div><div class="wardrobe-v3-toolbar"><input id="outfitSearch" class="search" placeholder="搜索衣服…"><div class="wardrobe-cats">${OUTFIT_CATS.map(c=>`<button data-cat="${c}" class="${c===cat?'active':''}">${c}</button>`).join('')}</div></div>
-   <div class="wardrobe-v3-body"><div class="wardrobe-v3-grid" id="wardrobeGrid"></div><aside class="wardrobe-v3-preview"><div class="fit-mirror"><img id="fitPreview" src="${cur.spriteBase}/idle.png" onerror="this.onerror=null;this.src='./assets/sprites/${person}-idle.png'"></div><h2 id="previewName">${cur.name}</h2><p id="outfitMeta">${cur.cat} · ${owned?'已拥有':'未购买'}</p><div id="outfitRealParts">${outfitPartsHtml(cur)}</div><button class="small-button" id="mainOutfitAction">${owned?'穿上这套':`购买 · ${cur.price} Coins`}</button><button class="small-button secondary" id="favOutfit">♡ 收藏</button></aside></div>
+   <div class="wardrobe-baked-note">🛠 MASTER 2.6.2 人物修复模式：旧换装 PNG 暂时停用，先使用干净人物母版测试。衣橱数据与购买记录仍保留。</div><div class="wardrobe-v3-toolbar"><input id="outfitSearch" class="search" placeholder="搜索衣服…"><div class="wardrobe-cats">${OUTFIT_CATS.map(c=>`<button data-cat="${c}" class="${c===cat?'active':''}">${c}</button>`).join('')}</div></div>
+   <div class="wardrobe-v3-body"><div class="wardrobe-v3-grid" id="wardrobeGrid"></div><aside class="wardrobe-v3-preview"><div class="fit-mirror"><img id="fitPreview" src="${baseHumanSpriteSrc(person,'idle')}"></div><h2 id="previewName">${cur.name}</h2><p id="outfitMeta">${cur.cat} · ${owned?'已拥有':'未购买'}</p><div id="outfitRealParts">${outfitPartsHtml(cur)}</div><button class="small-button" id="mainOutfitAction">${owned?'穿上这套':`购买 · ${cur.price} Coins`}</button><button class="small-button secondary" id="favOutfit">♡ 收藏</button></aside></div>
   </div>`);bind();
  };
- const grid=()=>{const r=$('#wardrobeGrid');if(!r)return;const rows=filtered();r.innerHTML=rows.length?rows.map(o=>{const owned=outfitOwned(person,o.id);return `<button class="fit-outfit-card realwear-card ${selected===o.id?'selected':''}" data-outfit="${o.id}"><div class="realwear-thumb"><img src="${o.spriteBase}/idle.png" onerror="this.onerror=null;this.src='./assets/sprites/${person}-idle.png'">${!owned?`<span class="shop-price">🪙 ${o.price}</span>`:''}</div><b>${o.name}</b><span>${o.cat}</span><small>${owned?'✓ 已拥有':'商店限定'}</small></button>`}).join(''):`<div class="wardrobe-empty">${mode==='shop'?'这个分类已经买完了 ♡':'这个分类还没有拥有的衣服'}</div>`;r.querySelectorAll('[data-outfit]').forEach(b=>b.onclick=()=>select(b.dataset.outfit))};
- const select=id=>{selected=id;const o=getOutfit(person,id),owned=outfitOwned(person,id);document.querySelectorAll('.fit-outfit-card').forEach(x=>x.classList.toggle('selected',x.dataset.outfit===id));$('#fitPreview').onerror=()=>{$('#fitPreview').onerror=null;$('#fitPreview').src=baseHumanSpriteSrc(person,'idle')};$('#fitPreview').src=o.spriteBase+'/idle.png';$('#previewName').textContent=o.name;$('#outfitMeta').textContent=`${o.cat} · ${owned?'已拥有':`价格 ${o.price} Coins`}`;$('#outfitRealParts').innerHTML=outfitPartsHtml(o);$('#mainOutfitAction').textContent=owned?'穿上这套':`购买 · ${o.price} Coins`};
+ const grid=()=>{const r=$('#wardrobeGrid');if(!r)return;const rows=filtered();r.innerHTML=rows.length?rows.map(o=>{const owned=outfitOwned(person,o.id);return `<button class="fit-outfit-card realwear-card ${selected===o.id?'selected':''}" data-outfit="${o.id}"><div class="realwear-thumb"><img src="${baseHumanSpriteSrc(person,'idle')}">${!owned?`<span class="shop-price">🪙 ${o.price}</span>`:''}</div><b>${o.name}</b><span>${o.cat}</span><small>${owned?'✓ 已拥有':'商店限定'}</small></button>`}).join(''):`<div class="wardrobe-empty">${mode==='shop'?'这个分类已经买完了 ♡':'这个分类还没有拥有的衣服'}</div>`;r.querySelectorAll('[data-outfit]').forEach(b=>b.onclick=()=>select(b.dataset.outfit))};
+ const select=id=>{selected=id;const o=getOutfit(person,id),owned=outfitOwned(person,id);document.querySelectorAll('.fit-outfit-card').forEach(x=>x.classList.toggle('selected',x.dataset.outfit===id));$('#fitPreview').onerror=()=>{$('#fitPreview').onerror=null;$('#fitPreview').src=baseHumanSpriteSrc(person,'idle')};$('#fitPreview').src=baseHumanSpriteSrc(person,'idle');$('#previewName').textContent=o.name;$('#outfitMeta').textContent=`${o.cat} · ${owned?'已拥有':`价格 ${o.price} Coins`}`;$('#outfitRealParts').innerHTML=outfitPartsHtml(o);$('#mainOutfitAction').textContent=owned?'穿上这套':`购买 · ${o.price} Coins`};
  const bind=()=>{
   document.querySelectorAll('[data-person]').forEach(b=>b.onclick=()=>{person=b.dataset.person;selected=state.outfits[person];cat='全部';q='';draw()});
   document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;cat='全部';q='';const list=OUTFITS[person].filter(o=>mode==='shop'?!outfitOwned(person,o.id):outfitOwned(person,o.id));selected=(list[0]||getOutfit(person,state.outfits[person])).id;draw()});

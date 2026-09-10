@@ -622,3 +622,12 @@
 @media(max-width:850px){
   .car29-player-car{width:clamp(170px,36vw,260px);bottom:12%}
 }
+
+
+/* MASTER 2.9.1 — BALANCED DRIVING + LIVE POINTS */
+.car28-score-live header b{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.car28-score-live header em{font-style:normal;background:#fff0c9;color:#8d5b18;border-radius:999px;padding:3px 8px;font-size:10px;font-weight:900}
+.car291-challenge{position:relative!important;display:grid!important;grid-template-columns:auto 1fr!important;align-items:center!important;gap:5px!important;margin-top:5px!important;padding:4px 7px!important;background:#fff7f0!important;border-radius:9px!important;overflow:hidden!important;min-height:24px}
+.car291-challenge span{font-size:12px!important;display:block!important}.car291-challenge b{font-size:8px!important;z-index:2}.car291-challenge i{position:absolute!important;left:0!important;bottom:0!important;height:3px!important;width:0;background:linear-gradient(90deg,#ff9aad,#ffd46b)!important;transition:width .12s linear!important}
+.car291-final-points{margin:10px 0;padding:12px 15px;border-radius:15px;background:#fff5dc;border:1px solid #f0dfaf;display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap}.car291-final-points b{font-size:24px;color:#8a5a13}.car291-final-points span{font-size:11px;color:#765f48}
+.car29-live-world .car10-traffic.hit{animation:hitShake .45s;filter:grayscale(.3);opacity:.72}

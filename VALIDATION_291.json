@@ -1,0 +1,7 @@
+{
+  "points_ui": true,
+  "challenge_ui": true,
+  "collision_stop": true,
+  "center_assist": true,
+  "micro_challenges": true
+}

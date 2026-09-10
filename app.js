@@ -632,6 +632,7 @@ function openOutingMap(selected='supermarket'){
 function outingReward(coins=0,xp=0,love=0,msg='完成活动 ♡'){state.coins+=coins;state.xpTotal+=xp;if(love)addLove(love,'一起出游');save();renderTaskUI();renderNeedsUI();rewardPop(`${msg}${coins?` · +${coins}🪙`:''}${xp?` +${xp}XP`:''}`)}
 function openOutingLocation(id,arrivedByCar=false){
  if(id==='supermarket')return openSupermarket32({arrivedByCar,carId:arrivedByCar?state.lastArrivalCarId:null,driver:state.active,together:true});
+ if(id==='cafe'||id==='restaurant')return openDateVenue33(id,{arrivedByCar,carId:arrivedByCar?state.lastArrivalCarId:null,driver:state.active,together:true});
  closeOuting();const o=OUTING_DESTINATIONS[id];if(!o)return;state.lastOuting=id;save();
  const actionSets={
   supermarket:[['🛒 买一篮食材 · 120 Coins','groceries'],['🥤 买饮料 · 25 Coins','drink']],
@@ -1361,7 +1362,7 @@ function playCarExitSequence(carId,dest,driver,together,score,parkingResult){
 }
 function completeCarTrip(carId,dest,driver,together,score,parkingResult){document.querySelector('.car10-overlay')?.remove();recordEvent('driveCar',1);if(together)addLove(score>=85?3:2,'一起出门');save();arriveByCar(carId,dest,driver,together,score,parkingResult)}
 
-function arriveByCar(carId,dest,driver,together,score,parkingResult){if(dest==='homeFromMarket32'){state.room='garage';save();showGame();setTimeout(()=>openHomeUnload32(carId),250);return}if(OUTING_DESTINATIONS[dest]){state.lastArrivalCarId=carId;save();openOutingLocation(dest,true);return}if(dest==='lake'){state.room='lake';showGame();toast('开到湖边了 ♡');return}if(dest==='fuel'){openRefuelGame(carId);return}if(dest==='wash'){openCarWashGame(carId);return}if(dest==='cafe'){adjustNeeds(driver,{mood:+8});if(together){adjustNeeds(carPartner(driver),{mood:+8});addLove(4,'Café 小约会')}modal('湖景 Café ☕',`<p>${together?'两个人一起':'你'}顺利到达 Café。驾驶 ${score}/100 · ${parkingResult}</p><button class="small-button" id="cafeDrink">买饮料 · 20 Coins</button>`);$('#cafeDrink').onclick=()=>{if(state.coins<20){toast('Coins 不够');return}state.coins-=20;adjustNeeds(driver,{mood:+5,hunger:-4});save();renderTaskUI();toast('喝饮料 ♡')};return}openDriveShop(carId,driver,together)}
+function arriveByCar(carId,dest,driver,together,score,parkingResult){if(dest==='homeFromMarket32'){state.room='garage';save();showGame();setTimeout(()=>openHomeUnload32(carId),250);return}if(dest==='date33Home'){state.room='garage';save();showGame();toast('约会结束，安全到家 ♡');return}if(OUTING_DESTINATIONS[dest]){state.lastArrivalCarId=carId;save();openOutingLocation(dest,true);return}if(dest==='lake'){state.room='lake';showGame();toast('开到湖边了 ♡');return}if(dest==='fuel'){openRefuelGame(carId);return}if(dest==='wash'){openCarWashGame(carId);return}if(dest==='cafe'){adjustNeeds(driver,{mood:+8});if(together){adjustNeeds(carPartner(driver),{mood:+8});addLove(4,'Café 小约会')}modal('湖景 Café ☕',`<p>${together?'两个人一起':'你'}顺利到达 Café。驾驶 ${score}/100 · ${parkingResult}</p><button class="small-button" id="cafeDrink">买饮料 · 20 Coins</button>`);$('#cafeDrink').onclick=()=>{if(state.coins<20){toast('Coins 不够');return}state.coins-=20;adjustNeeds(driver,{mood:+5,hunger:-4});save();renderTaskUI();toast('喝饮料 ♡')};return}openDriveShop(carId,driver,together)}
 function openDriveShopLegacy(carId,driver,together){const car=state.cars[carId];modal('城市超市 🛒',`<p>买到的东西会先放进 <b>${car.plate}</b> 的后备箱，不会瞬间传送到冰箱。</p><div class="grid"><button class="card" data-buy="groceries">🥚 基础食材箱 · 120</button><button class="card" data-buy="seeds">🌱 种子包 ×8 · 70</button><button class="card" data-buy="bait">🎣 普通鱼饵 ×8 · 55</button><button class="card" data-buy="premium">🪱 高级鱼饵 ×2 · 100</button><button class="card" data-buy="pet">🐾 宠物食品 · 60</button></div><button class="small-button secondary" id="openBootAfterShop">查看后备箱</button>`);document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{const type=b.dataset.buy,cost={groceries:120,seeds:70,bait:55,premium:100,pet:60}[type],label={groceries:'基础食材箱',seeds:'种子包 ×8',bait:'普通鱼饵 ×8',premium:'高级鱼饵 ×2',pet:'宠物食品'}[type];if(state.coins<cost){toast('Coins 不够');return}state.coins-=cost;car.storage.boot.push({type,label,qty:1});save();renderTaskUI();toast(`${label} 已放进后备箱`) });$('#openBootAfterShop').onclick=()=>openCarStorage(carId,'boot')}
 function openDriveShop(carId,driver,together){return openSupermarket32({arrivedByCar:true,carId,driver,together});}
 function openCarStorage(carId,focus='boot',back=null){const car=state.cars[carId],areas=[['boot','后备箱'],['backSeat','后座'],['glove','手套箱'],['cups','杯架']];modal(`${car.plate} · 车内收纳`, `<div class="car10-storage-tabs">${areas.map(([id,n])=>`<button data-storage="${id}" class="${id===focus?'active':''}">${n}</button>`).join('')}</div><div id="carStorageList"></div>${state.room==='garage'?'<button class="small-button" id="unloadBoot">把后备箱购物搬进家里</button>':''}`);const render=a=>{focus=a;document.querySelectorAll('[data-storage]').forEach(b=>b.classList.toggle('active',b.dataset.storage===a));const list=car.storage[a]||[];$('#carStorageList').innerHTML=list.length?`<div class="car10-storage-list">${list.map((it,i)=>`<div><span>📦</span><b>${it.label||it.type}</b><small>×${it.qty||1}</small></div>`).join('')}</div>`:'<p class="empty-note">这里是空的。</p>'};document.querySelectorAll('[data-storage]').forEach(b=>b.onclick=()=>render(b.dataset.storage));$('#unloadBoot')?.addEventListener('click',()=>unloadCarBoot(carId));render(focus)}
@@ -3532,4 +3533,362 @@ function openSupermarket32(opts={}){
 
   render();
   requestAnimationFrame(frame);
+}
+
+
+/* =========================================================
+   MASTER 3.3 — RESTAURANT & CAFÉ DATE LIFE 1.0
+   Walkable venues + host seating + order + wait + serve +
+   eating interactions + bill + date score + memories.
+   ========================================================= */
+
+const DATE33_MENU=[{"id":"latte","en":"Vanilla Latte","cn":"香草拿铁","cat":"drink","price":14,"emoji":"☕","venue":"cafe","asset":"./assets/date33/menu/latte.svg"},{"id":"strawberry_latte","en":"Strawberry Latte","cn":"草莓拿铁","cat":"drink","price":16,"emoji":"🍓","venue":"cafe","asset":"./assets/date33/menu/strawberry_latte.svg"},{"id":"matcha_latte","en":"Matcha Latte","cn":"抹茶拿铁","cat":"drink","price":16,"emoji":"🍵","venue":"cafe","asset":"./assets/date33/menu/matcha_latte.svg"},{"id":"hot_chocolate","en":"Hot Chocolate","cn":"热巧克力","cat":"drink","price":15,"emoji":"🍫","venue":"cafe","asset":"./assets/date33/menu/hot_chocolate.svg"},{"id":"tiramisu","en":"Tiramisu","cn":"提拉米苏","cat":"dessert","price":18,"emoji":"🍰","venue":"cafe","asset":"./assets/date33/menu/tiramisu.svg"},{"id":"strawberry_cake","en":"Strawberry Cake","cn":"草莓蛋糕","cat":"dessert","price":19,"emoji":"🍓","venue":"cafe","asset":"./assets/date33/menu/strawberry_cake.svg"},{"id":"croffle","en":"Berry Croffle","cn":"莓果可颂华夫","cat":"dessert","price":17,"emoji":"🧇","venue":"cafe","asset":"./assets/date33/menu/croffle.svg"},{"id":"cream_pasta","en":"Cream Pasta","cn":"奶油意面","cat":"main","price":26,"emoji":"🍝","venue":"cafe","asset":"./assets/date33/menu/cream_pasta.svg"},{"id":"mushroom_soup","en":"Mushroom Soup","cn":"蘑菇浓汤","cat":"main","price":18,"emoji":"🍲","venue":"cafe","asset":"./assets/date33/menu/mushroom_soup.svg"},{"id":"grilled_salmon","en":"Grilled Salmon","cn":"香煎三文鱼","cat":"main","price":38,"emoji":"🐟","venue":"restaurant","asset":"./assets/date33/menu/grilled_salmon.svg"},{"id":"ribeye_steak","en":"Ribeye Steak","cn":"肋眼牛排","cat":"main","price":46,"emoji":"🥩","venue":"restaurant","asset":"./assets/date33/menu/ribeye_steak.svg"},{"id":"truffle_pasta","en":"Truffle Pasta","cn":"松露意面","cat":"main","price":36,"emoji":"🍝","venue":"restaurant","asset":"./assets/date33/menu/truffle_pasta.svg"},{"id":"tomato_soup","en":"Tomato Soup","cn":"番茄浓汤","cat":"starter","price":16,"emoji":"🍅","venue":"restaurant","asset":"./assets/date33/menu/tomato_soup.svg"},{"id":"caesar_salad","en":"Caesar Salad","cn":"凯撒沙拉","cat":"starter","price":20,"emoji":"🥗","venue":"restaurant","asset":"./assets/date33/menu/caesar_salad.svg"},{"id":"garlic_bread","en":"Garlic Bread","cn":"蒜香面包","cat":"starter","price":14,"emoji":"🥖","venue":"restaurant","asset":"./assets/date33/menu/garlic_bread.svg"},{"id":"sparkling_berry","en":"Sparkling Berry","cn":"莓果气泡饮","cat":"drink","price":16,"emoji":"🫐","venue":"restaurant","asset":"./assets/date33/menu/sparkling_berry.svg"},{"id":"lemon_soda","en":"Lemon Soda","cn":"柠檬苏打","cat":"drink","price":14,"emoji":"🍋","venue":"restaurant","asset":"./assets/date33/menu/lemon_soda.svg"},{"id":"chocolate_lava","en":"Chocolate Lava Cake","cn":"熔岩巧克力蛋糕","cat":"dessert","price":24,"emoji":"🍫","venue":"restaurant","asset":"./assets/date33/menu/chocolate_lava.svg"},{"id":"panna_cotta","en":"Berry Panna Cotta","cn":"莓果奶冻","cat":"dessert","price":22,"emoji":"🍮","venue":"restaurant","asset":"./assets/date33/menu/panna_cotta.svg"}];
+
+const DATE33_VENUES={
+ cafe:{
+  id:'cafe',name:'Brew & Bloom Café',icon:'☕',theme:'cafe',
+  subtitle:'Soft café date · coffee · cake · pasta',
+  tables:[
+   {id:'window',name:'Window Seat',cn:'窗边位',x:24,y:39,bonus:'view',icon:'🌸'},
+   {id:'sofa',name:'Couple Sofa',cn:'情侣沙发',x:61,y:43,bonus:'love',icon:'🛋️'},
+   {id:'patio',name:'Garden Patio',cn:'花园露台',x:75,y:69,bonus:'photo',icon:'🌿'}
+  ]
+ },
+ restaurant:{
+  id:'restaurant',name:'Riverside Bistro',icon:'🍽️',theme:'bistro',
+  subtitle:'Dinner date · steak · salmon · dessert',
+  tables:[
+   {id:'river',name:'Riverside Window',cn:'河景窗边',x:24,y:40,bonus:'view',icon:'🌙'},
+   {id:'booth',name:'Couple Booth',cn:'情侣卡座',x:58,y:43,bonus:'love',icon:'❤️'},
+   {id:'quiet',name:'Quiet Corner',cn:'安静角落',x:76,y:67,bonus:'talk',icon:'🕯️'}
+  ]
+ }
+};
+const DATE33_AUDIO={
+ ctx:null,amb:null,timer:null,on:true,
+ init(){try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;if(!this.ctx)this.ctx=new A();if(this.ctx.state==='suspended')this.ctx.resume()}catch(e){}},
+ tone(f=620,d=.07,g=.028,type='sine'){if(!this.on)return;this.init();if(!this.ctx)return;const o=this.ctx.createOscillator(),v=this.ctx.createGain();o.type=type;o.frequency.value=f;v.gain.value=.0001;o.connect(v);v.connect(this.ctx.destination);const t=this.ctx.currentTime;v.gain.exponentialRampToValueAtTime(g,t+.01);v.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.02)},
+ start(theme='cafe'){if(!this.on)return;this.init();if(!this.ctx||this.amb)return;const o=this.ctx.createOscillator(),g=this.ctx.createGain(),f=this.ctx.createBiquadFilter();o.type='sine';o.frequency.value=theme==='cafe'?98:82;g.gain.value=.002;f.type='lowpass';f.frequency.value=330;o.connect(f);f.connect(g);g.connect(this.ctx.destination);o.start();this.amb={o,g};this.timer=setInterval(()=>this.tone(theme==='cafe'?[523,659,784][Math.floor(Math.random()*3)]:[392,494,587][Math.floor(Math.random()*3)],.18,.004),4800)},
+ stop(){try{this.amb?.o.stop()}catch(e){}this.amb=null;if(this.timer)clearInterval(this.timer);this.timer=null}
+};
+function ensureDate33(){
+ state.date33=Object.assign({visits:0,memories:[],favoriteVenue:null,bestScore:0},state.date33||{});
+ state.date33.memories=Array.isArray(state.date33.memories)?state.date33.memories:[];
+}
+if(typeof CAR_ROUTES!=='undefined'&&!CAR_ROUTES.date33Home){
+ CAR_ROUTES.date33Home={name:'约会地点 → Home',km:5.4,difficulty:'EASY',parking:'NORMAL',icon:'🏠',desc:'吃完约会后安全开车回家',speedLimit:60,traffic:'normal',road:'住宅区'};
+}
+
+function openDateVenue33(venueId='cafe',opts={}){
+ ensureDate33();
+ document.querySelector('.outing-location-overlay')?.remove();closeOuting?.();
+ const venue=DATE33_VENUES[venueId]||DATE33_VENUES.cafe;
+ const driver=opts.driver||state.active,partner=driver==='elyn'?'shawn':'elyn';
+ const together=opts.together!==false,arrivedByCar=!!opts.arrivedByCar;
+ const carId=opts.carId&&state.cars?.[opts.carId]?opts.carId:null;
+ state.date33.visits++;state.date33.favoriteVenue=venueId;save();
+
+ let alive=true,last=performance.now(),player={x:50,y:88},target=null,targetAction=null;
+ let phase='arrival',table=null,order=[],serviceQuality=78+Math.floor(Math.random()*22),datePoints=0;
+ let actionsDone=new Set(),foodServed=false,paid=false;
+ const keys={};
+
+ const el=document.createElement('section');el.className=`date33-overlay ${venue.theme}`;
+ el.innerHTML=`
+ <div class="date33-shell">
+  <header class="date33-header">
+   <div class="date33-brand"><button id="date33Back">←</button><span>${venue.icon}</span><div><b>${venue.name}</b><small>${venue.subtitle}${arrivedByCar&&carId?` · 🚗 ${state.cars[carId].plate}`:''}</small></div></div>
+   <div class="date33-status"><div><small>PHASE</small><b id="date33Phase">ARRIVAL</b></div><div><small>DATE</small><b id="date33Pts">0 pts</b></div><div><small>COINS</small><b id="date33Coins">${state.coins} 🪙</b></div></div>
+   <button id="date33Sound">🔊</button>
+  </header>
+
+  <div class="date33-main">
+   <aside class="date33-left">
+    <div class="date33-mini-profile"><img src="${carActorImg(driver)}"><span><b>${carPersonName(driver)}</b><small>Host will seat you</small></span></div>
+    <div class="date33-mini-profile ${together?'':'hide'}"><img src="${carActorImg(partner)}"><span><b>${carPersonName(partner)}</b><small id="date33PartnerMood">期待约会 ♡</small></span></div>
+    <div class="date33-goals"><b>Date Moments</b><span id="d33g1">○ Choose a nice table</span><span id="d33g2">○ Order food & drink</span><span id="d33g3">○ Couple interaction</span><span id="d33g4">○ Pay the bill</span></div>
+    <div class="date33-tip" id="date33Tip">走向 Host Desk 开始。</div>
+   </aside>
+
+   <main class="date33-viewport" id="date33Viewport">
+    <div class="date33-world" id="date33World">
+     <div class="date33-back-wall">
+      <div class="date33-venue-logo">${venue.name}</div>
+      <div class="date33-window">
+       <span>${venueId==='cafe'?'🌸 🌿 ☁️':'🌃 🌙 ✨'}</span>
+       <i></i><i></i>
+      </div>
+      <div class="date33-counter">
+       <div class="machine">${venueId==='cafe'?'☕':'🍷'}</div><span></span><span></span><span></span>
+      </div>
+     </div>
+     <div class="date33-floor"></div>
+     <div class="date33-light one"></div><div class="date33-light two"></div>
+
+     <button class="date33-host-desk" id="date33Host">
+      <span>👩🏻‍💼</span><div><b>HOST</b><small>Table for two?</small></div>
+     </button>
+
+     ${venue.tables.map((t,i)=>`<button class="date33-table t${i+1}" data-date33-table="${t.id}" style="left:${t.x}%;top:${t.y}%">
+       <div class="date33-chair left"></div><div class="date33-tabletop"><span>🌷</span></div><div class="date33-chair right"></div>
+       <b>${t.icon} ${t.cn}</b>
+      </button>`).join('')}
+
+     <div class="date33-npc waiter"><span>🧑🏻‍🍳</span><i>🍽️</i></div>
+     <div class="date33-npc customer1">👩🏻</div><div class="date33-npc customer2">🧑🏻</div>
+
+     <div class="date33-serving-tray" id="date33Tray"></div>
+     <div class="date33-table-food" id="date33TableFood"></div>
+
+     <img id="date33Partner" class="date33-partner ${together?'':'hide'}" src="${carActorImg(partner)}">
+     <img id="date33Player" class="date33-player" src="${carActorImg(driver)}">
+     <div class="date33-bubble" id="date33Bubble">👋 Host Desk</div>
+    </div>
+
+    <div class="date33-mobile">
+     <div><button data-d33move="up">▲</button><span><button data-d33move="left">◀</button><button data-d33move="down">▼</button><button data-d33move="right">▶</button></span></div>
+     <button id="date33Action">👋 Talk to Host</button>
+    </div>
+   </main>
+
+   <aside class="date33-right">
+    <b>Your Date</b><div id="date33OrderMini"><p>No order yet.</p></div>
+    <div class="date33-score-bars"><span>Food <i><b id="d33FoodBar"></b></i></span><span>Mood <i><b id="d33MoodBar"></b></i></span><span>Couple <i><b id="d33LoveBar"></b></i></span></div>
+    <button id="date33MenuQuick" disabled>📖 Menu</button>
+   </aside>
+  </div>
+
+  <div class="date33-panel" id="date33Panel"></div>
+  <div class="date33-toast" id="date33Toast"></div>
+ </div>`;
+ document.body.appendChild(el);
+ DATE33_AUDIO.on=true;DATE33_AUDIO.start(venue.theme);
+
+ const $d=q=>el.querySelector(q),$$d=q=>[...el.querySelectorAll(q)];
+ const obstacles=venue.tables.map(t=>({x:t.x,y:t.y,w:14,h:11}));
+ function blocked(x,y){
+  if(x<5||x>95||y<18||y>94)return true;
+  if(x>7&&x<26&&y>70&&y<89)return true; // host
+  return obstacles.some(o=>x>o.x-o.w/2&&x<o.x+o.w/2&&y>o.y-o.h/2&&y<o.y+o.h/2);
+ }
+ function setTarget(x,y,action=null){x=Math.max(5,Math.min(95,x));y=Math.max(18,Math.min(94,y));if(blocked(x,y)&&!action)return;target={x,y};targetAction=action}
+ function toast(msg){const t=$d('#date33Toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t?.classList.remove('show'),1000)}
+ function setPhase(p,label){phase=p;$d('#date33Phase').textContent=label}
+ function addPts(n,msg){datePoints+=n;$d('#date33Pts').textContent=datePoints+' pts';if(msg)toast(`+${n} ${msg}`)}
+ function showPanel(inner,cls=''){const p=$d('#date33Panel');p.className='date33-panel open '+cls;p.innerHTML=inner}
+ function closePanel(){const p=$d('#date33Panel');p.className='date33-panel';p.innerHTML=''}
+ function tableById(id){return venue.tables.find(t=>t.id===id)}
+ function orderTotal(){return order.reduce((s,x)=>s+x.price,0)}
+ function menuForVenue(){return DATE33_MENU.filter(x=>x.venue===venueId)}
+ function moveToTable(t,after){setTarget(t.x,t.y+10,after)}
+ function hostTalk(){
+  setTarget(17,80,()=>{
+   DATE33_AUDIO.tone(610,.06,.025);setPhase('table','CHOOSE TABLE');
+   showPanel(`<div class="date33-host-panel"><div class="date33-host-face">👩🏻‍💼</div><div><small>HOST</small><h2>Welcome to ${venue.name}</h2><p>${together?'Table for two? Choose where you would like to sit.':'Choose a table.'}</p>
+   <div class="date33-table-options">${venue.tables.map(t=>`<button data-d33choose="${t.id}"><span>${t.icon}</span><b>${t.name}</b><small>${t.cn}</small></button>`).join('')}</div></div></div>`);
+   $$d('[data-d33choose]').forEach(b=>b.onclick=()=>chooseTable(b.dataset.d33choose));
+  });
+ }
+ function chooseTable(id){
+  table=tableById(id);if(!table)return;closePanel();addPts(80,'NICE TABLE');$d('#d33g1').textContent='✓ Choose a nice table';
+  $d('#date33Tip').textContent='Host 正在带你到座位。';
+  setPhase('seating','HOST SEATING');
+  moveToTable(table,()=>seatSequence());
+ }
+ function seatSequence(){
+  const tb=$d(`[data-date33-table="${table.id}"]`);tb?.classList.add('chosen','pull-chair');
+  $d('#date33Player').classList.add('sitting');
+  if(together)$d('#date33Partner').classList.add('sitting');
+  DATE33_AUDIO.tone(380,.05,.018);
+  setTimeout(()=>{tb?.classList.add('chair-in');$d('#date33Tip').textContent='坐好了。现在打开菜单点餐。';setPhase('menu','ORDERING');$d('#date33MenuQuick').disabled=false;openMenu()},650);
+ }
+ function openMenu(){
+  if(!table)return;
+  const menu=menuForVenue(),cats=[...new Set(menu.map(x=>x.cat))];
+  showPanel(`<div class="date33-menu-panel">
+   <header><div><small>${venue.name}</small><h2>Menu</h2></div><div><b id="d33MenuTotal">${orderTotal()} 🪙</b><button id="d33MenuClose">×</button></div></header>
+   <div class="date33-menu-tabs">${cats.map((c,i)=>`<button data-d33cat="${c}" class="${i===0?'active':''}">${c==='starter'?'Starter':c==='main'?'Main':c==='drink'?'Drinks':'Dessert'}</button>`).join('')}</div>
+   <div class="date33-menu-grid" id="d33MenuGrid"></div>
+   <footer><span>建议：至少选 1 个主食 + 1 杯饮料${together?'，甜品可以一起分享 ♡':''}</span><button id="d33ConfirmOrder">Send Order</button></footer>
+  </div>`,'menu');
+  let cat=cats[0];
+  const renderMenu=()=>{
+   $d('#d33MenuGrid').innerHTML=menu.filter(x=>x.cat===cat).map(x=>`<button data-d33item="${x.id}" class="${order.some(o=>o.id===x.id)?'selected':''}">
+    <img src="${x.asset}"><div><b>${x.en}</b><small>${x.cn}</small><strong>${x.price} 🪙</strong></div><span>${order.some(o=>o.id===x.id)?'✓':'+'}</span>
+   </button>`).join('');
+   $$d('[data-d33item]').forEach(b=>b.onclick=()=>{const it=DATE33_MENU.find(x=>x.id===b.dataset.d33item);const found=order.findIndex(o=>o.id===it.id);if(found>=0)order.splice(found,1);else order.push(it);DATE33_AUDIO.tone(found>=0?430:760,.05,.02);$d('#d33MenuTotal').textContent=orderTotal()+' 🪙';renderMenu();renderOrderMini()});
+  };
+  $$d('[data-d33cat]').forEach(b=>b.onclick=()=>{cat=b.dataset.d33cat;$$d('[data-d33cat]').forEach(x=>x.classList.toggle('active',x===b));renderMenu()});
+  $d('#d33MenuClose').onclick=closePanel;
+  $d('#d33ConfirmOrder').onclick=()=>{
+   const hasFood=order.some(o=>o.cat==='main'||o.cat==='starter'),hasDrink=order.some(o=>o.cat==='drink');
+   if(!hasFood||!hasDrink){toast('至少选一份食物 + 一杯饮料。');return}
+   if(orderTotal()>state.coins){toast('Coins 不够。');return}
+   closePanel();$d('#d33g2').textContent='✓ Order food & drink';addPts(100,'ORDER COMPLETE');beginWaiting();
+  };
+  renderMenu();
+ }
+ function renderOrderMini(){
+  $d('#date33OrderMini').innerHTML=order.length?order.map(o=>`<div><img src="${o.asset}"><span><b>${o.cn}</b><small>${o.price}🪙</small></span></div>`).join(''):'<p>No order yet.</p>';
+ }
+ function beginWaiting(){
+  setPhase('waiting','WAITING');$d('#date33Tip').textContent='厨房正在准备。等待时可以聊天。';
+  let progress=0,done=false;
+  showPanel(`<div class="date33-wait">
+   <div class="date33-kitchen-window"><span>👨🏻‍🍳</span><i>🍳</i><i>🔥</i><i>🥣</i></div>
+   <div><small>ORDER SENT</small><h2>Your food is being prepared…</h2><div class="date33-wait-bar"><i id="d33WaitBar"></i></div><p id="d33WaitText">Kitchen 0%</p>
+   <div class="date33-wait-actions"><button data-d33wait="talk">💬 Talk</button><button data-d33wait="hands">🤝 Hold Hands</button><button data-d33wait="photo">📷 Quick Photo</button></div></div>
+  </div>`,'waiting');
+  $$d('[data-d33wait]').forEach(b=>b.onclick=()=>{
+   if(actionsDone.has('wait_'+b.dataset.d33wait))return;
+   actionsDone.add('wait_'+b.dataset.d33wait);
+   if(b.dataset.d33wait==='talk'){addPts(55,'GOOD CONVERSATION');$d('#date33PartnerMood').textContent='聊得很开心 ♡'}
+   if(b.dataset.d33wait==='hands'){addPts(65,'SWEET MOMENT');if(together)addLove(2,'约会牵手')}
+   if(b.dataset.d33wait==='photo'){addPts(45,'DATE PHOTO')}
+   b.classList.add('done');DATE33_AUDIO.tone(720,.06,.02);
+  });
+  const iv=setInterval(()=>{
+   if(!document.body.contains(el)){clearInterval(iv);return}
+   progress+=7+Math.random()*7;progress=Math.min(100,progress);
+   const bar=$d('#d33WaitBar'),txt=$d('#d33WaitText');if(bar)bar.style.width=progress+'%';if(txt)txt.textContent=`Kitchen ${Math.round(progress)}%`;
+   if(progress>=100&&!done){done=true;clearInterval(iv);closePanel();serveFood()}
+  },360);
+ }
+ function serveFood(){
+  setPhase('serving','SERVING');const tray=$d('#date33Tray');tray.innerHTML=order.map(o=>`<img src="${o.asset}">`).join('');tray.classList.add('serve');
+  $d('#date33Tip').textContent='Waiter 正在把餐点送来。';
+  DATE33_AUDIO.tone(620,.06,.022);
+  setTimeout(()=>{
+   tray.classList.remove('serve');tray.innerHTML='';foodServed=true;
+   const food=$d('#date33TableFood');food.innerHTML=order.map(o=>`<img src="${o.asset}" title="${o.cn}">`).join('');food.classList.add('show');
+   setPhase('eating','DINING');$d('#date33Tip').textContent='餐点到了。选择互动，完成这次约会。';openEating();
+  },1150);
+ }
+ function openEating(){
+  showPanel(`<div class="date33-eat-panel">
+   <header><div><small>FOOD SERVED</small><h2>Enjoy your date ♡</h2></div><span>${venueId==='cafe'?'☕🌸':'🍽️✨'}</span></header>
+   <div class="date33-eat-actions">
+    <button data-d33eat="eat"><span>🍴</span><b>Eat</b><small>真正开始吃饭</small></button>
+    <button data-d33eat="drink"><span>🥤</span><b>Take a Sip</b><small>喝一口饮料</small></button>
+    <button data-d33eat="feed" ${together?'':'disabled'}><span>🥄</span><b>Feed Partner</b><small>喂对方一口 ♡</small></button>
+    <button data-d33eat="share" ${order.some(o=>o.cat==='dessert')&&together?'':'disabled'}><span>🍰</span><b>Share Dessert</b><small>一起吃甜品</small></button>
+    <button data-d33eat="talk"><span>💬</span><b>Conversation</b><small>聊天小互动</small></button>
+    <button data-d33eat="photo"><span>📷</span><b>Take Photo</b><small>保存 Date Memory</small></button>
+   </div>
+   <footer><span id="d33EatCount">0 / 3 moments</span><button id="d33AskBill" disabled>Ask for Bill</button></footer>
+  </div>`,'eating');
+  const completeAction=(act)=>{
+   if(actionsDone.has('eat_'+act))return;actionsDone.add('eat_'+act);
+   const p=$d('#date33Player'),pa=$d('#date33Partner');
+   p.classList.add('date-action',act);if(together)pa.classList.add('date-action',act);
+   setTimeout(()=>{p?.classList.remove('date-action',act);pa?.classList.remove('date-action',act)},650);
+   if(act==='eat'){addPts(60,'DINING');adjustNeeds(driver,{hunger:-38,mood:+6});if(together)adjustNeeds(partner,{hunger:-34,mood:+6})}
+   if(act==='drink'){addPts(35,'DRINK')}
+   if(act==='feed'){addPts(85,'CUTE MOMENT');addLove(3,'约会喂一口')}
+   if(act==='share'){addPts(90,'SHARED DESSERT');addLove(3,'一起分享甜品')}
+   if(act==='talk'){addPts(60,'CONVERSATION');if(together)addLove(2,'约会聊天')}
+   if(act==='photo'){addPts(70,'DATE PHOTO')}
+   DATE33_AUDIO.tone(720+actionsDone.size*22,.06,.025);
+   const n=[...actionsDone].filter(x=>x.startsWith('eat_')).length;
+   $d('#d33EatCount').textContent=`${Math.min(3,n)} / 3 moments`;
+   if(n>=3){$d('#d33AskBill').disabled=false;$d('#d33g3').textContent='✓ Couple interaction'}
+   const b=$d(`[data-d33eat="${act}"]`);b?.classList.add('done');
+  };
+  $$d('[data-d33eat]').forEach(b=>b.onclick=()=>{if(!b.disabled)completeAction(b.dataset.d33eat)});
+  $d('#d33AskBill').onclick=()=>openBill();
+ }
+ function openBill(){
+  setPhase('bill','BILL');
+  const sub=orderTotal(),service=Math.round(sub*.06),total=sub+service;
+  const foodScore=Math.min(100,72+order.filter(x=>x.cat==='main').length*8+order.filter(x=>x.cat==='dessert').length*6);
+  const coupleScore=Math.min(100,55+[...actionsDone].filter(x=>x.startsWith('eat_')).length*9+(table?.bonus==='love'?8:0));
+  const moodScore=Math.min(100,serviceQuality+(table?.bonus==='view'?5:0));
+  const dateScore=Math.round(foodScore*.35+coupleScore*.40+moodScore*.25);
+  $d('#d33FoodBar').style.width=foodScore+'%';$d('#d33MoodBar').style.width=moodScore+'%';$d('#d33LoveBar').style.width=coupleScore+'%';
+  showPanel(`<div class="date33-bill">
+   <div class="date33-receipt">
+    <small>${venue.name.toUpperCase()}</small><h2>YOUR BILL</h2>
+    ${order.map(o=>`<span>${o.cn}<b>${o.price} 🪙</b></span>`).join('')}
+    <hr><span>Subtotal<b>${sub} 🪙</b></span><span>Service 6%<b>${service} 🪙</b></span><strong>Total<b>${total} 🪙</b></strong>
+   </div>
+   <div class="date33-bill-score"><small>DATE SCORE</small><h1>${dateScore}<i>/100</i></h1>
+    <div><span>Food <b>${foodScore}</b></span><span>Mood & Service <b>${moodScore}</b></span><span>Couple Moments <b>${coupleScore}</b></span></div>
+    <p>${dateScore>=90?'Perfect date ♡':dateScore>=80?'Sweet date ♡':dateScore>=70?'Nice time together':'A simple little date'}</p>
+    <button id="d33Pay" ${state.coins<total?'disabled':''}>${state.coins<total?'Coins 不够':'Pay '+total+' 🪙'}</button>
+    <button id="d33BillBack">继续坐一下</button>
+   </div>
+  </div>`,'bill');
+  $d('#d33BillBack').onclick=()=>{closePanel();openEating()};
+  $d('#d33Pay')?.addEventListener('click',()=>{
+   if(state.coins<total)return;
+   state.coins-=total;state.xpTotal+=Math.round(dateScore*.35);
+   if(together)addLove(Math.max(2,Math.round(dateScore/20)),'Restaurant/Café Date');
+   const memory={id:'date_'+Date.now(),venue:venue.name,venueId,score:dateScore,table:table?.name||'',items:order.map(o=>o.id),time:Date.now(),photo:actionsDone.has('eat_photo')};
+   state.date33.memories.unshift(memory);state.date33.memories=state.date33.memories.slice(0,20);state.date33.bestScore=Math.max(state.date33.bestScore||0,dateScore);save();renderTaskUI?.();
+   paid=true;$d('#d33g4').textContent='✓ Pay the bill';DATE33_AUDIO.tone(920,.08,.04);setTimeout(()=>DATE33_AUDIO.tone(1180,.11,.035),90);
+   closePanel();showDateResult33({venue,venueId,dateScore,total,foodScore,moodScore,coupleScore,memory,arrivedByCar,carId,driver,together,el});
+  });
+ }
+ function updateContext(){
+  const bubble=$d('#date33Bubble'),action=$d('#date33Action');
+  if(phase==='arrival'){bubble.textContent='👋 Talk to Host';bubble.classList.add('show');action.textContent='👋 Talk to Host';return}
+  if(phase==='menu'||phase==='waiting'||phase==='eating'||phase==='bill'){bubble.classList.remove('show');action.textContent=phase==='menu'?'📖 Menu':phase==='eating'?'🍴 Date Actions':'♡';return}
+  bubble.classList.remove('show');
+ }
+
+ $d('#date33Host').onclick=e=>{e.stopPropagation();if(phase==='arrival')hostTalk()};
+ $$d('[data-date33-table]').forEach(b=>b.onclick=e=>{e.stopPropagation();if(phase==='table')chooseTable(b.dataset.date33Table)});
+ $d('#date33Action').onclick=()=>{if(phase==='arrival')hostTalk();else if(phase==='menu')openMenu();else if(phase==='eating')openEating()};
+ $d('#date33MenuQuick').onclick=openMenu;
+ $d('#date33Sound').onclick=()=>{DATE33_AUDIO.on=!DATE33_AUDIO.on;$d('#date33Sound').textContent=DATE33_AUDIO.on?'🔊':'🔇';if(DATE33_AUDIO.on)DATE33_AUDIO.start(venue.theme);else DATE33_AUDIO.stop()};
+ function cleanup(){alive=false;DATE33_AUDIO.stop();window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
+ $d('#date33Back').onclick=()=>{cleanup();el.remove();openOutingMap(venueId)};
+
+ function kd(e){const k=e.key.toLowerCase();if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){keys[k]=true;e.preventDefault()}}
+ function ku(e){keys[e.key.toLowerCase()]=false}
+ window.addEventListener('keydown',kd);window.addEventListener('keyup',ku);
+ $$d('[data-d33move]').forEach(b=>{const k=b.dataset.d33move;b.onpointerdown=e=>{e.preventDefault();keys['touch_'+k]=true;b.setPointerCapture?.(e.pointerId)};b.onpointerup=()=>keys['touch_'+k]=false;b.onpointercancel=()=>keys['touch_'+k]=false});
+ $d('#date33Viewport').addEventListener('pointerdown',e=>{
+  if(e.target.closest('button,.date33-mobile'))return;
+  const r=$d('#date33Viewport').getBoundingClientRect(),dx=(e.clientX-(r.left+r.width/2))/r.width*45,dy=(e.clientY-(r.top+r.height*.6))/r.height*35;
+  setTarget(player.x+dx,player.y+dy);
+ });
+
+ function loop(now){
+  if(!alive)return;const dt=Math.min(.04,Math.max(.001,(now-last)/1000));last=now;
+  if(!['seating','menu','waiting','eating','bill'].includes(phase)){
+   let dx=((keys.d||keys.arrowright||keys.touch_right)?1:0)-((keys.a||keys.arrowleft||keys.touch_left)?1:0),dy=((keys.s||keys.arrowdown||keys.touch_down)?1:0)-((keys.w||keys.arrowup||keys.touch_up)?1:0);
+   if(dx||dy){target=null;targetAction=null;const m=Math.hypot(dx,dy)||1;dx/=m;dy/=m;const nx=player.x+dx*dt*20,ny=player.y+dy*dt*20;if(!blocked(nx,player.y))player.x=nx;if(!blocked(player.x,ny))player.y=ny}
+  }
+  if(target){
+   const dx=target.x-player.x,dy=target.y-player.y,d=Math.hypot(dx,dy);
+   if(d<.8){player={...target};target=null;const a=targetAction;targetAction=null;a?.()}
+   else{const st=Math.min(d,dt*22),nx=player.x+dx/d*st,ny=player.y+dy/d*st;if(!blocked(nx,player.y)||targetAction)player.x=nx;if(!blocked(player.x,ny)||targetAction)player.y=ny}
+  }
+  player.x=Math.max(5,Math.min(95,player.x));player.y=Math.max(18,Math.min(94,player.y));
+  const scale=.80+player.y*.0037,p=$d('#date33Player');p.style.left=player.x+'%';p.style.top=player.y+'%';if(!p.classList.contains('sitting'))p.style.transform=`translate(-50%,-88%) scale(${scale})`;
+  if(together){const pa=$d('#date33Partner');pa.style.left=(player.x+3.7)+'%';pa.style.top=(player.y+1.2)+'%';if(!pa.classList.contains('sitting'))pa.style.transform=`translate(-50%,-88%) scale(${scale*.96})`}
+  updateContext();requestAnimationFrame(loop);
+ }
+ requestAnimationFrame(loop);
+}
+
+function showDateResult33(ctx){
+ const {venue,dateScore,total,memory,arrivedByCar,carId,driver,together,el}=ctx;
+ const layer=document.createElement('div');layer.className='date33-result';
+ layer.innerHTML=`<div class="date33-result-card">
+  <div class="date33-polaroid"><span>${venue.icon}</span><b>${venue.name}</b><small>${new Date(memory.time).toLocaleDateString()}</small></div>
+  <small>DATE COMPLETE</small><h1>${dateScore}/100</h1>
+  <p>${dateScore>=90?'Perfect Date ✨':dateScore>=80?'Sweet Date ♡':dateScore>=70?'Nice Date':'Little Date Memory'}</p>
+  <div class="date33-memory"><b>Memory Saved</b><span>${memory.table}${memory.photo?' · 📷 Photo Moment':''}</span></div>
+  <strong>Bill −${total} 🪙 · +${Math.round(dateScore*.35)} XP</strong>
+  <div class="date33-result-actions">
+   <button id="d33Stay">再坐一下</button>
+   ${arrivedByCar&&carId?'<button id="d33DriveHome">🚗 开车回家</button>':'<button id="d33Home">🏠 回家</button>'}
+  </div>
+ </div>`;
+ el.querySelector('.date33-shell').appendChild(layer);
+ layer.querySelector('#d33Stay').onclick=()=>layer.remove();
+ if(arrivedByCar&&carId)layer.querySelector('#d33DriveHome').onclick=()=>{DATE33_AUDIO.stop();el.remove();prepareCarTrip(carId,'date33Home',driver,together)};
+ else layer.querySelector('#d33Home').onclick=()=>{DATE33_AUDIO.stop();el.remove();state.room='living';save();showGame();toast('约会结束 ♡')};
 }

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 180 200">
+    <rect width="180" height="200" rx="30" fill="#f3e0bd"/>
+    <circle cx="48" cy="36" r="16" fill="#bd8652" opacity=".12"/>
+    <circle cx="139" cy="52" r="11" fill="#bd8652" opacity=".10"/>
+    <ellipse cx="90" cy="116" rx="60" ry="22" fill="#d6c9be"/>
+        <ellipse cx="90" cy="106" rx="54" ry="29" fill="#fffaf4" stroke="#bd8652" stroke-width="5"/>
+        <ellipse cx="90" cy="104" rx="44" ry="21" fill="#bd8652" opacity=".75"/>
+    <text x="90" y="111" text-anchor="middle" font-size="31">🥖</text>
+    <rect x="18" y="154" width="144" height="32" rx="16" fill="#fff" opacity=".9"/>
+    <text x="90" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#3e3531">Garlic Bread</text>
+    <text x="90" y="181" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#796c64">蒜香面包</text>
+    </svg>

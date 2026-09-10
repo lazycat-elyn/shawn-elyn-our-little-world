@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 180 200">
+    <rect width="180" height="200" rx="30" fill="#ead8c6"/>
+    <circle cx="57" cy="45" r="15" fill="#9a6d4d" opacity=".12"/>
+    <circle cx="130" cy="51" r="8" fill="#9a6d4d" opacity=".10"/>
+    <path d="M60 42 H120 L112 132 Q90 145 68 132 Z" fill="#fffaf4" stroke="#9a6d4d" stroke-width="5"/>
+        <path d="M66 60 H114 L108 119 Q90 130 72 119 Z" fill="#9a6d4d" opacity=".72"/>
+        <path d="M120 63 Q143 66 134 96 Q130 108 115 106" fill="none" stroke="#9a6d4d" stroke-width="6"/>
+    <text x="90" y="111" text-anchor="middle" font-size="31">☕</text>
+    <rect x="18" y="154" width="144" height="32" rx="16" fill="#fff" opacity=".9"/>
+    <text x="90" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#3e3531">Vanilla Latte</text>
+    <text x="90" y="181" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#796c64">香草拿铁</text>
+    </svg>

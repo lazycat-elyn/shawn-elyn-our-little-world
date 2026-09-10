@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 180 200">
+    <rect width="180" height="200" rx="30" fill="#f4ead7"/>
+    <circle cx="36" cy="42" r="14" fill="#aa8a59" opacity=".12"/>
+    <circle cx="133" cy="46" r="7" fill="#aa8a59" opacity=".10"/>
+    <ellipse cx="90" cy="119" rx="64" ry="21" fill="#d6c9be" opacity=".7"/>
+        <ellipse cx="90" cy="105" rx="59" ry="31" fill="#fffaf4" stroke="#aa8a59" stroke-width="5"/>
+        <path d="M55 104 Q74 72 91 103 T126 103 Q110 126 90 126 Q70 126 55 104Z" fill="#aa8a59" opacity=".82"/>
+    <text x="90" y="111" text-anchor="middle" font-size="31">🍝</text>
+    <rect x="18" y="154" width="144" height="32" rx="16" fill="#fff" opacity=".9"/>
+    <text x="90" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#3e3531">Cream Pasta</text>
+    <text x="90" y="181" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#796c64">奶油意面</text>
+    </svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 180 200">
+    <rect width="180" height="200" rx="30" fill="#deebd5"/>
+    <circle cx="57" cy="45" r="15" fill="#6f9b65" opacity=".12"/>
+    <circle cx="130" cy="49" r="10" fill="#6f9b65" opacity=".10"/>
+    <ellipse cx="90" cy="116" rx="60" ry="22" fill="#d6c9be"/>
+        <ellipse cx="90" cy="106" rx="54" ry="29" fill="#fffaf4" stroke="#6f9b65" stroke-width="5"/>
+        <ellipse cx="90" cy="104" rx="44" ry="21" fill="#6f9b65" opacity=".75"/>
+    <text x="90" y="111" text-anchor="middle" font-size="31">🥗</text>
+    <rect x="18" y="154" width="144" height="32" rx="16" fill="#fff" opacity=".9"/>
+    <text x="90" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#3e3531">Caesar Salad</text>
+    <text x="90" y="181" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#796c64">凯撒沙拉</text>
+    </svg>

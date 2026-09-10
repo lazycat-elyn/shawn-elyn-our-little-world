@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 180 200">
+    <rect width="180" height="200" rx="30" fill="#f3e2e8"/>
+    <circle cx="32" cy="44" r="10" fill="#b96e8b" opacity=".12"/>
+    <circle cx="131" cy="44" r="11" fill="#b96e8b" opacity=".10"/>
+    <ellipse cx="90" cy="129" rx="57" ry="13" fill="#d6c9be" opacity=".65"/>
+        <path d="M48 76 L132 76 L117 124 L63 124 Z" fill="#b96e8b" opacity=".86"/>
+        <path d="M53 66 Q90 53 127 66 L132 78 H48 Z" fill="#fffaf4" stroke="#b96e8b" stroke-width="4"/>
+    <text x="90" y="111" text-anchor="middle" font-size="31">🍮</text>
+    <rect x="18" y="154" width="144" height="32" rx="16" fill="#fff" opacity=".9"/>
+    <text x="90" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#3e3531">Berry Panna Cotta</text>
+    <text x="90" y="181" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#796c64">莓果奶冻</text>
+    </svg>

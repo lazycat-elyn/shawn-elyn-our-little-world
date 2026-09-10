@@ -1,0 +1,20 @@
+{
+  "node_syntax": "OK",
+  "go_out_cafe_restaurant_redirect": true,
+  "two_venues": true,
+  "walkable_scene": true,
+  "host_seating": true,
+  "menu_order": true,
+  "unique_menu_assets": 19,
+  "waiting_interactions": true,
+  "serving_animation": true,
+  "eating_interactions": true,
+  "bill_and_date_score": true,
+  "memory_saved": true,
+  "drive_home": true,
+  "mobile": true,
+  "supermarket_preserved": true,
+  "racing_preserved": true,
+  "fishing_preserved": true,
+  "clean_character_mode_preserved": true
+}

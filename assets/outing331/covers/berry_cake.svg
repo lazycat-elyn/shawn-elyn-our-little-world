@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8dce5"/><stop offset="1" stop-color="#fffaf5"/></linearGradient>
+      </defs>
+      <rect width="520" height="300" rx="30" fill="url(#g)"/>
+      <circle cx="56" cy="54" r="8" fill="#c86685" opacity=".12"/><circle cx="109" cy="85" r="9" fill="#c86685" opacity=".12"/><circle cx="162" cy="116" r="10" fill="#c86685" opacity=".12"/><circle cx="215" cy="32" r="11" fill="#c86685" opacity=".12"/><circle cx="268" cy="63" r="12" fill="#c86685" opacity=".12"/><circle cx="321" cy="94" r="13" fill="#c86685" opacity=".12"/><circle cx="74" cy="125" r="14" fill="#c86685" opacity=".12"/>
+      <rect x="18" y="160" width="484" height="125" rx="24" fill="#fff8f2" stroke="#c86685" stroke-width="4"/>
+      <path d="M25 80 H335 L315 115 H45 Z" fill="#c86685" opacity=".85"/><path d="M55 80 v35 M95 80 v35 M135 80 v35 M175 80 v35 M215 80 v35 M255 80 v35 M295 80 v35" stroke="#fff7f2" stroke-width="12"/>
+      <rect x="70" y="138" width="380" height="84" rx="18" fill="#fffaf6" stroke="#c86685" stroke-width="5"/>
+      <rect x="95" y="158" width="108" height="64" rx="10" fill="#f8dce5"/>
+      <rect x="317" y="158" width="108" height="64" rx="10" fill="#f8dce5"/>
+      <circle cx="260" cy="184" r="34" fill="#c86685" opacity=".18"/>
+      <text x="260" y="194" text-anchor="middle" font-size="36">🍰</text>
+      <text x="260" y="247" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#493b36">Berry Cake Studio</text>
+      <text x="260" y="270" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#7a6861">Strawberry cakes</text>
+    </svg>

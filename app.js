@@ -632,7 +632,7 @@ function openOutingMap(selected='supermarket'){
 function outingReward(coins=0,xp=0,love=0,msg='完成活动 ♡'){state.coins+=coins;state.xpTotal+=xp;if(love)addLove(love,'一起出游');save();renderTaskUI();renderNeedsUI();rewardPop(`${msg}${coins?` · +${coins}🪙`:''}${xp?` +${xp}XP`:''}`)}
 function openOutingLocation(id,arrivedByCar=false){
  if(id==='supermarket')return openSupermarket32({arrivedByCar,carId:arrivedByCar?state.lastArrivalCarId:null,driver:state.active,together:true});
- if(id==='cafe'||id==='restaurant')return openDateVenue33(id,{arrivedByCar,carId:arrivedByCar?state.lastArrivalCarId:null,driver:state.active,together:true});
+ if(id==='cafe'||id==='restaurant'||(typeof DATE33_VENUES!=='undefined'&&DATE33_VENUES[id]))return openDateVenue33(id,{arrivedByCar,carId:arrivedByCar?state.lastArrivalCarId:null,driver:state.active,together:true});
  closeOuting();const o=OUTING_DESTINATIONS[id];if(!o)return;state.lastOuting=id;save();
  const actionSets={
   supermarket:[['🛒 买一篮食材 · 120 Coins','groceries'],['🥤 买饮料 · 25 Coins','drink']],
@@ -3593,7 +3593,7 @@ function openDateVenue33(venueId='cafe',opts={}){
  let actionsDone=new Set(),foodServed=false,paid=false;
  const keys={};
 
- const el=document.createElement('section');el.className=`date33-overlay ${venue.theme}`;
+ const el=document.createElement('section');el.className=`date33-overlay ${venue.theme} venue-${venueId}`;
  el.innerHTML=`
  <div class="date33-shell">
   <header class="date33-header">
@@ -3721,7 +3721,7 @@ function openDateVenue33(venueId='cafe',opts={}){
   $$d('[data-d33cat]').forEach(b=>b.onclick=()=>{cat=b.dataset.d33cat;$$d('[data-d33cat]').forEach(x=>x.classList.toggle('active',x===b));renderMenu()});
   $d('#d33MenuClose').onclick=closePanel;
   $d('#d33ConfirmOrder').onclick=()=>{
-   const hasFood=order.some(o=>o.cat==='main'||o.cat==='starter'),hasDrink=order.some(o=>o.cat==='drink');
+   const hasFood=order.some(o=>o.cat==='main'||o.cat==='starter'||o.cat==='dessert'),hasDrink=order.some(o=>o.cat==='drink');
    if(!hasFood||!hasDrink){toast('至少选一份食物 + 一杯饮料。');return}
    if(orderTotal()>state.coins){toast('Coins 不够。');return}
    closePanel();$d('#d33g2').textContent='✓ Order food & drink';addPts(100,'ORDER COMPLETE');beginWaiting();
@@ -3892,3 +3892,170 @@ function showDateResult33(ctx){
  if(arrivedByCar&&carId)layer.querySelector('#d33DriveHome').onclick=()=>{DATE33_AUDIO.stop();el.remove();prepareCarTrip(carId,'date33Home',driver,together)};
  else layer.querySelector('#d33Home').onclick=()=>{DATE33_AUDIO.stop();el.remove();state.room='living';save();showGame();toast('约会结束 ♡')};
 }
+
+
+/* =========================================================
+   MASTER 3.3.1 — GO OUT UI REDESIGN + CAFÉ & DESSERT WORLD
+   ========================================================= */
+
+const OUT331_SHOPS=[{"id":"fluffed","name":"Fluffed","group":"cafe","subtitle":"Soufflé pancakes · waffles · cozy date","budget":"RM18–35","tags":["soufflé","sweet","cozy"],"icon":"🥞","cover":"./assets/outing331/covers/fluffed.svg","distance":2.0,"vibe":"Romantic","time":"Afternoon"},{"id":"brew_bloom","name":"Brew & Bloom Café","group":"cafe","subtitle":"Flowers · latte · brunch · date spot","budget":"RM14–32","tags":["flowers","latte","brunch"],"icon":"☕","cover":"./assets/outing331/covers/brew_bloom.svg","distance":2.8,"vibe":"Cozy","time":"Afternoon"},{"id":"lakeview_cafe","name":"Lakeview Café","group":"cafe","subtitle":"Lake view · coffee · sunset tables","budget":"RM12–30","tags":["lake","sunset","photo"],"icon":"🌊","cover":"./assets/outing331/covers/lakeview_cafe.svg","distance":3.6,"vibe":"Cute","time":"Evening"},{"id":"moonlight_cafe","name":"Moonlight Café","group":"cafe","subtitle":"Night lights · soft drinks · desserts","budget":"RM15–34","tags":["night","romantic","dessert"],"icon":"🌙","cover":"./assets/outing331/covers/moonlight_cafe.svg","distance":4.4,"vibe":"Romantic","time":"Evening"},{"id":"sunday_roast","name":"Sunday Roast Café","group":"cafe","subtitle":"Croffle · latte · brunch plates","budget":"RM16–36","tags":["brunch","croffle","latte"],"icon":"🥐","cover":"./assets/outing331/covers/sunday_roast.svg","distance":5.2,"vibe":"Cozy","time":"Afternoon"},{"id":"little_corner","name":"Little Corner Café","group":"cafe","subtitle":"Quiet reading café · calm couple time","budget":"RM10–26","tags":["quiet","books","budget"],"icon":"📚","cover":"./assets/outing331/covers/little_corner.svg","distance":6.0,"vibe":"Cute","time":"Afternoon"},{"id":"snow_blossom","name":"Snow Blossom Bingsu","group":"dessert","subtitle":"Korean bingsu · fruit · soft snow ice","budget":"RM16–32","tags":["bingsu","korean","cold"],"icon":"🍧","cover":"./assets/outing331/covers/snow_blossom.svg","distance":2.3,"vibe":"Romantic","time":"Evening"},{"id":"sweet_bean","name":"Sweet Bean Bingsu House","group":"dessert","subtitle":"Red bean · matcha · mango bingsu","budget":"RM15–30","tags":["bingsu","matcha","share"],"icon":"🍨","cover":"./assets/outing331/covers/sweet_bean.svg","distance":3.1,"vibe":"Cozy","time":"Evening"},{"id":"gelato_garden","name":"Gelato Garden","group":"dessert","subtitle":"Choose flavours · double scoops · garden seats","budget":"RM10–24","tags":["gelato","garden","cute"],"icon":"🍦","cover":"./assets/outing331/covers/gelato_garden.svg","distance":3.9,"vibe":"Cute","time":"Afternoon"},{"id":"berry_cake","name":"Berry Cake Studio","group":"dessert","subtitle":"Strawberry cakes · mille crêpe · photo spot","budget":"RM14–30","tags":["cake","berry","photo"],"icon":"🍰","cover":"./assets/outing331/covers/berry_cake.svg","distance":4.7,"vibe":"Romantic","time":"Afternoon"},{"id":"honey_toast","name":"Honey Toast House","group":"dessert","subtitle":"Honey toast · ice cream · milkshakes","budget":"RM16–34","tags":["toast","ice cream","share"],"icon":"🍞","cover":"./assets/outing331/covers/honey_toast.svg","distance":5.5,"vibe":"Cozy","time":"Evening"},{"id":"mochi_matcha","name":"Mochi & Matcha","group":"dessert","subtitle":"Matcha parfait · mochi · tea","budget":"RM12–28","tags":["matcha","mochi","japanese"],"icon":"🍵","cover":"./assets/outing331/covers/mochi_matcha.svg","distance":6.3,"vibe":"Cute","time":"Evening"}];
+const DATE331_MENU=[{"id":"berry_souffle","en":"Berry Soufflé","cn":"莓果舒芙蕾","cat":"dessert","price":24,"emoji":"🥞","venue":"fluffed","asset":"./assets/date331/menu/berry_souffle.svg"},{"id":"matcha_souffle","en":"Matcha Soufflé","cn":"抹茶舒芙蕾","cat":"dessert","price":26,"emoji":"🍵","venue":"fluffed","asset":"./assets/date331/menu/matcha_souffle.svg"},{"id":"fluffed_cocoa","en":"Iced Cocoa","cn":"冰可可","cat":"drink","price":15,"emoji":"🍫","venue":"fluffed","asset":"./assets/date331/menu/fluffed_cocoa.svg"},{"id":"waffle_bites","en":"Waffle Bites","cn":"华夫小点","cat":"dessert","price":18,"emoji":"🧇","venue":"fluffed","asset":"./assets/date331/menu/waffle_bites.svg"},{"id":"rose_latte","en":"Rose Latte","cn":"玫瑰拿铁","cat":"drink","price":16,"emoji":"🌹","venue":"brew_bloom","asset":"./assets/date331/menu/rose_latte.svg"},{"id":"lemon_tart","en":"Lemon Tart","cn":"柠檬挞","cat":"dessert","price":18,"emoji":"🍋","venue":"brew_bloom","asset":"./assets/date331/menu/lemon_tart.svg"},{"id":"flower_cake","en":"Flower Cake","cn":"花朵蛋糕","cat":"dessert","price":20,"emoji":"🌸","venue":"brew_bloom","asset":"./assets/date331/menu/flower_cake.svg"},{"id":"brunch_toast","en":"Brunch Toast","cn":"早午餐吐司","cat":"main","price":24,"emoji":"🍞","venue":"brew_bloom","asset":"./assets/date331/menu/brunch_toast.svg"},{"id":"sea_salt_latte","en":"Sea Salt Latte","cn":"海盐拿铁","cat":"drink","price":16,"emoji":"☕","venue":"lakeview_cafe","asset":"./assets/date331/menu/sea_salt_latte.svg"},{"id":"blueberry_cheesecake","en":"Blueberry Cheesecake","cn":"蓝莓芝士蛋糕","cat":"dessert","price":19,"emoji":"🫐","venue":"lakeview_cafe","asset":"./assets/date331/menu/blueberry_cheesecake.svg"},{"id":"sunset_parfait","en":"Sunset Parfait","cn":"夕阳芭菲","cat":"dessert","price":20,"emoji":"🍨","venue":"lakeview_cafe","asset":"./assets/date331/menu/sunset_parfait.svg"},{"id":"lake_pasta","en":"Lakeview Pasta","cn":"湖景意面","cat":"main","price":27,"emoji":"🍝","venue":"lakeview_cafe","asset":"./assets/date331/menu/lake_pasta.svg"},{"id":"violet_soda","en":"Violet Soda","cn":"紫罗兰气泡饮","cat":"drink","price":16,"emoji":"🥤","venue":"moonlight_cafe","asset":"./assets/date331/menu/violet_soda.svg"},{"id":"moon_mousse","en":"Moon Mousse","cn":"月光慕斯","cat":"dessert","price":20,"emoji":"🌙","venue":"moonlight_cafe","asset":"./assets/date331/menu/moon_mousse.svg"},{"id":"night_tiramisu","en":"Night Tiramisu","cn":"夜色提拉米苏","cat":"dessert","price":19,"emoji":"🍰","venue":"moonlight_cafe","asset":"./assets/date331/menu/night_tiramisu.svg"},{"id":"midnight_pasta","en":"Midnight Pasta","cn":"午夜意面","cat":"main","price":28,"emoji":"🍝","venue":"moonlight_cafe","asset":"./assets/date331/menu/midnight_pasta.svg"},{"id":"flat_white","en":"Flat White","cn":"馥芮白","cat":"drink","price":14,"emoji":"☕","venue":"sunday_roast","asset":"./assets/date331/menu/flat_white.svg"},{"id":"berry_croffle","en":"Berry Croffle","cn":"莓果可颂华夫","cat":"dessert","price":18,"emoji":"🧇","venue":"sunday_roast","asset":"./assets/date331/menu/berry_croffle.svg"},{"id":"banana_toast","en":"Banana Toast","cn":"香蕉吐司","cat":"dessert","price":17,"emoji":"🍌","venue":"sunday_roast","asset":"./assets/date331/menu/banana_toast.svg"},{"id":"egg_brunch","en":"Sunday Brunch Plate","cn":"周日早午餐","cat":"main","price":26,"emoji":"🍳","venue":"sunday_roast","asset":"./assets/date331/menu/egg_brunch.svg"},{"id":"honey_milk","en":"Honey Milk","cn":"蜂蜜牛奶","cat":"drink","price":12,"emoji":"🥛","venue":"little_corner","asset":"./assets/date331/menu/honey_milk.svg"},{"id":"book_cake","en":"Book Cake","cn":"书本小蛋糕","cat":"dessert","price":16,"emoji":"📚","venue":"little_corner","asset":"./assets/date331/menu/book_cake.svg"},{"id":"pudding_cup","en":"Pudding Cup","cn":"布丁杯","cat":"dessert","price":14,"emoji":"🍮","venue":"little_corner","asset":"./assets/date331/menu/pudding_cup.svg"},{"id":"quiet_sandwich","en":"Quiet Sandwich","cn":"轻食三明治","cat":"main","price":20,"emoji":"🥪","venue":"little_corner","asset":"./assets/date331/menu/quiet_sandwich.svg"},{"id":"strawberry_bingsu","en":"Strawberry Bingsu","cn":"草莓冰","cat":"dessert","price":26,"emoji":"🍓","venue":"snow_blossom","asset":"./assets/date331/menu/strawberry_bingsu.svg"},{"id":"mango_bingsu","en":"Mango Bingsu","cn":"芒果冰","cat":"dessert","price":25,"emoji":"🥭","venue":"snow_blossom","asset":"./assets/date331/menu/mango_bingsu.svg"},{"id":"milk_tea_bingsu","en":"Milk Tea Bingsu","cn":"奶茶冰","cat":"dessert","price":24,"emoji":"🧋","venue":"snow_blossom","asset":"./assets/date331/menu/milk_tea_bingsu.svg"},{"id":"yuja_tea","en":"Yuja Tea","cn":"柚子茶","cat":"drink","price":12,"emoji":"🍋","venue":"snow_blossom","asset":"./assets/date331/menu/yuja_tea.svg"},{"id":"redbean_bingsu","en":"Red Bean Bingsu","cn":"红豆冰","cat":"dessert","price":22,"emoji":"🫘","venue":"sweet_bean","asset":"./assets/date331/menu/redbean_bingsu.svg"},{"id":"matcha_bingsu","en":"Matcha Bingsu","cn":"抹茶冰","cat":"dessert","price":24,"emoji":"🍵","venue":"sweet_bean","asset":"./assets/date331/menu/matcha_bingsu.svg"},{"id":"injeolmi_bingsu","en":"Injeolmi Bingsu","cn":"黄豆粉冰","cat":"dessert","price":23,"emoji":"🍧","venue":"sweet_bean","asset":"./assets/date331/menu/injeolmi_bingsu.svg"},{"id":"barley_tea","en":"Barley Tea","cn":"麦茶","cat":"drink","price":10,"emoji":"🍵","venue":"sweet_bean","asset":"./assets/date331/menu/barley_tea.svg"},{"id":"pistachio_gelato","en":"Pistachio Gelato","cn":"开心果冰淇淋","cat":"dessert","price":14,"emoji":"🍦","venue":"gelato_garden","asset":"./assets/date331/menu/pistachio_gelato.svg"},{"id":"berry_gelato","en":"Berry Gelato","cn":"莓果冰淇淋","cat":"dessert","price":13,"emoji":"🍓","venue":"gelato_garden","asset":"./assets/date331/menu/berry_gelato.svg"},{"id":"double_scoop","en":"Double Scoop","cn":"双球冰淇淋","cat":"dessert","price":18,"emoji":"🍨","venue":"gelato_garden","asset":"./assets/date331/menu/double_scoop.svg"},{"id":"sparkle_lemon","en":"Sparkle Lemon","cn":"柠檬气泡水","cat":"drink","price":11,"emoji":"🍋","venue":"gelato_garden","asset":"./assets/date331/menu/sparkle_lemon.svg"},{"id":"berry_mille","en":"Berry Mille Crêpe","cn":"莓果千层","cat":"dessert","price":20,"emoji":"🍰","venue":"berry_cake","asset":"./assets/date331/menu/berry_mille.svg"},{"id":"strawberry_shortcake","en":"Strawberry Shortcake","cn":"草莓鲜奶蛋糕","cat":"dessert","price":19,"emoji":"🍓","venue":"berry_cake","asset":"./assets/date331/menu/strawberry_shortcake.svg"},{"id":"berry_choux","en":"Berry Choux","cn":"莓果泡芙","cat":"dessert","price":16,"emoji":"🧁","venue":"berry_cake","asset":"./assets/date331/menu/berry_choux.svg"},{"id":"berry_tea","en":"Berry Tea","cn":"莓果茶","cat":"drink","price":13,"emoji":"🫐","venue":"berry_cake","asset":"./assets/date331/menu/berry_tea.svg"},{"id":"honey_toast_big","en":"Honey Toast","cn":"蜜糖吐司","cat":"dessert","price":24,"emoji":"🍞","venue":"honey_toast","asset":"./assets/date331/menu/honey_toast_big.svg"},{"id":"icecream_toast","en":"Ice Cream Toast","cn":"冰淇淋吐司","cat":"dessert","price":27,"emoji":"🍨","venue":"honey_toast","asset":"./assets/date331/menu/icecream_toast.svg"},{"id":"caramel_shake","en":"Caramel Shake","cn":"焦糖奶昔","cat":"drink","price":16,"emoji":"🥤","venue":"honey_toast","asset":"./assets/date331/menu/caramel_shake.svg"},{"id":"mini_fries","en":"Mini Fries","cn":"小薯条","cat":"main","price":12,"emoji":"🍟","venue":"honey_toast","asset":"./assets/date331/menu/mini_fries.svg"},{"id":"matcha_parfait","en":"Matcha Parfait","cn":"抹茶芭菲","cat":"dessert","price":20,"emoji":"🍵","venue":"mochi_matcha","asset":"./assets/date331/menu/matcha_parfait.svg"},{"id":"strawberry_mochi","en":"Strawberry Mochi","cn":"草莓大福","cat":"dessert","price":16,"emoji":"🍓","venue":"mochi_matcha","asset":"./assets/date331/menu/strawberry_mochi.svg"},{"id":"warabi_mochi","en":"Warabi Mochi","cn":"蕨饼","cat":"dessert","price":15,"emoji":"🍡","venue":"mochi_matcha","asset":"./assets/date331/menu/warabi_mochi.svg"},{"id":"hojicha_latte","en":"Hojicha Latte","cn":"焙茶拿铁","cat":"drink","price":15,"emoji":"☕","venue":"mochi_matcha","asset":"./assets/date331/menu/hojicha_latte.svg"}];
+
+// Extend the existing date venue system without deleting Brew & Bloom / Riverside Bistro.
+DATE33_MENU.push(...DATE331_MENU);
+Object.assign(DATE33_VENUES,{
+ fluffed:{id:'fluffed',name:'Fluffed',icon:'🥞',theme:'cafe',subtitle:'Soufflé pancakes · waffles · cozy date',tables:[{id:'window',name:'Window Seat',cn:'窗边位',x:24,y:39,bonus:'view',icon:'🌸'},{id:'sofa',name:'Soft Sofa',cn:'软绵沙发位',x:61,y:43,bonus:'love',icon:'🛋️'},{id:'photo',name:'Photo Corner',cn:'拍照角落',x:75,y:69,bonus:'photo',icon:'📷'}]},
+ brew_bloom:{id:'brew_bloom',name:'Brew & Bloom Café',icon:'☕',theme:'cafe',subtitle:'Flowers · latte · brunch · date spot',tables:[{id:'window',name:'Flower Window',cn:'花窗位',x:24,y:39,bonus:'view',icon:'🌷'},{id:'sofa',name:'Couple Sofa',cn:'情侣沙发',x:61,y:43,bonus:'love',icon:'🛋️'},{id:'patio',name:'Garden Patio',cn:'花园露台',x:75,y:69,bonus:'photo',icon:'🌿'}]},
+ lakeview_cafe:{id:'lakeview_cafe',name:'Lakeview Café',icon:'🌊',theme:'cafe',subtitle:'Lake view · coffee · sunset tables',tables:[{id:'lake',name:'Lake Window',cn:'湖景窗边',x:24,y:39,bonus:'view',icon:'🌊'},{id:'sofa',name:'Cream Sofa',cn:'奶油沙发位',x:61,y:43,bonus:'love',icon:'🛋️'},{id:'sunset',name:'Sunset Patio',cn:'夕阳露台',x:75,y:69,bonus:'photo',icon:'🌅'}]},
+ moonlight_cafe:{id:'moonlight_cafe',name:'Moonlight Café',icon:'🌙',theme:'cafe',subtitle:'Night lights · soft drinks · desserts',tables:[{id:'window',name:'Night Window',cn:'夜景窗边',x:24,y:39,bonus:'view',icon:'🌙'},{id:'booth',name:'Moon Booth',cn:'月光卡座',x:61,y:43,bonus:'love',icon:'💜'},{id:'light',name:'Fairy Light',cn:'灯串位',x:75,y:69,bonus:'photo',icon:'✨'}]},
+ sunday_roast:{id:'sunday_roast',name:'Sunday Roast Café',icon:'🥐',theme:'cafe',subtitle:'Croffle · latte · brunch plates',tables:[{id:'sun',name:'Sunny Window',cn:'阳光窗边',x:24,y:39,bonus:'view',icon:'☀️'},{id:'bench',name:'Brunch Bench',cn:'早午餐卡座',x:61,y:43,bonus:'love',icon:'🥐'},{id:'corner',name:'Cozy Corner',cn:'温馨角落',x:75,y:69,bonus:'talk',icon:'☕'}]},
+ little_corner:{id:'little_corner',name:'Little Corner Café',icon:'📚',theme:'cafe',subtitle:'Quiet reading café · calm couple time',tables:[{id:'book',name:'Book Window',cn:'书窗位',x:24,y:39,bonus:'view',icon:'📚'},{id:'quiet',name:'Quiet Sofa',cn:'安静沙发',x:61,y:43,bonus:'talk',icon:'🤍'},{id:'lamp',name:'Lamp Corner',cn:'暖灯角落',x:75,y:69,bonus:'love',icon:'💡'}]},
+ snow_blossom:{id:'snow_blossom',name:'Snow Blossom Bingsu',icon:'🍧',theme:'cafe',subtitle:'Korean bingsu · fruit · soft snow ice',tables:[{id:'snow',name:'Snow Window',cn:'雪花窗边',x:24,y:39,bonus:'view',icon:'❄️'},{id:'share',name:'Share Table',cn:'分享桌',x:61,y:43,bonus:'love',icon:'🍧'},{id:'cute',name:'Photo Booth',cn:'可爱拍照位',x:75,y:69,bonus:'photo',icon:'📷'}]},
+ sweet_bean:{id:'sweet_bean',name:'Sweet Bean Bingsu House',icon:'🍨',theme:'cafe',subtitle:'Red bean · matcha · mango bingsu',tables:[{id:'matcha',name:'Matcha Window',cn:'抹茶窗边',x:24,y:39,bonus:'view',icon:'🍵'},{id:'bean',name:'Sweet Booth',cn:'甜豆卡座',x:61,y:43,bonus:'love',icon:'🫘'},{id:'wood',name:'Wood Corner',cn:'木质角落',x:75,y:69,bonus:'talk',icon:'🤎'}]},
+ gelato_garden:{id:'gelato_garden',name:'Gelato Garden',icon:'🍦',theme:'cafe',subtitle:'Choose flavours · double scoops · garden seats',tables:[{id:'garden',name:'Garden Seat',cn:'花园位',x:24,y:39,bonus:'photo',icon:'🌿'},{id:'pink',name:'Pink Booth',cn:'粉色卡座',x:61,y:43,bonus:'love',icon:'🌸'},{id:'sun',name:'Sunny Table',cn:'阳光桌',x:75,y:69,bonus:'view',icon:'☀️'}]},
+ berry_cake:{id:'berry_cake',name:'Berry Cake Studio',icon:'🍰',theme:'cafe',subtitle:'Strawberry cakes · mille crêpe · photo spot',tables:[{id:'berry',name:'Berry Window',cn:'莓果窗边',x:24,y:39,bonus:'photo',icon:'🍓'},{id:'cream',name:'Cream Sofa',cn:'奶油沙发',x:61,y:43,bonus:'love',icon:'🤍'},{id:'studio',name:'Studio Corner',cn:'摄影角落',x:75,y:69,bonus:'photo',icon:'📷'}]},
+ honey_toast:{id:'honey_toast',name:'Honey Toast House',icon:'🍞',theme:'cafe',subtitle:'Honey toast · ice cream · milkshakes',tables:[{id:'toast',name:'Toast Window',cn:'吐司窗边',x:24,y:39,bonus:'view',icon:'🍯'},{id:'share',name:'Share Booth',cn:'分享卡座',x:61,y:43,bonus:'love',icon:'🍞'},{id:'warm',name:'Warm Corner',cn:'暖色角落',x:75,y:69,bonus:'talk',icon:'🧡'}]},
+ mochi_matcha:{id:'mochi_matcha',name:'Mochi & Matcha',icon:'🍵',theme:'cafe',subtitle:'Matcha parfait · mochi · tea',tables:[{id:'matcha',name:'Matcha Window',cn:'抹茶窗边',x:24,y:39,bonus:'view',icon:'🍵'},{id:'tatami',name:'Soft Booth',cn:'柔软卡座',x:61,y:43,bonus:'love',icon:'🍡'},{id:'zen',name:'Quiet Corner',cn:'静谧角落',x:75,y:69,bonus:'talk',icon:'🌿'}]}
+});
+
+// Add new places to the shared destination registry so car travel can use them too.
+for(const s of OUT331_SHOPS){
+ OUTING_DESTINATIONS[s.id]={
+  name:s.name,icon:s.icon,x:18+((OUT331_SHOPS.indexOf(s)*7)%68),y:20+((OUT331_SHOPS.indexOf(s)*11)%64),
+  preview:s.cover,desc:s.subtitle,route:s.id,group:s.group,budget:s.budget,tags:s.tags
+ };
+ if(typeof CAR_ROUTES!=='undefined'&&!CAR_ROUTES[s.id]){
+  CAR_ROUTES[s.id]={name:s.name,km:s.distance,difficulty:s.distance>5?'NORMAL':'EASY',parking:'NORMAL',icon:s.icon,desc:s.subtitle,speedLimit:60,traffic:'normal',road:'城市道路'};
+ }
+}
+
+// Keep old café entry working, but visually send users to the richer Brew & Bloom card.
+OUTING_DESTINATIONS.cafe.name='Brew & Bloom Café';
+OUTING_DESTINATIONS.cafe.desc='Flowers · latte · brunch · date spot';
+
+function openOutingMap(selected='fluffed'){
+ closeOuting();
+ const allPlaces=[
+  ...OUT331_SHOPS.map(s=>({...s,type:s.group})),
+  {id:'restaurant',name:'Riverside Bistro',group:'food',type:'food',subtitle:'Dinner · steak · salmon · date night',budget:'RM35–70',tags:['dinner','date','riverside'],icon:'🍽️',cover:OUTING_DESTINATIONS.restaurant.preview,distance:4.8,vibe:'Romantic',time:'Evening'},
+  {id:'supermarket',name:'Little World Market',group:'shopping',type:'shopping',subtitle:'Real supermarket · trolley · checkout · groceries',budget:'RM20–120',tags:['groceries','home','shopping'],icon:'🛒',cover:OUTING_DESTINATIONS.supermarket.preview,distance:3.6,vibe:'Daily Life',time:'Anytime'},
+  {id:'cinema',name:'Cinema',group:'activities',type:'activities',subtitle:'Movie date · popcorn · couple time',budget:'RM25–60',tags:['movie','date','indoor'],icon:'🎬',cover:OUTING_DESTINATIONS.cinema.preview,distance:4.2,vibe:'Date',time:'Evening'},
+  {id:'park',name:'Park',group:'activities',type:'activities',subtitle:'Walk Dudu · picnic · photos',budget:'RM0–20',tags:['walk','pet','picnic'],icon:'🌳',cover:OUTING_DESTINATIONS.park.preview,distance:2.5,vibe:'Relaxed',time:'Afternoon'},
+  {id:'gym',name:'Gym',group:'activities',type:'activities',subtitle:'Treadmill · weights · cycling',budget:'RM10–30',tags:['fitness','energy'],icon:'🏋️',cover:OUTING_DESTINATIONS.gym.preview,distance:3.8,vibe:'Active',time:'Morning'},
+  {id:'amusement',name:'Amusement Park',group:'activities',type:'activities',subtitle:'Rides · ferris wheel · couple photos',budget:'RM35–80',tags:['rides','fun','date'],icon:'🎡',cover:OUTING_DESTINATIONS.amusement.preview,distance:7.2,vibe:'Exciting',time:'Evening'},
+  {id:'ski',name:'Ski Resort',group:'activities',type:'activities',subtitle:'Snow · skiing · funny falls',budget:'RM45–90',tags:['snow','game'],icon:'❄️',cover:OUTING_DESTINATIONS.ski.preview,distance:8.1,vibe:'Adventure',time:'Afternoon'},
+  {id:'mall',name:'Shopping Mall',group:'shopping',type:'shopping',subtitle:'Fashion · gifts · food · furniture',budget:'RM20–100',tags:['shopping','fashion'],icon:'🛍️',cover:OUTING_DESTINATIONS.mall.preview,distance:4.0,vibe:'Casual',time:'Anytime'},
+  {id:'convenience',name:'Convenience Store',group:'shopping',type:'shopping',subtitle:'Quick snacks · drinks · supplies',budget:'RM5–30',tags:['quick','snacks'],icon:'🏪',cover:OUTING_DESTINATIONS.convenience.preview,distance:1.8,vibe:'Quick',time:'Anytime'}
+ ];
+ let current=allPlaces.some(p=>p.id===selected)?selected:'fluffed';
+ let category='featured';
+ let search='';
+ let mapMode=false;
+
+ const el=document.createElement('section');el.className='outing-overlay outing331-overlay';
+ el.innerHTML=`
+ <div class="outing331-shell">
+  <header class="outing331-header">
+   <div class="outing331-title">
+    <div><small>SHAWN & ELYN · GO OUT</small><h1>Where should we go today? ♡</h1><p>先选你想要的气氛，不用一打开就看整张地图。</p></div>
+   </div>
+   <div class="outing331-header-actions">
+    <button id="out331MapToggle">🗺 Map View</button>
+    <button id="out331Close">✕</button>
+   </div>
+  </header>
+
+  <div class="outing331-toolbar">
+   <div class="outing331-tabs">
+    <button data-out331-cat="featured" class="active">✨ For You</button>
+    <button data-out331-cat="cafe">☕ Café</button>
+    <button data-out331-cat="dessert">🍰 Dessert</button>
+    <button data-out331-cat="food">🍽 Food</button>
+    <button data-out331-cat="activities">🎡 Activities</button>
+    <button data-out331-cat="shopping">🛍 Shopping</button>
+   </div>
+   <label class="outing331-search"><span>⌕</span><input id="out331Search" placeholder="Search café, bingsu, cake…"></label>
+  </div>
+
+  <div class="outing331-content">
+   <section class="outing331-listing">
+    <div class="outing331-feature-banner">
+     <div><span>Today’s sweet pick</span><h2>Fluffed 🥞</h2><p>Soft soufflé pancakes, waffles and a cozy date atmosphere.</p><button data-out331-feature="fluffed">See Fluffed</button></div>
+     <div class="outing331-feature-dessert"><span>🥞</span><i>☕</i><b>♡</b></div>
+    </div>
+    <div class="outing331-section-head"><div><b id="out331Heading">Recommended for you</b><span id="out331Count"></span></div><button id="out331Random">🎲 Pick for us</button></div>
+    <div class="outing331-grid" id="out331Grid"></div>
+   </section>
+
+   <aside class="outing331-detail" id="out331Detail"></aside>
+   <button class="outing331-mobile-go" id="out331MobileGo">Go Here ♡</button><section class="outing331-map-panel" id="out331MapPanel">
+    <div class="outing331-map-faux">
+     <div class="river"></div>
+     <div class="road r1"></div><div class="road r2"></div><div class="road r3"></div>
+     <span class="district d1">Riverside</span><span class="district d2">City Center</span><span class="district d3">Lake District</span>
+     <div id="out331Pins"></div>
+    </div>
+    <p>Map View 是辅助页。主要选地点还是用卡片，比较清楚。</p>
+   </section>
+  </div>
+ </div>`;
+ document.body.appendChild(el);
+
+ const $o=q=>el.querySelector(q),$$o=q=>[...el.querySelectorAll(q)];
+ const groupLabel={featured:'Recommended for you',cafe:'Cafés',dessert:'Dessert & Bingsu',food:'Restaurants',activities:'Things to do',shopping:'Shopping'};
+ function filtered(){
+  let arr=allPlaces;
+  if(category==='featured')arr=[...OUT331_SHOPS.slice(0,6),...OUT331_SHOPS.filter(x=>x.group==='dessert').slice(0,4),...allPlaces.filter(x=>['restaurant','park','cinema'].includes(x.id))];
+  else arr=arr.filter(x=>x.group===category||x.type===category);
+  if(search){const q=search.toLowerCase();arr=arr.filter(x=>(x.name+' '+x.subtitle+' '+(x.tags||[]).join(' ')).toLowerCase().includes(q))}
+  return [...new Map(arr.map(x=>[x.id,x])).values()];
+ }
+ function renderGrid(){
+  const arr=filtered();$o('#out331Heading').textContent=groupLabel[category]||'Places';$o('#out331Count').textContent=`${arr.length} places`;
+  $o('#out331Grid').innerHTML=arr.map(p=>`
+   <button class="outing331-card ${p.id===current?'active':''}" data-out331-place="${p.id}">
+    <div class="outing331-cover"><img src="${p.cover}" alt="${p.name}"><span>${p.vibe||'Cozy'}</span><em>${p.distance||OUTING_DESTINATIONS[p.id]?.km||'--'} km</em></div>
+    <div class="outing331-card-body"><div><b>${p.icon} ${p.name}</b><small>${p.subtitle}</small></div>
+     <div class="outing331-meta"><span>💰 ${p.budget||'Varies'}</span><span>🕒 ${p.time||'Anytime'}</span></div>
+     <div class="outing331-tags">${(p.tags||[]).slice(0,3).map(t=>`<i>${t}</i>`).join('')}</div>
+    </div>
+   </button>`).join('');
+  $$o('[data-out331-place]').forEach(b=>b.onclick=()=>{const id=b.dataset.out331Place;if(window.innerWidth<=720&&current===id)openOutingLocation(id,false);else if(window.innerWidth<=720){current=id;select(id)}else select(id)});
+ }
+ function placeById(id){return allPlaces.find(x=>x.id===id)||OUT331_SHOPS.find(x=>x.id===id)}
+ function select(id){
+  current=id;renderGrid();const p=placeById(id)||{id,...OUTING_DESTINATIONS[id],cover:OUTING_DESTINATIONS[id]?.preview,subtitle:OUTING_DESTINATIONS[id]?.desc};
+  const playable=!!DATE33_VENUES[id]||['supermarket','restaurant','cafe'].includes(id);
+  $o('#out331Detail').innerHTML=`
+   <div class="outing331-detail-cover"><img src="${p.cover||OUTING_DESTINATIONS[id]?.preview}"><span>${p.icon||OUTING_DESTINATIONS[id]?.icon}</span></div>
+   <small>${p.group==='dessert'?'DESSERT DATE':p.group==='cafe'?'CAFÉ DATE':'GO OUT'}</small>
+   <h2>${p.name||OUTING_DESTINATIONS[id]?.name}</h2>
+   <p>${p.subtitle||OUTING_DESTINATIONS[id]?.desc||''}</p>
+   <div class="outing331-detail-info">
+    <span><b>Budget</b>${p.budget||'Varies'}</span><span><b>Distance</b>${p.distance||'--'} km</span>
+    <span><b>Best time</b>${p.time||'Anytime'}</span><span><b>Vibe</b>${p.vibe||'Casual'}</span>
+   </div>
+   <div class="outing331-detail-tags">${(p.tags||[]).map(t=>`<i>${t}</i>`).join('')}</div>
+   <div class="outing331-detail-actions">
+    <button class="primary" id="out331Enter">${playable?'Enter & Play':'Enter Place'}</button>
+    <button id="out331Drive">🚗 Drive Here</button>
+   </div>
+   ${p.group==='dessert'?'<div class="outing331-note">🍧 Dessert shops use the full date flow: choose seat → order → share dessert → photo → bill → memory.</div>':''}`;
+  $o('#out331Enter').onclick=()=>openOutingLocation(current,false);if($o('#out331MobileGo'))$o('#out331MobileGo').onclick=()=>openOutingLocation(current,false);
+  $o('#out331Drive').onclick=()=>chooseOutingCar(current);
+ }
+ function renderMap(){
+  const pts=allPlaces.slice(0,22);
+  $o('#out331Pins').innerHTML=pts.map((p,i)=>`<button data-out331-pin="${p.id}" class="${p.id===current?'active':''}" style="left:${10+(i*17)%78}%;top:${15+(i*23)%68}%"><span>${p.icon}</span></button>`).join('');
+  $$o('[data-out331-pin]').forEach(b=>b.onclick=()=>{select(b.dataset.out331Pin);renderMap()});
+ }
+ $$o('[data-out331-cat]').forEach(b=>b.onclick=()=>{category=b.dataset.out331Cat;$$o('[data-out331-cat]').forEach(x=>x.classList.toggle('active',x===b));mapMode=false;$o('#out331MapPanel').classList.remove('show');$o('.outing331-listing').classList.remove('hide');renderGrid()});
+ $o('#out331Search').oninput=e=>{search=e.target.value.trim();renderGrid()};
+ $o('#out331MapToggle').onclick=()=>{mapMode=!mapMode;$o('#out331MapPanel').classList.toggle('show',mapMode);$o('.outing331-listing').classList.toggle('hide',mapMode);if(mapMode)renderMap()};
+ $o('#out331Random').onclick=()=>{const arr=filtered();if(!arr.length)return;select(arr[Math.floor(Math.random()*arr.length)].id)};
+ $o('[data-out331-feature]').onclick=()=>{category='cafe';$$o('[data-out331-cat]').forEach(x=>x.classList.toggle('active',x.dataset.out331Cat==='cafe'));select('fluffed')};
+ $o('#out331Close').onclick=closeOuting;
+ renderGrid();select(current);
+}
+
+// Slight visual variation between café/dessert venues while keeping the full Date 3.3 gameplay.

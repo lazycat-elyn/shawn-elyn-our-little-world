@@ -1,0 +1,17 @@
+{
+  "node_syntax": "OK",
+  "go_out_redesign": true,
+  "map_secondary": true,
+  "fluffed": true,
+  "bingsu_shops": true,
+  "new_shop_count": 12,
+  "new_cover_assets": 12,
+  "new_menu_assets": 48,
+  "dessert_order_fix": true,
+  "date_venues_extended": true,
+  "mobile_go_button": true,
+  "supermarket_preserved": true,
+  "racing_preserved": true,
+  "fishing_preserved": true,
+  "clean_character_mode_preserved": true
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4ddd4"/><stop offset="1" stop-color="#fffaf5"/></linearGradient>
+      </defs>
+      <rect width="520" height="300" rx="30" fill="url(#g)"/>
+      <circle cx="63" cy="59" r="7" fill="#b77e6a" opacity=".12"/><circle cx="116" cy="90" r="8" fill="#b77e6a" opacity=".12"/><circle cx="169" cy="121" r="9" fill="#b77e6a" opacity=".12"/><circle cx="222" cy="37" r="10" fill="#b77e6a" opacity=".12"/><circle cx="275" cy="68" r="11" fill="#b77e6a" opacity=".12"/><circle cx="328" cy="99" r="12" fill="#b77e6a" opacity=".12"/><circle cx="81" cy="130" r="13" fill="#b77e6a" opacity=".12"/>
+      <rect x="18" y="160" width="484" height="125" rx="24" fill="#fff8f2" stroke="#b77e6a" stroke-width="4"/>
+      <rect x="30" y="65" width="330" height="68" rx="18" fill="#b77e6a" opacity=".82"/><circle cx="85" cy="99" r="25" fill="#fff7f2" opacity=".82"/><circle cx="310" cy="99" r="25" fill="#fff7f2" opacity=".82"/>
+      <rect x="70" y="138" width="380" height="84" rx="18" fill="#fffaf6" stroke="#b77e6a" stroke-width="5"/>
+      <rect x="95" y="158" width="108" height="64" rx="10" fill="#f4ddd4"/>
+      <rect x="317" y="158" width="108" height="64" rx="10" fill="#f4ddd4"/>
+      <circle cx="260" cy="184" r="34" fill="#b77e6a" opacity=".18"/>
+      <text x="260" y="194" text-anchor="middle" font-size="36">☕</text>
+      <text x="260" y="247" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#493b36">Brew &amp; Bloom Café</text>
+      <text x="260" y="270" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#7a6861">Flowers</text>
+    </svg>

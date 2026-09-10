@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 180 200">
+    <rect width="180" height="200" rx="30" fill="#f1e2cf"/>
+    <circle cx="45" cy="27" r="8" fill="#a77f58" opacity=".10"/>
+    <circle cx="143" cy="51" r="14" fill="#a77f58" opacity=".11"/>
+    <ellipse cx="90" cy="121" rx="62" ry="20" fill="#d8cbc0"/><ellipse cx="90" cy="106" rx="56" ry="30" fill="#fff" stroke="#a77f58" stroke-width="5"/><path d="M52 104 Q72 78 91 104 T128 103 Q112 127 90 127 Q68 127 52 104 Z" fill="#a77f58" opacity=".8"/>
+    <text x="90" y="112" text-anchor="middle" font-size="30">🍳</text>
+    <rect x="17" y="154" width="146" height="32" rx="16" fill="#fff" opacity=".91"/>
+    <text x="90" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#3f3531">Sunday Brunch Plate</text>
+    <text x="90" y="181" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#756862">周日早午餐</text>
+    </svg>

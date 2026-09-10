@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 180 200">
+    <rect width="180" height="200" rx="30" fill="#f4ddd4"/>
+    <circle cx="42" cy="34" r="11" fill="#b77e6a" opacity=".10"/>
+    <circle cx="136" cy="48" r="11" fill="#b77e6a" opacity=".11"/>
+    <path d="M58 48 H122 L115 132 Q90 146 65 132 Z" fill="#fff" stroke="#b77e6a" stroke-width="5"/><path d="M66 68 H114 L109 123 Q90 134 71 123 Z" fill="#b77e6a" opacity=".75"/><path d="M122 68 Q144 69 136 98 Q131 111 116 106" fill="none" stroke="#b77e6a" stroke-width="6"/>
+    <text x="90" y="112" text-anchor="middle" font-size="30">🌹</text>
+    <rect x="17" y="154" width="146" height="32" rx="16" fill="#fff" opacity=".91"/>
+    <text x="90" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#3f3531">Rose Latte</text>
+    <text x="90" y="181" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#756862">玫瑰拿铁</text>
+    </svg>

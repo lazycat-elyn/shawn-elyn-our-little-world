@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 180 200">
+    <rect width="180" height="200" rx="30" fill="#e5ecd7"/>
+    <circle cx="34" cy="26" r="7" fill="#71905e" opacity=".10"/>
+    <circle cx="144" cy="52" r="10" fill="#71905e" opacity=".11"/>
+    <ellipse cx="90" cy="130" rx="56" ry="13" fill="#d9ccc0"/><path d="M48 83 L132 83 L118 126 H62 Z" fill="#71905e" opacity=".82"/><path d="M53 72 Q90 52 127 72 L132 84 H48 Z" fill="#fff" stroke="#71905e" stroke-width="4"/>
+    <text x="90" y="112" text-anchor="middle" font-size="30">🍵</text>
+    <rect x="17" y="154" width="146" height="32" rx="16" fill="#fff" opacity=".91"/>
+    <text x="90" y="169" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#3f3531">Matcha Bingsu</text>
+    <text x="90" y="181" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" fill="#756862">抹茶冰</text>
+    </svg>

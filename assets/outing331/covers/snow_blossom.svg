@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e4eef9"/><stop offset="1" stop-color="#fffaf5"/></linearGradient>
+      </defs>
+      <rect width="520" height="300" rx="30" fill="url(#g)"/>
+      <circle cx="55" cy="57" r="9" fill="#6f94b3" opacity=".12"/><circle cx="108" cy="88" r="10" fill="#6f94b3" opacity=".12"/><circle cx="161" cy="119" r="11" fill="#6f94b3" opacity=".12"/><circle cx="214" cy="35" r="12" fill="#6f94b3" opacity=".12"/><circle cx="267" cy="66" r="13" fill="#6f94b3" opacity=".12"/><circle cx="320" cy="97" r="14" fill="#6f94b3" opacity=".12"/><circle cx="73" cy="128" r="15" fill="#6f94b3" opacity=".12"/>
+      <rect x="18" y="160" width="484" height="125" rx="24" fill="#fff8f2" stroke="#6f94b3" stroke-width="4"/>
+      <path d="M25 80 H335 L315 115 H45 Z" fill="#6f94b3" opacity=".85"/><path d="M55 80 v35 M95 80 v35 M135 80 v35 M175 80 v35 M215 80 v35 M255 80 v35 M295 80 v35" stroke="#fff7f2" stroke-width="12"/>
+      <rect x="70" y="138" width="380" height="84" rx="18" fill="#fffaf6" stroke="#6f94b3" stroke-width="5"/>
+      <rect x="95" y="158" width="108" height="64" rx="10" fill="#e4eef9"/>
+      <rect x="317" y="158" width="108" height="64" rx="10" fill="#e4eef9"/>
+      <circle cx="260" cy="184" r="34" fill="#6f94b3" opacity=".18"/>
+      <text x="260" y="194" text-anchor="middle" font-size="36">🍧</text>
+      <text x="260" y="247" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#493b36">Snow Blossom Bingsu</text>
+      <text x="260" y="270" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#7a6861">Korean bingsu</text>
+    </svg>

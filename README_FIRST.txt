@@ -1,20 +1,28 @@
-MASTER 2.6 — CLEAN BASE CHARACTER TEST (DRAFT)
+MASTER 2.6.1 — CLEAN BASE SAFE TEST
 
 Purpose:
-- TEST ONLY for Elyn + Shawn base character replacement.
-- Does not modify wardrobe, fishing, fridge, recipe, outing, cars, pets, tasks, or kitchen.
+- Replace the currently corrupted Elyn/Shawn live base sprites with clean, single-piece PNG characters.
+- Remove the visible center seams, clipped hair and alpha holes seen in the previous test.
 
-Important known limitation:
-- This draft currently has 4 unique source directions only.
-- idle/down both use FRONT.
-- up/back both use BACK.
-- left/right use their own side images.
-- Do NOT treat this as the final 6-direction production sprite pack.
+IMPORTANT:
+- This is a SAFE TEST build.
+- To isolate the corruption problem, all 6 movement states temporarily use the same clean FRONT sprite.
+- This means movement direction art is not final yet, but the character itself should stay visually clean.
+- Wardrobe outfit sprites are NOT rebuilt in this patch.
+- Fishing, Fridge, Recipes, Go Out, Cars, Kitchen, Pets and Tasks are not modified.
 
-How to test:
-1. Copy the contents of this folder into your GitHub project root.
-2. Replace matching assets/sprites files.
-3. Commit and push.
-4. Refresh StackBlitz and inspect Elyn + Shawn in the room.
+Install:
+1. Extract this ZIP.
+2. Open MASTER261_CLEAN_BASE_SAFE_TEST.
+3. Copy the "assets" folder into your local shawn-elyn-our-little-world repository.
+4. Replace files when Windows asks.
+5. GitHub Desktop Summary: MASTER 2.6.1 clean base safe test
+6. Commit to main.
+7. Push origin.
+8. Refresh StackBlitz.
 
-If you do not want to overwrite your current sprites yet, keep this ZIP only as a test asset pack.
+Test:
+- Check Elyn and Shawn in the live room/lake scene.
+- Confirm Elyn has full hair on both sides.
+- Confirm Shawn has no white center strip.
+- Confirm both bodies are solid and clean.

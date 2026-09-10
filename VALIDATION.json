@@ -1,0 +1,158 @@
+{
+  "elyn-left.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "shawn-down.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "elyn-idle.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "shawn-back.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "elyn-down.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "elyn-up.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "shawn-up.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "elyn-back.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "elyn-right.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "shawn-right.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "shawn-idle.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  },
+  "shawn-left.png": {
+    "size": [
+      180,
+      230
+    ],
+    "bbox": [
+      28,
+      9,
+      151,
+      221
+    ],
+    "touches_border": false
+  }
+}

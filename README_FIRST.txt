@@ -1,28 +1,51 @@
-MASTER 2.9.2 — EASY + FUN DRIVING
+MASTER 3.0 — RACING GAME 1.0
 
-Main changes:
-- Easy/Normal now use 3-lane assisted steering: tap left/right once to change a lane.
-- Hard keeps free steering.
-- Easy/Normal have smart speed limiting so the car is less twitchy and easier to manage.
-- Collisions force a full stop and show a crash warning.
-- Added collectible heart/coin/star bonuses on the road.
-- Added Near Miss bonus points.
-- Added 3 trip goals: collect bonuses, handle events correctly, finish without crashing.
-- End of trip now gives 1–3 stars plus Coins and EXP.
-- Existing live road, traffic, red lights, parking, cameras and Lexus cars are retained.
+This patch adds a SEPARATE real racing mode. It does not replace normal City Drive.
+
+Playable now:
+- Lakeside Sprint
+- 3 laps
+- 4 racers total: YOU + 3 AI opponents
+- ROOKIE / PRO / EXPERT AI difficulty
+
+Racing mechanics:
+- 3-2-1-GO countdown
+- continuous A/D steering (not lane snapping)
+- speed-sensitive steering: high speed has smaller steering angle
+- acceleration + real braking
+- corners require braking
+- track curvature pushes the car outward at high speed
+- off-road causes a strong slowdown
+- collision with AI causes immediate large speed loss
+- AI racers have their own pace, corner speed and lane choices
+- slipstream when directly behind an opponent
+- live position 1/4, lap 1/3, speed, race timer, lap timer
+- finish ranking
+- Coins + EXP rewards
+- best time is saved
+
+Where to enter:
+Garage -> select Black/White Lexus -> "🏁 赛车模式"
+
+Controls:
+W / Up = Accel
+S / Down = Brake
+A / D = continuous steering
+Space = Handbrake
+
+IMPORTANT:
+- Normal City Drive is retained.
+- MASTER 2.6.2 clean-character logic is retained.
+- Fishing / Fridge / Recipe / Go Out / Kitchen / Pets / Tasks are not intentionally changed.
 
 Install:
 1. Extract ZIP.
-2. Copy contents of MASTER292_EASY_FUN_DRIVING into shawn-elyn-our-little-world.
-3. Replace files.
-4. GitHub Desktop Summary: MASTER 2.9.2 easy fun driving
-5. Commit to main.
-6. Push origin.
-7. Refresh StackBlitz.
-
-Recommended test:
-- Use Standard mode.
-- Tap A/D or left/right button ONCE to change lane.
-- Collect 3 road bonuses.
-- Complete 2 traffic events correctly.
-- Try to finish without a crash for 3 stars.
+2. Open MASTER300_RACING_GAME_1_0.
+3. Ctrl+A -> Ctrl+C.
+4. Paste into shawn-elyn-our-little-world.
+5. Replace.
+6. GitHub Desktop Summary:
+   MASTER 3.0 racing game 1.0
+7. Commit to main.
+8. Push origin.
+9. Refresh StackBlitz.

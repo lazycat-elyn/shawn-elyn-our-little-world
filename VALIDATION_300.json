@@ -1,0 +1,16 @@
+{
+  "node_syntax": "OK",
+  "garage_racing_button": true,
+  "race_hub": true,
+  "lakeside_sprint": true,
+  "countdown": true,
+  "ai_opponents": true,
+  "continuous_steering": true,
+  "speed_sensitive_steering": true,
+  "curve_braking": true,
+  "collision_slowdown": true,
+  "offroad_slowdown": true,
+  "slipstream": true,
+  "lap_position_finish": true,
+  "clean_character_logic_preserved": true
+}

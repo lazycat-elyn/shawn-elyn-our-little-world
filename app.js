@@ -303,6 +303,8 @@ state.cars=state.cars||{
  car.custom=Object.assign({interior:'原厂',wheel:'原厂',hanging:'无',led:false,airFreshener:'棉花香'},car.custom||{});
 });
 state.carSettings=Object.assign({camera:'third',difficulty:'normal'},state.carSettings||{});
+state.racing=Object.assign({difficulty:'normal',bestTimes:{},wins:0,races:0},state.racing||{});
+state.racing.bestTimes=state.racing.bestTimes||{};
 
 const $=s=>document.querySelector(s), scene=$('#scene');
 let moving={elyn:false,shawn:false}; let keys={}; let raf=0; let last=0;
@@ -1226,10 +1228,11 @@ async function approachCarAndOpen(carId){if(state.room!=='garage'){enterRoom('ga
 
 function openCarGarage(carId,driver=state.active){
  const car=state.cars[carId];driver=driver==='shawn'?'shawn':'elyn';let together=true;
- modal(`${car.name} · ${car.plate}`,`<div class="car10-garage"><div class="car10-garage-photo"><img src="${car.model}"><span>${car.plate}</span></div><div class="car10-garage-side"><div class="car10-driver-select"><b>今天谁开？</b><button data-car-driver="elyn" class="${driver==='elyn'?'active':''}"><img src="${carActorImg('elyn')}">Elyn</button><button data-car-driver="shawn" class="${driver==='shawn'?'active':''}"><img src="${carActorImg('shawn')}">Shawn</button></div><label class="car10-together"><input id="carTogether" type="checkbox" checked> 和 ${carPersonName(carPartner(driver))} 一起出门 ❤️</label><div class="car10-stat-stack">${carMeter('油量',car.fuel,'⛽')}${carMeter('清洁',car.clean,'✨')}${carMeter('车况',car.condition,'🛠️')}</div><div class="mileage">里程 <b>${Math.round(car.mileage).toLocaleString()} km</b><small>最佳驾驶 ${Math.round(car.stats.bestScore||0)} 分 · Perfect Park ${car.stats.perfectParks||0}</small></div></div><div class="car10-garage-actions"><button class="card primary" id="driveCarBtn">🚗 出门驾驶</button><button class="card" id="interiorBtn">🎛️ 车内互动</button><button class="card" id="bootBtn">🧳 后备箱</button><button class="card" id="fuelCarBtn">⛽ 加油</button><button class="card" id="washCarBtn">🫧 洗车</button><button class="card" id="repairCarBtn">🛠️ 保养</button></div></div>`);
+ modal(`${car.name} · ${car.plate}`,`<div class="car10-garage"><div class="car10-garage-photo"><img src="${car.model}"><span>${car.plate}</span></div><div class="car10-garage-side"><div class="car10-driver-select"><b>今天谁开？</b><button data-car-driver="elyn" class="${driver==='elyn'?'active':''}"><img src="${carActorImg('elyn')}">Elyn</button><button data-car-driver="shawn" class="${driver==='shawn'?'active':''}"><img src="${carActorImg('shawn')}">Shawn</button></div><label class="car10-together"><input id="carTogether" type="checkbox" checked> 和 ${carPersonName(carPartner(driver))} 一起出门 ❤️</label><div class="car10-stat-stack">${carMeter('油量',car.fuel,'⛽')}${carMeter('清洁',car.clean,'✨')}${carMeter('车况',car.condition,'🛠️')}</div><div class="mileage">里程 <b>${Math.round(car.mileage).toLocaleString()} km</b><small>最佳驾驶 ${Math.round(car.stats.bestScore||0)} 分 · Perfect Park ${car.stats.perfectParks||0}</small></div></div><div class="car10-garage-actions"><button class="card primary" id="driveCarBtn">🚗 出门驾驶</button><button class="card race30-garage-btn" id="raceCarBtn">🏁 赛车模式</button><button class="card" id="interiorBtn">🎛️ 车内互动</button><button class="card" id="bootBtn">🧳 后备箱</button><button class="card" id="fuelCarBtn">⛽ 加油</button><button class="card" id="washCarBtn">🫧 洗车</button><button class="card" id="repairCarBtn">🛠️ 保养</button></div></div>`);
  const refreshDriver=d=>{driver=d;document.querySelectorAll('[data-car-driver]').forEach(b=>b.classList.toggle('active',b.dataset.carDriver===driver));const lab=$('.car10-together');if(lab)lab.lastChild.textContent=` 和 ${carPersonName(carPartner(driver))} 一起出门 ❤️`};
  document.querySelectorAll('[data-car-driver]').forEach(b=>b.onclick=()=>refreshDriver(b.dataset.carDriver));
  $('#driveCarBtn').onclick=()=>{together=$('#carTogether').checked;openDriveDestinations(carId,driver,together)};
+ $('#raceCarBtn').onclick=()=>{together=$('#carTogether').checked;openRace30Hub(carId,driver,together)};
  $('#interiorBtn').onclick=()=>openCarInterior(carId,driver,$('#carTogether').checked,null,true);
  $('#bootBtn').onclick=()=>openCarStorage(carId);
  $('#fuelCarBtn').onclick=()=>openRefuelGame(carId);
@@ -1387,9 +1390,9 @@ Object.assign(CAR_ROUTES.mall,{speedLimit:60,traffic:'busy',road:'市区'});
 Object.assign(CAR_ROUTES.convenience,{speedLimit:50,traffic:'light',road:'住宅区'});
 
 const CAR2_PROFILES={
- easy:{label:'轻松',sub:'自动回正 · 操控最稳 · 事件正常',traffic:.86,eventGap:.82,penalty:.62,steer:.58,grip:1.14,parkTol:1.22,maxSpeed:105,centerAssist:.972},
- normal:{label:'标准',sub:'推荐 · 好控制但有挑战',traffic:1.06,eventGap:.68,penalty:.92,steer:.70,grip:1.08,parkTol:1.06,maxSpeed:122,centerAssist:.982},
- hard:{label:'挑战',sub:'车流更多 · 事件密集 · 规则更严格',traffic:1.30,eventGap:.54,penalty:1.22,steer:.86,grip:1.0,parkTol:.90,maxSpeed:142,centerAssist:.990}
+ easy:{label:'轻松',sub:'三车道辅助 · 自动限速 · 最容易控制',traffic:.82,eventGap:.78,penalty:.55,steer:.48,grip:1.18,parkTol:1.32,maxSpeed:95,centerAssist:.965,laneAssist:true,smartLimit:true},
+ normal:{label:'标准',sub:'三车道辅助 · 有事件和奖励 · 推荐',traffic:1.00,eventGap:.62,penalty:.82,steer:.58,grip:1.12,parkTol:1.18,maxSpeed:108,centerAssist:.974,laneAssist:true,smartLimit:true},
+ hard:{label:'挑战',sub:'自由转向 · 车流更多 · 规则更严格',traffic:1.30,eventGap:.54,penalty:1.22,steer:.86,grip:1.0,parkTol:.90,maxSpeed:142,centerAssist:.990,laneAssist:false,smartLimit:false}
 };
 const CAR2_EVENT_TYPES=['redLight','speedCamera','speedBump','slowCar','pedestrian','roadwork','merge','turn','rain','schoolZone','cyclist','emergency','pothole'];
 
@@ -1407,7 +1410,8 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
  const car=state.cars[carId],route=CAR_ROUTES[dest],profile=car2Profile(),night=new Date().getHours()>=19||new Date().getHours()<6;
  stopEngineSound();startEngineSound();
  let camera=state.carSettings.camera||'third',gear='D',speed=0,lateral=0,steer=0,curve=0,targetCurve=0,progress=0,last=performance.now(),alive=true,signal='off',headlights=night,wipers=false,handbrake=false,rain=(state.weather==='小雨'||state.weather==='阵雨'),event=null,eventIndex=0,nextEventKm=.55+Math.random()*.25,traffic=[],trafficTimer=0,passengerTimer=0,stoppedRed=0,currentLimit=route.speedLimit||60,frontGap=999,crashLockUntil=0,nextCheckpoint=.55;
- const metrics={safety:100,smooth:100,rules:100,lane:100,speedScore:100,following:100,signalGood:0,signalNeed:0,collisions:0,hardBrakes:0,redStops:0,curb:0,eventsGood:0,eventsBad:0,points:0,combo:0,bestCombo:0,checkpoints:0};
+ const laneSlots=[-.72,0,.72];let laneIndex=1,laneTarget=0,lastLaneRequest=0,bonusTimer=2.8,bonuses=[];
+ const metrics={safety:100,smooth:100,rules:100,lane:100,speedScore:100,following:100,signalGood:0,signalNeed:0,collisions:0,hardBrakes:0,redStops:0,curb:0,eventsGood:0,eventsBad:0,points:0,combo:0,bestCombo:0,checkpoints:0,bonuses:0,laneChanges:0,nearMisses:0};
  const microChallenges=[{id:'lane',label:'保持 CENTER 6 秒',need:6},{id:'speed',label:'限速内稳定驾驶 7 秒',need:7},{id:'gap',label:'保持安全车距 6 秒',need:6}];
  let microIndex=Math.abs(hashString(dest))%microChallenges.length,microTimer=0;
  const keys={},controls={gas:false,brake:false,left:false,right:false};
@@ -1469,16 +1473,21 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
    </div>
    <div class="car28-score-live">
      <header><b>🏅 Driving Score <em id="car29Points">0 pts</em></b><strong id="car28ScoreTotal">100/100</strong></header>
+     <div class="car292-goals"><span id="car292GoalBonus">💗 Bonus 0/3</span><span id="car292GoalEvents">✅ Events 0/2</span><span id="car292GoalCrash">🛡️ No Crash</span></div>
      <div><span>🛡️<b id="car28ScoreSafety">100</b><small>Safety</small></span><span>📋<b id="car28ScoreRules">100</b><small>Rules</small></span><span>🛣️<b id="car28ScoreLane">100</b><small>Lane</small></span><span>🏎️<b id="car28ScoreSpeed">100</b><small>Speed</small></span><span>↔️<b id="car28ScoreSignals">100</b><small>Signals</small></span><span>🔥<b id="car29Combo">x1</b><small>Combo</small></span></div>
      <div class="car291-challenge"><span>🎯</span><b id="car291Challenge">${microChallenges[microIndex].label}</b><i id="car291ChallengeBar"></i></div>
    </div>
    <div class="car28-parking-next"><div><b>🅿️ Parking Challenge (Next)</b><span>Park in the marked spot at ${destInfo.name}!</span></div><img src="./assets/cars/ui28/parking-preview.jpg"></div>
  </section>
+ <div class="car292-points-float" id="car292PointsFloat">🏆 0 pts</div>
+ <div class="car292-crash" id="car292Crash">💥 CRASH · STOP</div>
+ <div class="car292-bonus-layer" id="car292BonusLayer"></div>
  <div class="car28-tools">
    <button id="gearControl">D / R</button><button id="signalLeft">↙</button><button id="signalRight">↘</button><button id="cameraControl">📷</button><button id="hornControl">📣</button><button id="lightControl">💡</button><button id="wiperControl">🌧️</button><button id="handbrakeControl">P</button>
  </div>
  <div class="car28-telemetry"><span>⛽ <b id="driveFuel">${Math.round(car.fuel)}%</b></span><span>🛠️ <b id="driveCondition">${Math.round(car.condition)}%</b></span><span>⭐ <b id="driveSafety">100</b></span><span>🛣️ <b id="driveDistance">0.0/${route.km}</b></span><span>车道 <b id="car2Lane">CENTER</b></span><span>档位 <b id="driveGear">D</b></span></div>
  <button class="drive-exit car28-exit" id="driveAbort">结束驾驶</button>`, 'drive10-mode car20-mode car28-mode');
+ el.dataset.difficulty=(state.carSettings?.difficulty||'normal');
  const cam=$('#carCamera');
  const roadCanvas=$('#car29RoadCanvas'),roadCtx=roadCanvas?.getContext('2d'),playerCar=$('#car29PlayerCar'),backdrop=$('#car29Backdrop');
  let roadFlow=0,visualClock=0,worldScenery=[];
@@ -1514,7 +1523,7 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
  document.querySelectorAll('[data-car28-menu]').forEach(b=>b.onclick=()=>flashDrive('🚗 驾驶中 · 到达目的地后再打开 '+b.dataset.car28Menu));
  if($('#car28ViewDetails'))$('#car28ViewDetails').onclick=()=>flashDrive(`${destInfo.icon||route.icon} ${destInfo.name} · ${destInfo.desc||route.desc}`);
  const cycleCamera=()=>setCamera(camera==='third'?'first':camera==='first'?'reverse':'third');
- const flashDrive=t=>{const m=$('#driveMessage');if(!m)return;m.textContent=t;m.classList.add('alert');clearTimeout(m._t);m._t=setTimeout(()=>{m.classList.remove('alert');m.textContent='W/↑ 油门 · S/↓ 刹车 · A/D 转向 · Q/E 灯 · C 镜头'},1450)};
+ const flashDrive=t=>{const m=$('#driveMessage');if(!m)return;m.textContent=t;m.classList.add('alert');clearTimeout(m._t);m._t=setTimeout(()=>{m.classList.remove('alert');m.textContent=profile.laneAssist?'W/↑ 油门 · S/↓ 刹车 · A/D 轻按换车道 · Q/E 方向灯':'W/↑ 油门 · S/↓ 刹车 · A/D 自由转向 · Q/E 方向灯'},1450)};
  const passengerReact=(kind='calm')=>{if(!together)return;const b=$('#passengerBubble'),p=$('#passengerProp'),box=$('#drivePassenger');if(!b)return;b.textContent=randomFrom(COUPLE_CAR_LINES[kind]||COUPLE_CAR_LINES.calm);p.textContent=kind==='phone'?'📱':kind==='drink'?'🧋':kind==='sleep'?'💤':'';box.className='car10-drive-passenger '+kind;clearTimeout(box._t);box._t=setTimeout(()=>{box.className='car10-drive-passenger';b.textContent='';p.textContent=''},4200)};
  const toggleGear=()=>{if(speed>3){flashDrive('先完全停稳再换 D/R');return}gear=gear==='D'?'R':'D';$('#driveGear').textContent=gear;$('#gearControl').textContent=gear==='D'?'D / R':'R / D';if(gear==='R')setCamera('reverse');else if(camera==='reverse')setCamera('third');driveTone(350,.06,.04,'sine')};
  const setSignal=s=>{signal=signal===s?'off':s;$('#driveSignalText').textContent=signal==='off'?'SIGNAL OFF':signal==='left'?'⬅ LEFT SIGNAL':'RIGHT SIGNAL ➡';$('#driveSignalText').className=signal==='off'?'':'on '+signal;driveTone(720,.05,.03,'sine')};
@@ -1522,12 +1531,16 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
  const toggleLights=()=>{headlights=!headlights;$('#lightControl').classList.toggle('active',headlights);cam.classList.toggle('headlights',headlights);flashDrive(headlights?'车灯开启':'车灯关闭')};
  const toggleWipers=()=>{wipers=!wipers;$('#wiperControl').classList.toggle('active',wipers);$('#wiperLayer').classList.toggle('on',wipers);flashDrive(wipers?'雨刷开启':'雨刷关闭')};
  const toggleHandbrake=()=>{handbrake=!handbrake;$('#handbrakeControl').classList.toggle('active',handbrake);flashDrive(handbrake?'手刹 ON':'手刹 OFF')};
- document.querySelectorAll('[data-car10]').forEach(b=>{const k=b.dataset.car10;b.onpointerdown=e=>{controls[k]=true;b.setPointerCapture?.(e.pointerId)};b.onpointerup=()=>controls[k]=false;b.onpointercancel=()=>controls[k]=false});
+ const requestLane=dir=>{if(!profile.laneAssist)return;const now=performance.now();if(now-lastLaneRequest<180)return;lastLaneRequest=now;const next=Math.max(0,Math.min(2,laneIndex+dir));if(next===laneIndex){flashDrive(next===0?'已经在最左车道':'已经在最右车道');return}laneIndex=next;laneTarget=laneSlots[laneIndex];metrics.laneChanges++;driveTone(520,.05,.02,'sine');flashDrive(`↔️ 换到 ${laneIndex===0?'LEFT':laneIndex===1?'CENTER':'RIGHT'} 车道`)};
+ document.querySelectorAll('[data-car10]').forEach(b=>{const k=b.dataset.car10;b.onpointerdown=e=>{b.setPointerCapture?.(e.pointerId);if(profile.laneAssist&&(k==='left'||k==='right')){requestLane(k==='left'?-1:1);controls[k]=false}else controls[k]=true};b.onpointerup=()=>controls[k]=false;b.onpointercancel=()=>controls[k]=false});
  $('#gearControl').onclick=toggleGear;$('#signalLeft').onclick=()=>setSignal('left');$('#signalRight').onclick=()=>setSignal('right');$('#cameraControl').onclick=cycleCamera;$('#hornControl').onclick=horn;$('#lightControl').onclick=toggleLights;$('#wiperControl').onclick=toggleWipers;$('#handbrakeControl').onclick=toggleHandbrake;
- const kd=e=>{const k=e.key.toLowerCase();keys[k]=true;if(k==='g')toggleGear();if(k==='q')setSignal('left');if(k==='e')setSignal('right');if(k==='c')cycleCamera();if(k==='h')horn();if(k==='l')toggleLights();if(k==='x')toggleWipers();if(e.code==='Space'){e.preventDefault();toggleHandbrake()}};const ku=e=>{keys[e.key.toLowerCase()]=false};window.addEventListener('keydown',kd);window.addEventListener('keyup',ku);
+ const kd=e=>{const k=e.key.toLowerCase();if(profile.laneAssist&&(k==='a'||k==='arrowleft'||k==='d'||k==='arrowright')){if(!e.repeat)requestLane((k==='a'||k==='arrowleft')?-1:1);keys[k]=false;return}keys[k]=true;if(k==='g')toggleGear();if(k==='q')setSignal('left');if(k==='e')setSignal('right');if(k==='c')cycleCamera();if(k==='h')horn();if(k==='l')toggleLights();if(k==='x')toggleWipers();if(e.code==='Space'){e.preventDefault();toggleHandbrake()}};const ku=e=>{keys[e.key.toLowerCase()]=false};window.addEventListener('keydown',kd);window.addEventListener('keyup',ku);
  const cleanup=()=>{window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku);stopEngineSound();el.remove()};$('#driveAbort').onclick=()=>{alive=false;cleanup();toast('已结束驾驶')};
  const trafficBase=route.traffic==='busy'?1.22:route.traffic==='light'?.76:1;
  const spawnTraffic=()=>{const root=$('#carTraffic');if(!root)return;const node=document.createElement('div');const lane=randomFrom([-0.72,0,.72])+(Math.random()-.5)*.12;const tone=randomFrom(['rose','blue','silver','charcoal','cream']);node.className='car10-traffic car29-traffic-car '+tone;node.innerHTML='<i class="glass"></i><i class="tail l"></i><i class="tail r"></i><i class="wheel wl"></i><i class="wheel wr"></i>';root.appendChild(node);traffic.push({node,lane,z:0,hit:false,pace:.55+Math.random()*.4})};
+ const spawnBonus=()=>{const root=$('#car292BonusLayer');if(!root)return;const lane=randomFrom(laneSlots),kind=randomFrom(['heart','coin','star']),node=document.createElement('div');node.className='car292-bonus '+kind;node.textContent=kind==='heart'?'💗':kind==='coin'?'🪙':'⭐';root.appendChild(node);bonuses.push({node,lane,z:0,kind,done:false})};
+ const updateTripGoals=()=>{if($('#car292GoalBonus'))$('#car292GoalBonus').textContent=`💗 Bonus ${Math.min(3,metrics.bonuses)}/3`;if($('#car292GoalEvents'))$('#car292GoalEvents').textContent=`✅ Events ${Math.min(2,metrics.eventsGood)}/2`;if($('#car292GoalCrash')){$('#car292GoalCrash').textContent=metrics.collisions?'💥 Crashed':'🛡️ No Crash';$('#car292GoalCrash').classList.toggle('bad',metrics.collisions>0)}};
+
  const setEventLimit=n=>{currentLimit=n;$('#car2Limit').textContent=n};
  const makeEvent=()=>{eventIndex++;let type=CAR2_EVENT_TYPES[(hashString(dest)+eventIndex*5+Math.floor(Math.random()*3))%CAR2_EVENT_TYPES.length];if(type==='rain'&&rain)type='pothole';if(dest==='ski'&&eventIndex===1)type='rain';if((dest==='supermarket'||dest==='store'||dest==='mall')&&eventIndex===1)type='redLight';if(dest==='park'&&eventIndex===1)type='schoolZone';const side=Math.random()<.5?'left':'right';event={type,side,distance:235,resolved:false,green:false,stopped:false};const title=$('#driveEventTitle'),hint=$('#driveEventHint'),root=$('#carRoadEvent');root.innerHTML='';const n=document.createElement('div');n.className='car10-road-event '+type;root.appendChild(n);setEventLimit(route.speedLimit||60);
    if(type==='redLight'){title.textContent='🚦 前方红灯';hint.textContent='停止线前完全停下，等绿灯';n.innerHTML='<div class="car10-light"><i class="red"></i><i></i><i></i></div><div class="car10-stopline"></div>';setTimeout(()=>{if(event&&event.type==='redLight'){event.green=true;n.classList.add('green');title.textContent='🟢 绿灯';hint.textContent='确认安全后继续'}},2800+Math.random()*1100)}
@@ -1545,7 +1558,7 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
    else if(type==='pothole'){setEventLimit(35);title.textContent='🕳️ 前方坑洞';hint.textContent=`减速并轻微靠${side==='left'?'左':'右'}避开`;n.innerHTML='<div class="car20-pothole">🕳️</div>'}
    metrics.signalNeed+=['roadwork','merge','turn','slowCar','cyclist'].includes(type)?1:0;
  };
- const updatePointHud=()=>{if($('#car29Points'))$('#car29Points').textContent=Math.round(metrics.points)+' pts';if($('#car29Combo'))$('#car29Combo').textContent='x'+Math.max(1,metrics.combo);const c=microChallenges[microIndex];if($('#car291Challenge'))$('#car291Challenge').textContent=c.label;if($('#car291ChallengeBar'))$('#car291ChallengeBar').style.width=Math.min(100,microTimer/c.need*100)+'%'};
+ const updatePointHud=()=>{const pts=Math.round(metrics.points);if($('#car29Points'))$('#car29Points').textContent=pts+' pts';if($('#car292PointsFloat'))$('#car292PointsFloat').textContent='🏆 '+pts+' pts';if($('#car29Combo'))$('#car29Combo').textContent='x'+Math.max(1,metrics.combo);const c=microChallenges[microIndex];if($('#car291Challenge'))$('#car291Challenge').textContent=c.label;if($('#car291ChallengeBar'))$('#car291ChallengeBar').style.width=Math.min(100,microTimer/c.need*100)+'%';updateTripGoals()};
  const awardPoints=(amount,msg='')=>{metrics.combo=Math.min(5,metrics.combo+1);metrics.bestCombo=Math.max(metrics.bestCombo,metrics.combo);const gain=Math.round(amount*(1+(metrics.combo-1)*.12));metrics.points+=gain;updatePointHud();if(msg)flashDrive(`+${gain} pts · ${msg} · COMBO x${metrics.combo}`)};
  const breakCombo=(loss=0)=>{if(loss)metrics.points=Math.max(0,metrics.points-loss);metrics.combo=0;updatePointHud()};
  const goodEvent=msg=>{metrics.eventsGood++;awardPoints(90,msg);driveTone(760,.06,.03,'sine')};
@@ -1567,16 +1580,17 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
  const finishRoad=()=>{alive=false;save();cleanup();startParkingGame10(carId,dest,driver,together,metrics)};
  if(night){cam.classList.add('night-driving');if(headlights)cam.classList.add('headlights')}if(rain)cam.classList.add('raining');
  const loop=now=>{if(!alive)return;const dt=Math.min(.045,(now-last)/1000);last=now;drawDynamicWorld(dt);const crashLocked=now<crashLockUntil;const gas=!crashLocked&&(keys['w']||keys['arrowup']||controls.gas),brake=!crashLocked&&(keys['s']||keys['arrowdown']||controls.brake),left=!crashLocked&&(keys['a']||keys['arrowleft']||controls.left),right=!crashLocked&&(keys['d']||keys['arrowright']||controls.right);
-   const oldSpeed=speed;if(crashLocked){speed=0;steer*=.78}else if(handbrake)speed=Math.max(0,speed-105*dt);else{if(gas)speed+=gear==='D'?36*dt:25*dt;else speed-=6*dt;if(brake)speed-=72*dt*(rain?.88:1)}speed=Math.max(0,Math.min(gear==='D'?profile.maxSpeed:30,speed));const hardDecel=(oldSpeed-speed)/Math.max(dt,.001);if(!crashLocked&&hardDecel>64&&oldSpeed>38){metrics.hardBrakes++;metrics.smooth=Math.max(0,metrics.smooth-dt*20*profile.penalty);if(together&&Math.random()<.25)passengerReact('brake')}
-   const steerInput=(right?1:0)-(left?1:0);steer+=(steerInput-steer)*dt*(speed<25?3.3:2.25)*profile.steer;steer=Math.max(-.72,Math.min(.72,steer));const grip=(rain?.78:1)*profile.grip;lateral+=steer*(.19+.0065*speed)*dt*grip*(gear==='R'?-1:1);lateral-=curve*speed*.00034*dt;if(Math.abs(steerInput)<.1)lateral*=Math.pow(profile.centerAssist||.984,dt*60);lateral=Math.max(-1.42,Math.min(1.42,lateral));if(Math.random()<dt*.075)targetCurve=(Math.random()-.5)*(route.road==='山路'?1.25:.9);curve+=(targetCurve-curve)*dt*.40;
-   const curveLimit=Math.abs(curve)>.65?45:Math.abs(curve)>.38?55:(route.speedLimit||60);const effectiveLimit=Math.min(currentLimit,curveLimit);if(speed>effectiveLimit+8){metrics.speedScore=Math.max(0,metrics.speedScore-dt*5*profile.penalty);metrics.safety=Math.max(0,metrics.safety-dt*2.6*profile.penalty)}if(Math.abs(lateral)>.82){metrics.lane=Math.max(0,metrics.lane-dt*5*profile.penalty)}if(Math.abs(lateral)>1.05){metrics.safety=Math.max(0,metrics.safety-dt*8*profile.penalty);car.condition=Math.max(0,car.condition-dt*.7);metrics.curb++;if(Math.abs(lateral)>1.34)speed*=.991}
+   const oldSpeed=speed;if(crashLocked){speed=0;steer*=.62}else if(handbrake)speed=Math.max(0,speed-96*dt);else{if(gas)speed+=gear==='D'?30*dt:22*dt;else speed-=3.2*dt;if(brake)speed-=58*dt*(rain?.88:1)}speed=Math.max(0,Math.min(gear==='D'?profile.maxSpeed:30,speed));const hardDecel=(oldSpeed-speed)/Math.max(dt,.001);if(!crashLocked&&hardDecel>68&&oldSpeed>42){metrics.hardBrakes++;metrics.smooth=Math.max(0,metrics.smooth-dt*16*profile.penalty);if(together&&Math.random()<.25)passengerReact('brake')}
+   const steerInput=(right?1:0)-(left?1:0);const grip=(rain?.80:1)*profile.grip;if(profile.laneAssist){const err=laneTarget-lateral;steer+=(Math.max(-.58,Math.min(.58,err*1.28))-steer)*Math.min(1,dt*6.2);lateral+=err*Math.min(1,dt*(speed<18?3.0:4.2));lateral-=curve*speed*.00012*dt}else{steer+=(steerInput-steer)*dt*(speed<25?3.0:2.1)*profile.steer;steer=Math.max(-.72,Math.min(.72,steer));lateral+=steer*(.18+.0062*speed)*dt*grip*(gear==='R'?-1:1);lateral-=curve*speed*.00032*dt;if(Math.abs(steerInput)<.1)lateral*=Math.pow(profile.centerAssist||.984,dt*60)}lateral=Math.max(-1.32,Math.min(1.32,lateral));if(Math.random()<dt*.070)targetCurve=(Math.random()-.5)*(route.road==='山路'?1.12:.78);curve+=(targetCurve-curve)*dt*.36;
+   const curveLimit=Math.abs(curve)>.65?45:Math.abs(curve)>.38?55:(route.speedLimit||60);const effectiveLimit=Math.min(currentLimit,curveLimit);if(profile.smartLimit&&speed>effectiveLimit+3)speed=Math.max(effectiveLimit+1,speed-22*dt);if(speed>effectiveLimit+8){metrics.speedScore=Math.max(0,metrics.speedScore-dt*5*profile.penalty);metrics.safety=Math.max(0,metrics.safety-dt*2.6*profile.penalty)}if(Math.abs(lateral)>.82){metrics.lane=Math.max(0,metrics.lane-dt*5*profile.penalty)}if(Math.abs(lateral)>1.05){metrics.safety=Math.max(0,metrics.safety-dt*8*profile.penalty);car.condition=Math.max(0,car.condition-dt*.7);metrics.curb++;if(Math.abs(lateral)>1.34)speed*=.991}
    if(night&&!headlights){metrics.safety=Math.max(0,metrics.safety-dt*2.5);cam.classList.add('dark-vision')}else cam.classList.remove('dark-vision');if(rain&&!wipers){metrics.safety=Math.max(0,metrics.safety-dt*1.8);cam.classList.add('rain-blur')}else cam.classList.remove('rain-blur');
    if(gear==='D')progress+=speed*dt/3600;else progress=Math.max(0,progress-speed*dt/7200);car.fuel=Math.max(0,car.fuel-speed*dt*.00042);car.clean=Math.max(0,car.clean-dt*.010*(1+speed/100)*(rain?1.8:1));revEngine(speed/(profile.maxSpeed||140));if(!event&&progress>=nextEventKm&&progress<route.km-.45)makeEvent();if(event){event.distance-=Math.max(1,speed)*dt*.42;const n=$('.car10-road-event');if(n){const z=Math.max(.18,1-event.distance/240);n.style.transform=`translate(-50%,-50%) scale(${.38+z*1.15})`;n.style.top=(16+z*60)+'%'}if(event.type==='redLight'&&!event.green&&event.distance<34&&speed<4){stoppedRed+=dt;event.stopped=stoppedRed>.45}else if(event.type==='pedestrian'&&event.distance<34&&speed<4)event.stopped=true;if(event.distance<=0)resolveEvent()}
-   trafficTimer+=dt;const spawnEvery=(1.95-Math.min(.5,speed/260))/(trafficBase*profile.traffic);if(trafficTimer>spawnEvery){trafficTimer=0;spawnTraffic()}frontGap=999;traffic.forEach(t=>{t.z+=dt*(.12+speed/240)*t.pace;const p=Math.min(1.18,t.z),px=50+t.lane*29/(1.1-Math.min(.95,p)*.48)+curve*9,py=15+p*74;t.node.style.left=px+'%';t.node.style.top=py+'%';t.node.style.transform=`translate(-50%,-50%) scale(${.28+p*1.0})`;if(Math.abs(t.lane-lateral)<.34&&p>.45&&p<1.05)frontGap=Math.min(frontGap,(1.05-p)*95);if(!t.hit&&p>.81&&p<1.05&&Math.abs(t.lane-lateral)<.34){t.hit=true;metrics.collisions++;car.stats.collisions++;metrics.safety=Math.max(0,metrics.safety-24*profile.penalty);car.condition=Math.max(0,car.condition-8);speed=0;steer=0;crashLockUntil=now+1350;controls.gas=controls.brake=controls.left=controls.right=false;breakCombo(160);t.node.classList.add('hit');flashDrive('💥 撞车！车辆已完全停止 · 1秒后可继续');passengerReact('brake');driveTone(85,.22,.11,'square')}if(p>1.2){t.node.remove();t.dead=true}});for(let i=traffic.length-1;i>=0;i--)if(traffic[i].dead)traffic.splice(i,1);if(frontGap<22&&speed>45){metrics.following=Math.max(0,metrics.following-dt*7*profile.penalty);metrics.safety=Math.max(0,metrics.safety-dt*3*profile.penalty)}
+   bonusTimer-=dt;if(bonusTimer<=0&&speed>12){bonusTimer=4.2+Math.random()*3.2;spawnBonus()}bonuses.forEach(b=>{b.z+=dt*(.16+speed/205);const p=Math.min(1.18,b.z),px=50+b.lane*29/(1.1-Math.min(.95,p)*.48)+curve*9,py=17+p*70;b.node.style.left=px+'%';b.node.style.top=py+'%';b.node.style.transform=`translate(-50%,-50%) scale(${.38+p*.95})`;if(!b.done&&p>.80&&p<1.05&&Math.abs(b.lane-lateral)<.28){b.done=true;metrics.bonuses++;awardPoints(b.kind==='star'?80:b.kind==='coin'?55:45,b.kind==='star'?'星星奖励':b.kind==='coin'?'金币路线奖励':'情侣爱心');b.node.classList.add('collected');setTimeout(()=>b.node.remove(),180)}if(p>1.16&&!b.done){b.node.remove();b.done=true}});for(let i=bonuses.length-1;i>=0;i--)if(bonuses[i].done)bonuses.splice(i,1);
+   trafficTimer+=dt;const spawnEvery=(1.95-Math.min(.5,speed/260))/(trafficBase*profile.traffic);if(trafficTimer>spawnEvery){trafficTimer=0;spawnTraffic()}frontGap=999;traffic.forEach(t=>{t.z+=dt*(.12+speed/240)*t.pace;const p=Math.min(1.18,t.z),px=50+t.lane*29/(1.1-Math.min(.95,p)*.48)+curve*9,py=15+p*74;t.node.style.left=px+'%';t.node.style.top=py+'%';t.node.style.transform=`translate(-50%,-50%) scale(${.28+p*1.0})`;if(Math.abs(t.lane-lateral)<.34&&p>.45&&p<1.05)frontGap=Math.min(frontGap,(1.05-p)*95);if(!t.hit&&p>.81&&p<1.05&&Math.abs(t.lane-lateral)<.34){t.hit=true;metrics.collisions++;car.stats.collisions++;metrics.safety=Math.max(0,metrics.safety-24*profile.penalty);car.condition=Math.max(0,car.condition-8);speed=0;steer=0;crashLockUntil=now+1900;controls.gas=controls.brake=controls.left=controls.right=false;breakCombo(180);t.node.classList.add('hit');const crashEl=$('#car292Crash');if(crashEl){crashEl.classList.add('show');setTimeout(()=>crashEl.classList.remove('show'),1700)}flashDrive('💥 撞车！车辆完全停止 · 先重新观察再继续');passengerReact('brake');driveTone(85,.22,.11,'square')}if(!t.hit&&!t.nearMiss&&p>1.02&&p<1.12){const d=Math.abs(t.lane-lateral);if(d>=.34&&d<.50){t.nearMiss=true;metrics.nearMisses++;awardPoints(30,'Near Miss 安全闪避')}}if(p>1.2){t.node.remove();t.dead=true}});for(let i=traffic.length-1;i>=0;i--)if(traffic[i].dead)traffic.splice(i,1);if(frontGap<22&&speed>45){metrics.following=Math.max(0,metrics.following-dt*7*profile.penalty);metrics.safety=Math.max(0,metrics.safety-dt*3*profile.penalty)}
    if(progress>=nextCheckpoint&&progress<route.km-.12){metrics.checkpoints++;awardPoints(65,'通过路线检查点');nextCheckpoint+=.55}
    const mission=microChallenges[microIndex];let missionOK=false;if(mission.id==='lane')missionOK=Math.abs(lateral)<.34&&speed>18;else if(mission.id==='speed')missionOK=speed>22&&speed<=effectiveLimit+3;else if(mission.id==='gap')missionOK=speed>18&&frontGap>35;if(missionOK)microTimer+=dt;else microTimer=Math.max(0,microTimer-dt*.7);if(microTimer>=mission.need){awardPoints(140,'完成挑战：'+mission.label);microIndex=(microIndex+1)%microChallenges.length;microTimer=0}updatePointHud();
    passengerTimer+=dt;if(together&&passengerTimer>10+Math.random()*8){passengerTimer=0;passengerReact(randomFrom(['calm','phone','drink','sleep']))}
-   const road=$('#carRoad');if(road)road.style.transform=`perspective(720px) rotateZ(${curve*1.1}deg) translateX(${curve*18-lateral*8}px)`;const wheel=$('#driveWheel');if(wheel)wheel.style.transform=`rotate(${steer*48-curve*10}deg)`;$('#driveSpeed').textContent=Math.round(speed);$('#driveGear').textContent=gear;$('#driveFuel').textContent=Math.round(car.fuel)+'%';$('#driveCondition').textContent=Math.round(car.condition)+'%';$('#driveSafety').textContent=Math.round(metrics.safety);$('#driveDistance').textContent=`${Math.min(route.km,progress).toFixed(1)}/${route.km}`;$('#car2Lane').textContent=Math.abs(lateral)<.42?'CENTER':lateral<0?'LEFT':'RIGHT';$('#car2Lane').className=Math.abs(lateral)<.78?'ok':'warn';$('#car2Gap').textContent=frontGap>35?'SAFE':frontGap>20?'CLOSE':'BRAKE';$('#car2Gap').className=frontGap>35?'ok':frontGap>20?'warn':'danger';const remain=Math.max(0,route.km-progress),eta=speed>12?Math.ceil(remain/Math.max(25,speed)*60):'--';$('#car2Eta').textContent=eta==='--'?'--':eta+' min';cam.style.setProperty('--lateral',lateral);cam.style.setProperty('--curve',curve);
+   const road=$('#carRoad');if(road)road.style.transform=`perspective(720px) rotateZ(${curve*1.1}deg) translateX(${curve*18-lateral*8}px)`;const wheel=$('#driveWheel');if(wheel)wheel.style.transform=`rotate(${steer*48-curve*10}deg)`;$('#driveSpeed').textContent=Math.round(speed);$('#driveGear').textContent=gear;$('#driveFuel').textContent=Math.round(car.fuel)+'%';$('#driveCondition').textContent=Math.round(car.condition)+'%';$('#driveSafety').textContent=Math.round(metrics.safety);$('#driveDistance').textContent=`${Math.min(route.km,progress).toFixed(1)}/${route.km}`;$('#car2Lane').textContent=profile.laneAssist?(laneIndex===0?'LEFT':laneIndex===1?'CENTER':'RIGHT'):(Math.abs(lateral)<.42?'CENTER':lateral<0?'LEFT':'RIGHT');$('#car2Lane').className=Math.abs(lateral-(profile.laneAssist?laneTarget:lateral))<.20?'ok':Math.abs(lateral)<.95?'warn':'danger';$('#car2Gap').textContent=frontGap>35?'SAFE':frontGap>20?'CLOSE':'BRAKE';$('#car2Gap').className=frontGap>35?'ok':frontGap>20?'warn':'danger';const remain=Math.max(0,route.km-progress),eta=speed>12?Math.ceil(remain/Math.max(25,speed)*60):'--';$('#car2Eta').textContent=eta==='--'?'--':eta+' min';cam.style.setProperty('--lateral',lateral);cam.style.setProperty('--curve',curve);
    const sigScore=metrics.signalNeed?Math.min(100,metrics.signalGood/metrics.signalNeed*100):100,liveTotal=Math.round((metrics.safety+metrics.rules+metrics.lane+metrics.speedScore+sigScore)/5);
    if($('#car28ScoreTotal'))$('#car28ScoreTotal').textContent=liveTotal+'/100';if($('#car28ScoreSafety'))$('#car28ScoreSafety').textContent=Math.round(metrics.safety);if($('#car28ScoreRules'))$('#car28ScoreRules').textContent=Math.round(metrics.rules);if($('#car28ScoreLane'))$('#car28ScoreLane').textContent=Math.round(metrics.lane);if($('#car28ScoreSpeed'))$('#car28ScoreSpeed').textContent=Math.round(metrics.speedScore);if($('#car28ScoreSignals'))$('#car28ScoreSignals').textContent=Math.round(sigScore);if($('#car28Traffic')){$('#car28Traffic').textContent=event?.type==='redLight'?(event.green?'✓ Green':'● Red'):frontGap<20?'⚠ Busy':'✓ Clear';$('#car28Traffic').className=event?.type==='redLight'&&!event.green?'danger':frontGap<20?'warn':'ok'};
    if(car.fuel<=0){alive=false;cleanup();state.coins=Math.max(0,state.coins-80);save();modal('没油了 😵','<p>道路救援扣除 80 Coins。下次出发前先检查油量。</p>');return}if(progress>=route.km){finishRoad();return}requestAnimationFrame(loop)
@@ -1598,8 +1612,8 @@ function startParkingGame10(carId,dest,driver,together,metrics){
 }
 
 function showCarTripScore(carId,dest,driver,together,metrics,parking){
- const car=state.cars[carId],signalScore=metrics.signalNeed?Math.min(100,metrics.signalGood/metrics.signalNeed*100):100,lane=Math.round(metrics.lane??100),speedScore=Math.round(metrics.speedScore??100),following=Math.round(metrics.following??100),road=Math.round(metrics.safety*.28+metrics.smooth*.14+metrics.rules*.20+signalScore*.10+lane*.12+speedScore*.10+following*.06),final=Math.max(0,Math.min(100,Math.round(road*.74+parking.score*.26))),grade=final>=93?'S':final>=85?'A':final>=72?'B':final>=58?'C':'D';car.stats.bestScore=Math.max(car.stats.bestScore||0,final);car.stats.trips=(car.stats.trips||0)+1;car.mileage+=CAR_ROUTES[dest].km;car.last=CAR_ROUTES[dest].name;car.stats.bestLane=Math.max(car.stats.bestLane||0,lane);save();
- const el=carOverlay(`<div class="car10-score-card car20-score-card"><img src="${car.model}"><span class="car10-grade grade-${grade}">${grade}</span><h1>CAR 2.1 SCORE · ${final}/100</h1><p>${CAR_ROUTES[dest].name} · ${car2Profile().label}模式 · ${parking.result}</p><div class="car291-final-points"><b>🏆 ${Math.round(metrics.points||0)} pts</b><span>Best Combo x${Math.max(1,metrics.bestCombo||0)} · Checkpoints ${metrics.checkpoints||0}</span></div><div class="car20-score-grid"><div><b>${Math.round(metrics.safety)}</b><span>安全</span></div><div><b>${Math.round(metrics.rules)}</b><span>规则</span></div><div><b>${lane}</b><span>车道</span></div><div><b>${speedScore}</b><span>限速</span></div><div><b>${following}</b><span>跟车</span></div><div><b>${Math.round(signalScore)}</b><span>方向灯</span></div><div><b>${parking.score}</b><span>停车</span></div></div><div class="car10-score-notes"><span>碰撞 ${metrics.collisions}</span><span>急刹 ${metrics.hardBrakes}</span><span>红灯正确停车 ${metrics.redStops}</span><span>路肩 ${metrics.curb}</span><span>停车 ${metrics.parkingTime||0}s</span><span>事件 ✓${metrics.eventsGood} / ✕${metrics.eventsBad}</span></div><button class="mama-btn" id="finishTripExit">熄火 · 下车</button></div>`, 'score-mode car20-score-mode');$('#finishTripExit').onclick=()=>playCarExitSequence(carId,dest,driver,together,final,parking.result)
+ const car=state.cars[carId],signalScore=metrics.signalNeed?Math.min(100,metrics.signalGood/metrics.signalNeed*100):100,lane=Math.round(metrics.lane??100),speedScore=Math.round(metrics.speedScore??100),following=Math.round(metrics.following??100),road=Math.round(metrics.safety*.28+metrics.smooth*.14+metrics.rules*.20+signalScore*.10+lane*.12+speedScore*.10+following*.06),final=Math.max(0,Math.min(100,Math.round(road*.74+parking.score*.26))),grade=final>=93?'S':final>=85?'A':final>=72?'B':final>=58?'C':'D';const goals=(metrics.bonuses>=3?1:0)+(metrics.eventsGood>=2?1:0)+(metrics.collisions===0?1:0),stars=Math.max(1,goals),rewardCoins=stars===3?45:stars===2?25:10,rewardXP=stars===3?35:stars===2?20:10;state.coins+=rewardCoins;state.xpTotal+=rewardXP;car.stats.bestScore=Math.max(car.stats.bestScore||0,final);car.stats.trips=(car.stats.trips||0)+1;car.mileage+=CAR_ROUTES[dest].km;car.last=CAR_ROUTES[dest].name;car.stats.bestLane=Math.max(car.stats.bestLane||0,lane);save();
+ const el=carOverlay(`<div class="car10-score-card car20-score-card"><img src="${car.model}"><span class="car10-grade grade-${grade}">${grade}</span><h1>CAR 2.1 SCORE · ${final}/100</h1><p>${CAR_ROUTES[dest].name} · ${car2Profile().label}模式 · ${parking.result}</p><div class="car291-final-points"><b>🏆 ${Math.round(metrics.points||0)} pts · ${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</b><span>Bonus ${metrics.bonuses||0} · Near Miss ${metrics.nearMisses||0} · Best Combo x${Math.max(1,metrics.bestCombo||0)}</span><strong>奖励 +${rewardCoins}🪙 +${rewardXP}XP</strong></div><div class="car20-score-grid"><div><b>${Math.round(metrics.safety)}</b><span>安全</span></div><div><b>${Math.round(metrics.rules)}</b><span>规则</span></div><div><b>${lane}</b><span>车道</span></div><div><b>${speedScore}</b><span>限速</span></div><div><b>${following}</b><span>跟车</span></div><div><b>${Math.round(signalScore)}</b><span>方向灯</span></div><div><b>${parking.score}</b><span>停车</span></div></div><div class="car10-score-notes"><span>碰撞 ${metrics.collisions}</span><span>急刹 ${metrics.hardBrakes}</span><span>红灯正确停车 ${metrics.redStops}</span><span>路肩 ${metrics.curb}</span><span>停车 ${metrics.parkingTime||0}s</span><span>事件 ✓${metrics.eventsGood} / ✕${metrics.eventsBad}</span></div><button class="mama-btn" id="finishTripExit">熄火 · 下车</button></div>`, 'score-mode car20-score-mode');$('#finishTripExit').onclick=()=>playCarExitSequence(carId,dest,driver,together,final,parking.result)
 }
 
 
@@ -1626,3 +1640,564 @@ requestAnimationFrame(keyboardLoop);if(state.started)showGame();
 /* MASTER 2.9 — LIVE MOVING ROAD: canvas road + scenery flow + real moving traffic + player car */
 
 /* MASTER 2.9.1 — BALANCED DRIVING: easier steering, full-stop collisions, live points/combo, micro challenges */
+
+/* MASTER 2.9.2 — EASY + FUN DRIVING: tap-to-change-lane assist, smart speed limiter, collectible bonuses, route goals, stars/rewards, near-miss bonus */
+
+
+/* =========================================================
+   MASTER 3.0 — RACING GAME 1.0
+   Real continuous steering, AI opponents, laps, position,
+   braking for curves, collision slowdown, off-road slowdown,
+   slipstream, finish ranking.
+   ========================================================= */
+
+const RACE30_TRACKS={
+  lakeside:{
+    id:'lakeside',
+    name:'Lakeside Sprint',
+    icon:'🌊',
+    laps:3,
+    lapMeters:920,
+    subtitle:'湖边高速赛 · 连续弯 + 长直路',
+    desc:'真正的赛车玩法：直路加速、弯前刹车、保持路线并超越 AI。',
+    curveStrength:1.0
+  }
+};
+const RACE30_DIFFICULTY={
+  easy:{id:'easy',label:'ROOKIE',ai:.89,grip:1.10,reward:.78},
+  normal:{id:'normal',label:'PRO',ai:1.0,grip:1.0,reward:1},
+  hard:{id:'hard',label:'EXPERT',ai:1.075,grip:.93,reward:1.30}
+};
+
+function race30FmtTime(sec){
+  sec=Math.max(0,Number(sec)||0);
+  const m=Math.floor(sec/60),s=sec-m*60;
+  return `${m}:${s.toFixed(2).padStart(5,'0')}`;
+}
+function race30CurveAt(track,meters){
+  const u=((meters%track.lapMeters)+track.lapMeters)%track.lapMeters/track.lapMeters;
+  // Intentional track layout: straight -> sweep -> S -> hairpin -> final sweep.
+  let c=0;
+  if(u<.14)c=0;
+  else if(u<.29)c=Math.sin((u-.14)/.15*Math.PI)*.52;
+  else if(u<.43)c=-Math.sin((u-.29)/.14*Math.PI)*.64;
+  else if(u<.56)c=Math.sin((u-.43)/.13*Math.PI)*.30;
+  else if(u<.72)c=-Math.sin((u-.56)/.16*Math.PI)*.86;
+  else if(u<.84)c=0;
+  else c=Math.sin((u-.84)/.16*Math.PI)*.48;
+  return c*(track.curveStrength||1);
+}
+function race30RecommendedSpeed(track,meters){
+  const c=Math.abs(race30CurveAt(track,meters+55));
+  if(c>.72)return 76;
+  if(c>.50)return 96;
+  if(c>.28)return 122;
+  return 178;
+}
+function openRace30Hub(carId,driver=state.active,together=true){
+  const car=state.cars[carId];
+  const diff=state.racing?.difficulty||'normal';
+  modal('🏁 Racing Circuit',`
+    <div class="race30-hub">
+      <div class="race30-car-card">
+        <img src="${car.model}" alt="${car.name}">
+        <div><b>${car.name}</b><strong>${car.plate}</strong>
+        <small>Driver · ${carPersonName(driver)}${together?` · ${carPersonName(carPartner(driver))} 为你加油 ♡`:''}</small></div>
+      </div>
+      <div class="race30-diff">
+        <span>AI 难度</span>
+        ${Object.values(RACE30_DIFFICULTY).map(d=>`<button data-race30-diff="${d.id}" class="${d.id===diff?'active':''}">${d.label}</button>`).join('')}
+      </div>
+      <div class="race30-track-grid">
+        <button class="race30-track active" data-race30-track="lakeside">
+          <div class="race30-track-art lakeside"><span>🌊</span><i>🏁</i></div>
+          <b>Lakeside Sprint</b>
+          <small>3 Laps · 2.76 km<br>连续转向 · AI 对手 · 弯前刹车</small>
+          <em>${state.racing.bestTimes?.lakeside?`BEST ${race30FmtTime(state.racing.bestTimes.lakeside)}`:'NO RECORD'}</em>
+        </button>
+        <button class="race30-track locked" disabled>
+          <div class="race30-track-art mountain"><span>⛰️</span></div>
+          <b>Mountain Pass</b><small>下一阶段开放</small><em>COMING NEXT</em>
+        </button>
+        <button class="race30-track locked" disabled>
+          <div class="race30-track-art night"><span>🌃</span></div>
+          <b>Night City Circuit</b><small>下一阶段开放</small><em>COMING NEXT</em>
+        </button>
+      </div>
+      <div class="race30-rules">
+        <b>怎么玩</b>
+        <span>W / ↑ 油门</span><span>S / ↓ 刹车</span><span>A / D 连续转向</span><span>Space 手刹</span>
+        <p>直路尽量加速；看到 BRAKE 提示就提早减速。冲出赛道会严重掉速，撞 AI 也会马上掉速。</p>
+      </div>
+      <button class="mama-btn race30-start" id="race30Start">3 · 2 · 1 · START RACE</button>
+    </div>
+  `);
+  let selectedDiff=diff;
+  document.querySelectorAll('[data-race30-diff]').forEach(b=>b.onclick=()=>{
+    selectedDiff=b.dataset.race30Diff;
+    document.querySelectorAll('[data-race30-diff]').forEach(x=>x.classList.toggle('active',x===b));
+  });
+  $('#race30Start').onclick=()=>{
+    state.racing.difficulty=selectedDiff;save();
+    $('#modalRoot').innerHTML='';
+    startRace30(carId,'lakeside',driver,together,selectedDiff);
+  };
+}
+
+function startRace30(carId,trackId='lakeside',driver=state.active,together=true,difficulty='normal'){
+  const track=RACE30_TRACKS[trackId],diff=RACE30_DIFFICULTY[difficulty]||RACE30_DIFFICULTY.normal,car=state.cars[carId];
+  if(!track||!car)return;
+  document.querySelector('.car10-overlay')?.remove();
+
+  const totalMeters=track.lapMeters*track.laps;
+  const el=carOverlay(`
+    <div class="race30-shell">
+      <div class="race30-topbar">
+        <div class="race30-track-name"><span>${track.icon}</span><div><b>${track.name}</b><small>${diff.label} · ${track.laps} LAPS</small></div></div>
+        <div class="race30-mainstats">
+          <div><small>POSITION</small><b id="race30Pos">4 / 4</b></div>
+          <div><small>LAP</small><b id="race30Lap">1 / ${track.laps}</b></div>
+          <div><small>SPEED</small><b><span id="race30Speed">0</span> <i>km/h</i></b></div>
+          <div><small>TIME</small><b id="race30Time">0:00.00</b></div>
+        </div>
+        <button type="button" class="race30-quit" id="race30Quit">退出比赛</button>
+      </div>
+
+      <div class="race30-stage">
+        <canvas id="race30Canvas" width="1280" height="720"></canvas>
+        <div class="race30-countdown" id="race30Countdown">3</div>
+        <div class="race30-corner" id="race30Corner"><b>STRAIGHT</b><span>FULL THROTTLE</span></div>
+        <div class="race30-slip" id="race30Slip">SLIPSTREAM +</div>
+        <div class="race30-hit" id="race30Hit">💥 CONTACT · SPEED LOST</div>
+
+        <div class="race30-leftpanel">
+          <div><small>BEST LAP</small><b id="race30BestLap">--</b></div>
+          <div><small>CURRENT LAP</small><b id="race30LapTime">0:00.00</b></div>
+          <div><small>GAP AHEAD</small><b id="race30Gap">--</b></div>
+        </div>
+
+        <div class="race30-rivals" id="race30Rivals"></div>
+
+        <div class="race30-progress">
+          <i id="race30ProgressFill"></i>
+          <span id="race30YouDot">YOU</span>
+        </div>
+
+        <div class="race30-player-label">
+          <span>${carId==='black'?'⚫':'⚪'}</span>
+          <b>${car.plate}</b>
+          <small>${carPersonName(driver)}</small>
+        </div>
+
+        <div class="race30-cheer ${together?'':'hidden'}">
+          <img src="${carActorImg(carPartner(driver))}">
+          <span id="race30Cheer">${carPersonName(carPartner(driver))}: 加油！🏁</span>
+        </div>
+
+        <div class="race30-controls">
+          <div class="race30-steer">
+            <button type="button" data-r30="left">◀</button>
+            <div><span>STEERING</span><i id="race30SteerBar"></i></div>
+            <button type="button" data-r30="right">▶</button>
+          </div>
+          <button type="button" class="race30-hand" data-r30="hand">HANDBRAKE<br><small>SPACE</small></button>
+          <button type="button" class="race30-pedal brake" data-r30="brake">BRAKE<br><small>S / ↓</small></button>
+          <button type="button" class="race30-pedal gas" data-r30="gas">ACCEL<br><small>W / ↑</small></button>
+        </div>
+      </div>
+    </div>
+  `,'race30-mode');
+
+  const canvas=$('#race30Canvas'),ctx=canvas.getContext('2d');
+  const controls={gas:false,brake:false,left:false,right:false,hand:false};
+  let alive=true,raceStarted=false,finished=false,paused=false;
+  let speed=0,playerX=0,steer=0,progress=0;
+  let raceTime=0,lapStart=0,bestLap=Infinity,lastLap=0;
+  let collisionCooldown=0,offRoadTime=0,collisions=0;
+  let lastTs=performance.now(),countValue=3,countTimer=0,cheerTimer=0;
+  let flashHit=0,slipstream=false;
+  const aiNames=['Mika','Noah','Rin'];
+  const aiColors=['#e85d6a','#4f78d7','#f1b84c'];
+  const ais=aiNames.map((name,i)=>({
+    name,
+    lane:[-.45,.43,0][i],
+    targetLane:[-.45,.43,0][i],
+    progress:-(i+1)*13,
+    speed:(111+i*5)*diff.ai,
+    base:(116+i*5)*diff.ai,
+    color:aiColors[i],
+    finished:false,
+    finishTime:null,
+    seed:i*2.17
+  }));
+  const cheerLines=['稳住，前面有弯！','可以超他了！','这圈很快！','直路踩下去！','慢一点进弯！','Nice overtake! 🏁'];
+
+  const cleanup=()=>{
+    alive=false;
+    window.removeEventListener('keydown',onKD,true);
+    window.removeEventListener('keyup',onKU,true);
+    document.querySelectorAll('[data-r30]').forEach(b=>{
+      b.onpointerdown=b.onpointerup=b.onpointercancel=null;
+    });
+  };
+  const quit=()=>{cleanup();el.remove();openCarGarage(carId,driver)};
+  $('#race30Quit').onclick=quit;
+
+  function setControl(k,v){controls[k]=v}
+  document.querySelectorAll('[data-r30]').forEach(b=>{
+    const k=b.dataset.r30;
+    b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);setControl(k,true)};
+    b.onpointerup=()=>setControl(k,false);
+    b.onpointercancel=()=>setControl(k,false);
+  });
+  function onKD(e){
+    if(!alive)return;
+    const k=e.key.toLowerCase();
+    if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright',' '].includes(k)){e.preventDefault();e.stopImmediatePropagation()}
+    if(k==='w'||k==='arrowup')controls.gas=true;
+    if(k==='s'||k==='arrowdown')controls.brake=true;
+    if(k==='a'||k==='arrowleft')controls.left=true;
+    if(k==='d'||k==='arrowright')controls.right=true;
+    if(k===' ')controls.hand=true;
+  }
+  function onKU(e){
+    if(!alive)return;
+    const k=e.key.toLowerCase();
+    if(k==='w'||k==='arrowup')controls.gas=false;
+    if(k==='s'||k==='arrowdown')controls.brake=false;
+    if(k==='a'||k==='arrowleft')controls.left=false;
+    if(k==='d'||k==='arrowright')controls.right=false;
+    if(k===' ')controls.hand=false;
+  }
+  window.addEventListener('keydown',onKD,true);
+  window.addEventListener('keyup',onKU,true);
+
+  function currentRank(){
+    const all=[{p:progress,me:true},...ais.map(a=>({p:a.progress,me:false}))].sort((a,b)=>b.p-a.p);
+    return all.findIndex(x=>x.me)+1;
+  }
+  function closestAhead(){
+    const ahead=ais.filter(a=>a.progress>progress).sort((a,b)=>a.progress-b.progress)[0];
+    return ahead?ahead.progress-progress:null;
+  }
+  function updateHUD(){
+    const lap=Math.min(track.laps,Math.floor(Math.max(0,progress)/track.lapMeters)+1);
+    $('#race30Pos').textContent=`${currentRank()} / 4`;
+    $('#race30Lap').textContent=`${lap} / ${track.laps}`;
+    $('#race30Speed').textContent=Math.round(speed);
+    $('#race30Time').textContent=race30FmtTime(raceTime);
+    $('#race30LapTime').textContent=race30FmtTime(Math.max(0,raceTime-lapStart));
+    $('#race30BestLap').textContent=isFinite(bestLap)?race30FmtTime(bestLap):'--';
+    const gap=closestAhead();$('#race30Gap').textContent=gap==null?'LEADER':`${gap.toFixed(0)} m`;
+    $('#race30ProgressFill').style.width=`${Math.min(100,progress/totalMeters*100)}%`;
+    $('#race30YouDot').style.left=`${Math.min(98,Math.max(2,progress/totalMeters*100))}%`;
+    $('#race30SteerBar').style.transform=`translateX(${steer*38}px)`;
+    const rec=race30RecommendedSpeed(track,progress);
+    const curve=race30CurveAt(track,progress+55),corner=$('#race30Corner');
+    if(Math.abs(curve)>.25){
+      corner.classList.add('warn');
+      corner.querySelector('b').textContent=curve>0?'RIGHT TURN →':'← LEFT TURN';
+      corner.querySelector('span').textContent=speed>rec+8?`BRAKE · ${rec} km/h`:`TARGET ${rec} km/h`;
+    }else{
+      corner.classList.remove('warn');
+      corner.querySelector('b').textContent='STRAIGHT';
+      corner.querySelector('span').textContent='FULL THROTTLE';
+    }
+    $('#race30Slip').classList.toggle('show',slipstream);
+    $('#race30Hit').classList.toggle('show',flashHit>0);
+    $('#race30Rivals').innerHTML=[{name:'YOU',p:progress,color:carId==='black'?'#18191d':'#f5f5f2'},...ais.map(a=>({name:a.name,p:a.progress,color:a.color}))]
+      .sort((a,b)=>b.p-a.p).map((r,i)=>`<div class="${r.name==='YOU'?'you':''}"><i style="background:${r.color}"></i><b>${i+1}</b><span>${r.name}</span></div>`).join('');
+  }
+
+  function finishRace(){
+    if(finished)return;finished=true;alive=false;
+    cleanup();
+    const rank=currentRank(),total=raceTime;
+    state.racing.races=(state.racing.races||0)+1;
+    if(rank===1)state.racing.wins=(state.racing.wins||0)+1;
+    const old=state.racing.bestTimes[trackId];
+    if(!old||total<old)state.racing.bestTimes[trackId]=total;
+    car.stats.races=(car.stats.races||0)+1;
+    car.stats.raceWins=(car.stats.raceWins||0)+(rank===1?1:0);
+    const rewardBase=[0,120,75,40,20][rank]||20;
+    const rewardCoins=Math.round(rewardBase*diff.reward);
+    const rewardXP=Math.round((rank===1?100:rank===2?70:rank===3?45:25)*diff.reward);
+    state.coins+=rewardCoins;state.xpTotal+=rewardXP;
+    save();renderTaskUI?.();
+    const medal=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'🏁';
+    const result=document.createElement('div');
+    result.className='race30-result';
+    result.innerHTML=`
+      <div class="race30-result-card">
+        <span class="race30-medal">${medal}</span>
+        <small>FINISH</small>
+        <h1>${rank===1?'1ST PLACE':rank===2?'2ND PLACE':rank===3?'3RD PLACE':'4TH PLACE'}</h1>
+        <p>${track.name} · ${diff.label}</p>
+        <div class="race30-result-stats">
+          <div><small>TOTAL TIME</small><b>${race30FmtTime(total)}</b></div>
+          <div><small>BEST LAP</small><b>${isFinite(bestLap)?race30FmtTime(bestLap):race30FmtTime(lastLap)}</b></div>
+          <div><small>COLLISIONS</small><b>${collisions}</b></div>
+          <div><small>OFF ROAD</small><b>${offRoadTime.toFixed(1)}s</b></div>
+        </div>
+        <strong class="race30-reward">+${rewardCoins} 🪙 · +${rewardXP} XP</strong>
+        <div class="race30-result-actions">
+          <button id="race30Again">再赛一次</button>
+          <button id="race30Garage">回车库</button>
+        </div>
+      </div>`;
+    el.appendChild(result);
+    $('#race30Again').onclick=()=>{el.remove();startRace30(carId,trackId,driver,together,difficulty)};
+    $('#race30Garage').onclick=()=>{el.remove();openCarGarage(carId,driver)};
+  }
+
+  function update(dt){
+    if(!raceStarted||finished)return;
+    raceTime+=dt;collisionCooldown=Math.max(0,collisionCooldown-dt);flashHit=Math.max(0,flashHit-dt);
+
+    const gas=controls.gas,brake=controls.brake,hand=controls.hand;
+    const left=controls.left,right=controls.right;
+    const steerInput=(right?1:0)-(left?1:0);
+
+    // Speed-sensitive continuous steering. Low speed = easier turn, high speed = smaller steering angle.
+    const maxSteer=.92-(Math.min(190,speed)/190)*.42;
+    steer+=(steerInput*maxSteer-steer)*Math.min(1,dt*(speed<55?5.5:3.7));
+    if(!left&&!right)steer*=Math.pow(.87,dt*60);
+
+    // Power / braking.
+    const accel=gas?(43*(1-Math.min(speed,195)/245)):0;
+    const braking=brake?92:0;
+    const drag=4.8+speed*.016;
+    speed+=accel*dt;
+    speed-=braking*dt;
+    speed-=drag*dt;
+    if(hand){speed-=35*dt;steer*=1.16}
+    speed=Math.max(0,Math.min(198,speed));
+
+    // Track curvature physically pushes the car outward more at speed.
+    const curve=race30CurveAt(track,progress+25);
+    const grip=diff.grip;
+    playerX+=steer*dt*(.72+speed/78)*grip;
+    playerX-=curve*dt*(speed/125)*.42;
+    if(Math.abs(curve)>.5&&speed>115){
+      const excess=(speed-115)/80;
+      playerX-=Math.sign(curve)*excess*dt*.24;
+    }
+
+    // Off road = big speed loss. This is the main "brake for corner" challenge.
+    const off=Math.abs(playerX)>1.02;
+    if(off){
+      offRoadTime+=dt;
+      speed=Math.max(32,speed-68*dt);
+      playerX=Math.max(-1.34,Math.min(1.34,playerX));
+    }else playerX=Math.max(-1.22,Math.min(1.22,playerX));
+
+    // Slipstream when directly behind a rival.
+    slipstream=false;
+    let nearestSlip=null;
+    ais.forEach(a=>{
+      const gap=a.progress-progress;
+      if(gap>7&&gap<34&&Math.abs(a.lane-playerX)<.20){
+        nearestSlip=a;slipstream=true;
+      }
+    });
+    if(slipstream&&gas)speed=Math.min(202,speed+8.5*dt);
+
+    // Advance player in true distance.
+    progress+=speed/3.6*dt;
+
+    // AI racing: slows for corners and changes lane to overtake.
+    ais.forEach((a,i)=>{
+      const aCurve=Math.abs(race30CurveAt(track,a.progress+55));
+      const cornerTarget=aCurve>.72?82:aCurve>.5?101:aCurve>.28?126:(a.base+28);
+      const target=Math.min(a.base+31,cornerTarget)*diff.ai;
+      a.speed+=(target-a.speed)*Math.min(1,dt*1.15);
+      a.speed+=Math.sin(raceTime*.7+a.seed)*dt*1.6;
+      a.speed=Math.max(65,Math.min(188,a.speed));
+
+      // AI changes racing line sometimes.
+      if(Math.random()<dt*.18){
+        const opts=[-.55,0,.55];
+        a.targetLane=opts[Math.floor(Math.random()*opts.length)];
+      }
+      a.lane+=(a.targetLane-a.lane)*Math.min(1,dt*.65);
+
+      if(!a.finished){
+        a.progress+=a.speed/3.6*dt;
+        if(a.progress>=totalMeters){a.finished=true;a.finishTime=raceTime}
+      }
+
+      // Collision detection: CONTACT means immediate big speed loss.
+      const gap=a.progress-progress;
+      if(collisionCooldown<=0&&gap>-2.8&&gap<5.8&&Math.abs(a.lane-playerX)<.25){
+        collisionCooldown=1.05;collisions++;
+        speed=Math.max(20,speed*.46);
+        a.speed=Math.max(60,a.speed*.76);
+        playerX+=(playerX<=a.lane?-1:1)*.16;
+        flashHit=.75;
+        driveTone?.(85,.16,.10,'square');
+      }
+    });
+
+    // Lap timing.
+    const completedLaps=Math.floor(progress/track.lapMeters);
+    const previousCompleted=Math.floor((progress-speed/3.6*dt)/track.lapMeters);
+    if(completedLaps>previousCompleted&&completedLaps<track.laps){
+      lastLap=raceTime-lapStart;
+      bestLap=Math.min(bestLap,lastLap);
+      lapStart=raceTime;
+      if(together&&$('#race30Cheer'))$('#race30Cheer').textContent=`${carPersonName(carPartner(driver))}: Lap ${completedLaps+1}! 很快！`;
+    }
+    if(progress>=totalMeters){
+      lastLap=raceTime-lapStart;bestLap=Math.min(bestLap,lastLap);
+      finishRace();return;
+    }
+
+    cheerTimer-=dt;
+    if(together&&cheerTimer<=0){
+      cheerTimer=5+Math.random()*4;
+      $('#race30Cheer').textContent=`${carPersonName(carPartner(driver))}: ${cheerLines[Math.floor(Math.random()*cheerLines.length)]}`;
+    }
+  }
+
+  function drawCar(x,y,scale,color,label,isPlayer=false){
+    ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+    if(isPlayer){
+      ctx.shadowColor='rgba(0,0,0,.25)';ctx.shadowBlur=14;ctx.shadowOffsetY=8;
+    }
+    ctx.fillStyle=color;ctx.strokeStyle='#1c2025';ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.roundRect(-52,-76,104,144,24);
+    ctx.fill();ctx.stroke();
+    ctx.fillStyle='rgba(36,50,62,.92)';
+    ctx.beginPath();ctx.roundRect(-39,-52,78,48,13);ctx.fill();
+    ctx.fillStyle='#e64d57';ctx.fillRect(-43,39,23,8);ctx.fillRect(20,39,23,8);
+    ctx.fillStyle='#f7f1dd';ctx.fillRect(-12,32,24,17);
+    ctx.fillStyle='#272727';ctx.font='bold 11px Arial';ctx.textAlign='center';
+    ctx.fillText(label,0,44);
+    ctx.fillStyle='#151515';ctx.fillRect(-58,-35,8,35);ctx.fillRect(50,-35,8,35);
+    ctx.fillRect(-58,23,8,35);ctx.fillRect(50,23,8,35);
+    ctx.restore();
+  }
+
+  function draw(){
+    const W=canvas.width,H=canvas.height,horizon=172;
+    ctx.clearRect(0,0,W,H);
+
+    // Sky / lake / mountains.
+    const sky=ctx.createLinearGradient(0,0,0,horizon+120);
+    sky.addColorStop(0,'#8fd0ef');sky.addColorStop(.62,'#d8eef4');sky.addColorStop(1,'#f6d8c3');
+    ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#94bfcc';ctx.fillRect(0,130,W,100);
+    ctx.fillStyle='#7ea4aa';
+    ctx.beginPath();ctx.moveTo(0,160);
+    for(let x=0;x<=W;x+=100)ctx.lineTo(x,125+Math.sin(x*.013)*28+Math.sin(x*.031)*10);
+    ctx.lineTo(W,230);ctx.lineTo(0,230);ctx.fill();
+
+    // Pseudo-3D road slices.
+    const baseCurve=race30CurveAt(track,progress+18);
+    const slices=72;
+    let prev=null;
+    for(let i=0;i<=slices;i++){
+      const p=i/slices;
+      const y=horizon+p*(H-horizon);
+      const persp=p*p;
+      const roadHalf=78+persp*520;
+      const bend=baseCurve*(1-p)*280 + Math.sin((progress*.004)+p*3.2)*baseCurve*32*(1-p);
+      const center=W/2 + bend - playerX*250*persp;
+      if(prev){
+        ctx.fillStyle=(i+Math.floor(progress/18))%2===0?'#383b40':'#3c3f44';
+        ctx.beginPath();
+        ctx.moveTo(prev.center-prev.half,prev.y);ctx.lineTo(prev.center+prev.half,prev.y);
+        ctx.lineTo(center+roadHalf,y);ctx.lineTo(center-roadHalf,y);ctx.closePath();ctx.fill();
+
+        // shoulders
+        ctx.strokeStyle=(i+Math.floor(progress/12))%2===0?'#f7eee0':'#d45454';
+        ctx.lineWidth=Math.max(2,p*8);
+        ctx.beginPath();ctx.moveTo(prev.center-prev.half,prev.y);ctx.lineTo(center-roadHalf,y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(prev.center+prev.half,prev.y);ctx.lineTo(center+roadHalf,y);ctx.stroke();
+
+        // lane markers
+        if((i+Math.floor(progress/8))%8<4){
+          ctx.strokeStyle='rgba(255,249,225,.92)';ctx.lineWidth=Math.max(1,p*5);
+          [-1/3,1/3].forEach(f=>{
+            ctx.beginPath();
+            ctx.moveTo(prev.center+prev.half*f,prev.y);
+            ctx.lineTo(center+roadHalf*f,y);ctx.stroke();
+          });
+        }
+      }
+      prev={center,half:roadHalf,y};
+    }
+
+    // Roadside objects actually move with distance.
+    const scroll=(progress%92)/92;
+    for(let side of [-1,1]){
+      for(let j=0;j<9;j++){
+        let p=((j/9+scroll)%1);
+        p=.08+p*.92;
+        const persp=p*p;
+        const roadHalf=78+persp*520;
+        const bend=baseCurve*(1-p)*280;
+        const cx=W/2+bend-playerX*250*persp;
+        const x=cx+side*(roadHalf+45+persp*95);
+        const y=horizon+p*(H-horizon);
+        const s=.25+p*.95;
+        ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+        ctx.fillStyle='#5a6f39';ctx.beginPath();ctx.arc(0,-48,24,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#7f9c51';ctx.beginPath();ctx.arc(-12,-58,19,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(13,-60,17,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#75543c';ctx.fillRect(-4,-35,8,38);
+        ctx.restore();
+      }
+    }
+
+    // AI cars ahead/nearby.
+    ais.forEach(a=>{
+      const gap=a.progress-progress;
+      if(gap<-8||gap>175)return;
+      const z=1-Math.max(0,gap)/180;
+      const p=.18+z*.76,persp=p*p;
+      const roadHalf=78+persp*520;
+      const curveHere=race30CurveAt(track,progress+gap*.45)*(1-p)*240;
+      const center=W/2+curveHere-playerX*250*persp;
+      const x=center+a.lane*roadHalf*.72;
+      const y=horizon+p*(H-horizon)-42;
+      const scale=.30+z*.78;
+      drawCar(x,y,scale,a.color,a.name,false);
+    });
+
+    // Player Lexus.
+    const playerColor=carId==='black'?'#101318':'#f6f5f0';
+    drawCar(W/2,H-112,1.18,playerColor,car.plate,true);
+
+    // Speed lines at high speed.
+    if(speed>135){
+      ctx.strokeStyle='rgba(255,255,255,.34)';ctx.lineWidth=2;
+      for(let i=0;i<16;i++){
+        const x=(i*83+(progress*13)%83)%W;
+        const y=230+(i%7)*64;
+        ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+35+(speed-135)*.7);ctx.stroke();
+      }
+    }
+  }
+
+  function loop(ts){
+    if(!alive)return;
+    const dt=Math.min(.035,Math.max(.001,(ts-lastTs)/1000));lastTs=ts;
+    if(!raceStarted){
+      countTimer+=dt;
+      const next=3-Math.floor(countTimer);
+      if(next!==countValue&&next>=1){countValue=next;$('#race30Countdown').textContent=next;driveTone?.(430+next*80,.08,.04,'sine')}
+      if(countTimer>=3){
+        raceStarted=true;raceTime=0;lapStart=0;
+        $('#race30Countdown').textContent='GO!';
+        $('#race30Countdown').classList.add('go');
+        driveTone?.(760,.22,.06,'sine');
+        setTimeout(()=>{$('#race30Countdown')?.classList.add('hide')},650);
+      }
+    }else update(dt);
+    draw();updateHUD();
+    requestAnimationFrame(loop);
+  }
+  updateHUD();draw();requestAnimationFrame(loop);
+}

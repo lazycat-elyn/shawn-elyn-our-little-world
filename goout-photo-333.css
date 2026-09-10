@@ -1,0 +1,262 @@
+/* MASTER 3.3.3 — GO OUT PHOTO UI
+   Crisp photographic visual layer. No blur is applied to Go Out photos.
+*/
+.outing331-overlay.outing333-photo-ui {
+  background: rgba(28, 21, 18, .54) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.outing333-photo-ui .outing331-shell {
+  width: min(1540px, 98.6vw) !important;
+  height: min(920px, 97vh) !important;
+  background: #fbf8f5 !important;
+  box-shadow: 0 28px 90px rgba(28, 20, 17, .32) !important;
+}
+
+.outing333-photo-ui .outing331-header {
+  background: #fffaf7 !important;
+  border-bottom: 1px solid #eadfd8 !important;
+}
+
+.outing333-photo-ui .outing331-toolbar {
+  background: #fffdfb !important;
+}
+
+.outing333-photo-ui .outing331-content {
+  grid-template-columns: minmax(0, 1fr) 340px !important;
+  gap: 14px !important;
+  padding: 12px !important;
+  background: #f6f2ef !important;
+}
+
+.outing333-photo-ui .outing331-feature-banner {
+  height: 230px !important;
+  display: block !important;
+  position: relative !important;
+  isolation: isolate;
+  overflow: hidden !important;
+  border-radius: 24px !important;
+  background: linear-gradient(120deg, #f7dbe4, #fff1e9 55%, #dcebdc) !important;
+  box-shadow: 0 12px 30px rgba(48, 34, 28, .16) !important;
+}
+
+.outing333-photo-ui .outing333-feature-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 58%;
+  filter: none !important;
+  opacity: 1 !important;
+  image-rendering: auto !important;
+  transform: none !important;
+}
+
+.outing333-photo-ui .outing333-feature-shade {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(24, 19, 17, .76) 0%, rgba(24, 19, 17, .50) 40%, rgba(24, 19, 17, .10) 70%, rgba(24, 19, 17, .02) 100%);
+  pointer-events: none;
+}
+
+.outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing333-feature-shade {
+  display: block;
+}
+
+.outing333-photo-ui .outing333-feature-copy {
+  position: relative;
+  z-index: 2;
+  width: min(570px, 70%);
+  padding: 34px !important;
+}
+
+.outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing333-feature-copy {
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .25);
+}
+
+.outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing333-feature-copy > span {
+  color: #fff0d7 !important;
+  font-size: 9px !important;
+  letter-spacing: 1.6px !important;
+}
+
+.outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing333-feature-copy h2 {
+  color: #fff !important;
+  font-size: 36px !important;
+  margin: 6px 0 7px !important;
+}
+
+.outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing333-feature-copy p {
+  max-width: 440px !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  line-height: 1.55 !important;
+}
+
+.outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing333-feature-copy button {
+  padding: 10px 16px !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: #43352f !important;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, .12) !important;
+}
+
+.outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing331-feature-dessert {
+  display: none !important;
+}
+
+.outing333-photo-ui .outing331-grid {
+  gap: 12px !important;
+}
+
+.outing333-photo-ui .outing331-card {
+  overflow: hidden !important;
+  border: 1px solid #eee4de !important;
+  border-radius: 20px !important;
+  background: #fff !important;
+  box-shadow: 0 7px 20px rgba(52, 37, 30, .08) !important;
+}
+
+.outing333-photo-ui .outing331-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 13px 28px rgba(52, 37, 30, .13) !important;
+}
+
+.outing333-photo-ui .outing331-card.active {
+  border: 2px solid #ee7891 !important;
+  box-shadow: 0 0 0 3px #f9dde4, 0 12px 28px rgba(69, 39, 46, .12) !important;
+}
+
+.outing333-photo-ui .outing331-cover {
+  height: 168px !important;
+  position: relative;
+  background: #e9e2dd !important;
+}
+
+.outing333-photo-ui .outing331-cover img,
+.outing333-photo-ui .outing331-detail-cover img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  opacity: 1 !important;
+  image-rendering: auto !important;
+  transform: none !important;
+}
+
+.outing333-photo-ui .outing331-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .01), transparent 58%, rgba(0, 0, 0, .12));
+}
+
+.outing333-photo-ui .outing331-cover > span,
+.outing333-photo-ui .outing331-cover > em {
+  z-index: 2 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.outing333-photo-ui .outing331-cover > span {
+  padding: 4px 7px !important;
+  background: rgba(255, 255, 255, .94) !important;
+  color: #493a34 !important;
+  font-size: 7px !important;
+}
+
+.outing333-photo-ui .outing331-cover > em {
+  padding: 4px 7px !important;
+  background: rgba(29, 26, 24, .76) !important;
+  font-size: 7px !important;
+}
+
+.outing333-photo-ui .outing331-card-body {
+  padding: 10px 11px 11px !important;
+}
+
+.outing333-photo-ui .outing331-card-body b {
+  font-size: 11px !important;
+}
+
+.outing333-photo-ui .outing331-card-body small {
+  color: #76655e !important;
+  font-size: 7.5px !important;
+  line-height: 1.45 !important;
+}
+
+.outing333-photo-ui .outing331-detail {
+  padding: 12px !important;
+  border: 1px solid #ede2dc !important;
+  border-radius: 22px !important;
+  box-shadow: 0 9px 26px rgba(52, 37, 30, .08) !important;
+}
+
+.outing333-photo-ui .outing331-detail-cover {
+  height: 255px !important;
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px !important;
+  background: #e9e2dd !important;
+}
+
+.outing333-photo-ui .outing331-detail-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 67%, rgba(0, 0, 0, .12));
+}
+
+.outing333-photo-ui .outing331-detail-cover > span {
+  z-index: 2 !important;
+  background: rgba(255, 255, 255, .96) !important;
+}
+
+.outing333-photo-ui .outing331-detail h2 {
+  font-size: 25px !important;
+}
+
+.outing333-photo-ui .outing331-detail p {
+  font-size: 10px !important;
+}
+
+.outing333-photo-ui .outing331-detail-info span {
+  background: #f5f0ec !important;
+}
+
+.outing333-photo-ui .outing331-search {
+  border: 1px solid #eee4df !important;
+  background: #f4efeb !important;
+}
+
+@media (max-width: 1020px) {
+  .outing333-photo-ui .outing331-content {
+    grid-template-columns: minmax(0, 1fr) 290px !important;
+  }
+  .outing333-photo-ui .outing331-cover { height: 150px !important; }
+  .outing333-photo-ui .outing331-detail-cover { height: 225px !important; }
+}
+
+@media (max-width: 720px) {
+  .outing333-photo-ui .outing331-content {
+    display: block !important;
+    padding: 7px !important;
+  }
+  .outing333-photo-ui .outing331-feature-banner { height: 180px !important; }
+  .outing333-photo-ui .outing333-feature-copy { width: 78%; padding: 22px 18px !important; }
+  .outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing333-feature-copy h2 { font-size: 28px !important; }
+  .outing333-photo-ui .outing331-feature-banner.outing333-photo-ready .outing333-feature-copy p { font-size: 9px !important; }
+  .outing333-photo-ui .outing331-cover { height: 122px !important; }
+}

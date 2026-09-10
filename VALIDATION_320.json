@@ -1,0 +1,20 @@
+{
+  "node_syntax": "OK",
+  "go_out_supermarket_redirect": true,
+  "walkable_store": true,
+  "keyboard_and_touch_movement": true,
+  "trolley": true,
+  "shopping_list": true,
+  "aisles": true,
+  "distinct_product_assets": 57,
+  "checkout_scanning": true,
+  "produce_weighing": true,
+  "bagging": true,
+  "receipt_payment": true,
+  "lexus_boot_loading": true,
+  "drive_home_route": true,
+  "home_unload_sorting": true,
+  "clean_character_mode_preserved": true,
+  "racing_preserved": true,
+  "fishing_preserved": true
+}

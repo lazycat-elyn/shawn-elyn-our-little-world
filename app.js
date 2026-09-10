@@ -631,6 +631,7 @@ function openOutingMap(selected='supermarket'){
 }
 function outingReward(coins=0,xp=0,love=0,msg='完成活动 ♡'){state.coins+=coins;state.xpTotal+=xp;if(love)addLove(love,'一起出游');save();renderTaskUI();renderNeedsUI();rewardPop(`${msg}${coins?` · +${coins}🪙`:''}${xp?` +${xp}XP`:''}`)}
 function openOutingLocation(id,arrivedByCar=false){
+ if(id==='supermarket')return openSupermarket32({arrivedByCar,carId:arrivedByCar?state.lastArrivalCarId:null,driver:state.active,together:true});
  closeOuting();const o=OUTING_DESTINATIONS[id];if(!o)return;state.lastOuting=id;save();
  const actionSets={
   supermarket:[['🛒 买一篮食材 · 120 Coins','groceries'],['🥤 买饮料 · 25 Coins','drink']],
@@ -1360,10 +1361,11 @@ function playCarExitSequence(carId,dest,driver,together,score,parkingResult){
 }
 function completeCarTrip(carId,dest,driver,together,score,parkingResult){document.querySelector('.car10-overlay')?.remove();recordEvent('driveCar',1);if(together)addLove(score>=85?3:2,'一起出门');save();arriveByCar(carId,dest,driver,together,score,parkingResult)}
 
-function arriveByCar(carId,dest,driver,together,score,parkingResult){if(OUTING_DESTINATIONS[dest]){state.lastArrivalCarId=carId;save();openOutingLocation(dest,true);return}if(dest==='lake'){state.room='lake';showGame();toast('开到湖边了 ♡');return}if(dest==='fuel'){openRefuelGame(carId);return}if(dest==='wash'){openCarWashGame(carId);return}if(dest==='cafe'){adjustNeeds(driver,{mood:+8});if(together){adjustNeeds(carPartner(driver),{mood:+8});addLove(4,'Café 小约会')}modal('湖景 Café ☕',`<p>${together?'两个人一起':'你'}顺利到达 Café。驾驶 ${score}/100 · ${parkingResult}</p><button class="small-button" id="cafeDrink">买饮料 · 20 Coins</button>`);$('#cafeDrink').onclick=()=>{if(state.coins<20){toast('Coins 不够');return}state.coins-=20;adjustNeeds(driver,{mood:+5,hunger:-4});save();renderTaskUI();toast('喝饮料 ♡')};return}openDriveShop(carId,driver,together)}
-function openDriveShop(carId,driver,together){const car=state.cars[carId];modal('城市超市 🛒',`<p>买到的东西会先放进 <b>${car.plate}</b> 的后备箱，不会瞬间传送到冰箱。</p><div class="grid"><button class="card" data-buy="groceries">🥚 基础食材箱 · 120</button><button class="card" data-buy="seeds">🌱 种子包 ×8 · 70</button><button class="card" data-buy="bait">🎣 普通鱼饵 ×8 · 55</button><button class="card" data-buy="premium">🪱 高级鱼饵 ×2 · 100</button><button class="card" data-buy="pet">🐾 宠物食品 · 60</button></div><button class="small-button secondary" id="openBootAfterShop">查看后备箱</button>`);document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{const type=b.dataset.buy,cost={groceries:120,seeds:70,bait:55,premium:100,pet:60}[type],label={groceries:'基础食材箱',seeds:'种子包 ×8',bait:'普通鱼饵 ×8',premium:'高级鱼饵 ×2',pet:'宠物食品'}[type];if(state.coins<cost){toast('Coins 不够');return}state.coins-=cost;car.storage.boot.push({type,label,qty:1});save();renderTaskUI();toast(`${label} 已放进后备箱`) });$('#openBootAfterShop').onclick=()=>openCarStorage(carId,'boot')}
+function arriveByCar(carId,dest,driver,together,score,parkingResult){if(dest==='homeFromMarket32'){state.room='garage';save();showGame();setTimeout(()=>openHomeUnload32(carId),250);return}if(OUTING_DESTINATIONS[dest]){state.lastArrivalCarId=carId;save();openOutingLocation(dest,true);return}if(dest==='lake'){state.room='lake';showGame();toast('开到湖边了 ♡');return}if(dest==='fuel'){openRefuelGame(carId);return}if(dest==='wash'){openCarWashGame(carId);return}if(dest==='cafe'){adjustNeeds(driver,{mood:+8});if(together){adjustNeeds(carPartner(driver),{mood:+8});addLove(4,'Café 小约会')}modal('湖景 Café ☕',`<p>${together?'两个人一起':'你'}顺利到达 Café。驾驶 ${score}/100 · ${parkingResult}</p><button class="small-button" id="cafeDrink">买饮料 · 20 Coins</button>`);$('#cafeDrink').onclick=()=>{if(state.coins<20){toast('Coins 不够');return}state.coins-=20;adjustNeeds(driver,{mood:+5,hunger:-4});save();renderTaskUI();toast('喝饮料 ♡')};return}openDriveShop(carId,driver,together)}
+function openDriveShopLegacy(carId,driver,together){const car=state.cars[carId];modal('城市超市 🛒',`<p>买到的东西会先放进 <b>${car.plate}</b> 的后备箱，不会瞬间传送到冰箱。</p><div class="grid"><button class="card" data-buy="groceries">🥚 基础食材箱 · 120</button><button class="card" data-buy="seeds">🌱 种子包 ×8 · 70</button><button class="card" data-buy="bait">🎣 普通鱼饵 ×8 · 55</button><button class="card" data-buy="premium">🪱 高级鱼饵 ×2 · 100</button><button class="card" data-buy="pet">🐾 宠物食品 · 60</button></div><button class="small-button secondary" id="openBootAfterShop">查看后备箱</button>`);document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{const type=b.dataset.buy,cost={groceries:120,seeds:70,bait:55,premium:100,pet:60}[type],label={groceries:'基础食材箱',seeds:'种子包 ×8',bait:'普通鱼饵 ×8',premium:'高级鱼饵 ×2',pet:'宠物食品'}[type];if(state.coins<cost){toast('Coins 不够');return}state.coins-=cost;car.storage.boot.push({type,label,qty:1});save();renderTaskUI();toast(`${label} 已放进后备箱`) });$('#openBootAfterShop').onclick=()=>openCarStorage(carId,'boot')}
+function openDriveShop(carId,driver,together){return openSupermarket32({arrivedByCar:true,carId,driver,together});}
 function openCarStorage(carId,focus='boot',back=null){const car=state.cars[carId],areas=[['boot','后备箱'],['backSeat','后座'],['glove','手套箱'],['cups','杯架']];modal(`${car.plate} · 车内收纳`, `<div class="car10-storage-tabs">${areas.map(([id,n])=>`<button data-storage="${id}" class="${id===focus?'active':''}">${n}</button>`).join('')}</div><div id="carStorageList"></div>${state.room==='garage'?'<button class="small-button" id="unloadBoot">把后备箱购物搬进家里</button>':''}`);const render=a=>{focus=a;document.querySelectorAll('[data-storage]').forEach(b=>b.classList.toggle('active',b.dataset.storage===a));const list=car.storage[a]||[];$('#carStorageList').innerHTML=list.length?`<div class="car10-storage-list">${list.map((it,i)=>`<div><span>📦</span><b>${it.label||it.type}</b><small>×${it.qty||1}</small></div>`).join('')}</div>`:'<p class="empty-note">这里是空的。</p>'};document.querySelectorAll('[data-storage]').forEach(b=>b.onclick=()=>render(b.dataset.storage));$('#unloadBoot')?.addEventListener('click',()=>unloadCarBoot(carId));render(focus)}
-function unloadCarBoot(carId){const car=state.cars[carId],items=[...car.storage.boot];if(!items.length){toast('后备箱没有购物');return}for(const it of items){if(it.type==='groceries')Object.entries(DEFAULT_FRIDGE).forEach(([id,n])=>state.fridge[id]=Math.max(state.fridge[id]||0,Math.ceil(n*.85)));if(it.type==='seeds')state.seeds+=8;if(it.type==='bait')state.bait+=8;if(it.type==='premium')state.premiumBait+=2;if(it.type==='pet'){adjustNeeds('dudu',{hunger:-20});adjustNeeds('bubu',{hunger:-20})}}car.storage.boot=[];save();toast('购物已经搬进家里 ♡');$('#modalRoot').innerHTML=''}
+function unloadCarBoot(carId){const car=state.cars[carId],items=[...car.storage.boot];if(!items.length){toast('后备箱没有购物');return}for(const it of items){if(it.type==='supermarket32')applyMarketItems32(it.items||[]);if(it.type==='groceries')Object.entries(DEFAULT_FRIDGE).forEach(([id,n])=>state.fridge[id]=Math.max(state.fridge[id]||0,Math.ceil(n*.85)));if(it.type==='seeds')state.seeds+=8;if(it.type==='bait')state.bait+=8;if(it.type==='premium')state.premiumBait+=2;if(it.type==='pet'){adjustNeeds('dudu',{hunger:-20});adjustNeeds('bubu',{hunger:-20})}}car.storage.boot=[];save();toast('购物已经搬进家里 ♡');$('#modalRoot').innerHTML=''}
 
 function openRefuelGame(carId){const car=state.cars[carId];let fuelType='RON95',step=0,spent=0,hold=false,timer=null,startFuel=car.fuel;const draw=()=>{modal(`加油 · ${car.plate}`,`<div class="car10-refuel"><img src="${car.model}"><div class="car10-refuel-steps"><span class="${step>=0?'on':''}">1 打开油箱盖</span><span class="${step>=1?'on':''}">2 选择油品</span><span class="${step>=2?'on':''}">3 插入油枪</span><span class="${step>=3?'on':''}">4 加油</span></div><div id="refuelBody"></div></div>`);const body=$('#refuelBody');if(step===0){body.innerHTML='<button class="mama-btn" id="fuelDoor">打开油箱盖</button>';$('#fuelDoor').onclick=()=>{step=1;draw()}}else if(step===1){body.innerHTML='<p>选择油品</p><button class="mama-btn" data-fueltype="RON95">RON 95</button> <button class="mama-btn secondary" data-fueltype="RON97">RON 97</button>';document.querySelectorAll('[data-fueltype]').forEach(b=>b.onclick=()=>{fuelType=b.dataset.fueltype;step=2;draw()})}else if(step===2){body.innerHTML=`<p>${fuelType} · 把油枪插进去。</p><button class="mama-btn" id="insertNozzle">插入油枪</button>`;$('#insertNozzle').onclick=()=>{step=3;draw()}}else{body.innerHTML=`${carMeter('当前油量',car.fuel,'⛽')}<p>按住油枪加油。${fuelType==='RON97'?'RON97 稍贵。':'RON95 日常使用即可。'}</p><button class="mama-btn hold" id="fuelHold">按住加油</button><b id="fuelCost">本次 ${spent} Coins</b>`;const b=$('#fuelHold'),rate=fuelType==='RON97'?1.35:1;b.onpointerdown=e=>{hold=true;b.setPointerCapture?.(e.pointerId);timer=setInterval(()=>{if(car.fuel>=100||state.coins<=0){stop();return}car.fuel=Math.min(100,car.fuel+1.3);if(Math.random()<.45*rate){state.coins--;spent++}$('#fuelCost').textContent=`油量 ${Math.round(car.fuel)}% · 本次 ${spent} Coins`;save()},85)};const stop=()=>{if(!hold)return;hold=false;clearInterval(timer);if(car.fuel>startFuel){recordEvent('refuelCar',1);save();renderTaskUI();toast(`加油完成 · ${Math.round(car.fuel)}%`)}};b.onpointerup=stop;b.onpointercancel=stop}};draw()}
 
@@ -2814,4 +2816,433 @@ function startRace31(carId,trackId='lakeside',driver=state.active,together=true,
     requestAnimationFrame(loop);
   }
   drawRoad();drawMap();updateHUD();requestAnimationFrame(loop);
+}
+
+
+/* =========================================================
+   MASTER 3.2 — SUPERMARKET LIFE GAME 1.0
+   Real walkable shop + trolley + shelves + shopping list +
+   scanning/weighing/bagging + Lexus boot + home sorting.
+   ========================================================= */
+
+const SM32_PRODUCTS=[{"id":"apples","label":"苹果","cat":"produce","catLabel":"水果蔬菜","emoji":"🍎","price":11,"weight":0.61,"promo":0,"freshness":90,"asset":"./assets/supermarket32/products/apples.svg","isIngredient":true},{"id":"avocado","label":"牛油果","cat":"produce","catLabel":"水果蔬菜","emoji":"🥑","price":11,"weight":1.01,"promo":0,"freshness":90,"asset":"./assets/supermarket32/products/avocado.svg","isIngredient":true},{"id":"blueberries","label":"蓝莓","cat":"produce","catLabel":"水果蔬菜","emoji":"🫐","price":8,"weight":1.0,"promo":10,"freshness":93,"asset":"./assets/supermarket32/products/blueberries.svg","isIngredient":true},{"id":"broccoli","label":"西兰花","cat":"produce","catLabel":"水果蔬菜","emoji":"🥦","price":4,"weight":0.82,"promo":0,"freshness":95,"asset":"./assets/supermarket32/products/broccoli.svg","isIngredient":true},{"id":"carrots","label":"胡萝卜","cat":"produce","catLabel":"水果蔬菜","emoji":"🥕","price":8,"weight":0.53,"promo":0,"freshness":90,"asset":"./assets/supermarket32/products/carrots.svg","isIngredient":true},{"id":"corn","label":"玉米","cat":"produce","catLabel":"水果蔬菜","emoji":"🌽","price":11,"weight":0.76,"promo":0,"freshness":93,"asset":"./assets/supermarket32/products/corn.svg","isIngredient":true},{"id":"garlic","label":"大蒜","cat":"produce","catLabel":"水果蔬菜","emoji":"🧄","price":6,"weight":0.97,"promo":0,"freshness":94,"asset":"./assets/supermarket32/products/garlic.svg","isIngredient":true},{"id":"grapes","label":"葡萄","cat":"produce","catLabel":"水果蔬菜","emoji":"🍇","price":11,"weight":0.89,"promo":20,"freshness":90,"asset":"./assets/supermarket32/products/grapes.svg","isIngredient":true},{"id":"greenOnion","label":"青葱","cat":"produce","catLabel":"水果蔬菜","emoji":"🌿","price":10,"weight":0.47,"promo":0,"freshness":92,"asset":"./assets/supermarket32/products/greenOnion.svg","isIngredient":true},{"id":"lemon","label":"柠檬","cat":"produce","catLabel":"水果蔬菜","emoji":"🍋","price":5,"weight":1.06,"promo":0,"freshness":99,"asset":"./assets/supermarket32/products/lemon.svg","isIngredient":true},{"id":"lettuce","label":"生菜","cat":"produce","catLabel":"水果蔬菜","emoji":"🥬","price":11,"weight":0.39,"promo":0,"freshness":96,"asset":"./assets/supermarket32/products/lettuce.svg","isIngredient":true},{"id":"mushrooms","label":"蘑菇","cat":"produce","catLabel":"水果蔬菜","emoji":"🍄","price":4,"weight":1.05,"promo":10,"freshness":98,"asset":"./assets/supermarket32/products/mushrooms.svg","isIngredient":true},{"id":"onions","label":"洋葱","cat":"produce","catLabel":"水果蔬菜","emoji":"🧅","price":11,"weight":1.1,"promo":10,"freshness":99,"asset":"./assets/supermarket32/products/onions.svg","isIngredient":true},{"id":"potatoes","label":"马铃薯","cat":"produce","catLabel":"水果蔬菜","emoji":"🥔","price":3,"weight":0.81,"promo":0,"freshness":94,"asset":"./assets/supermarket32/products/potatoes.svg","isIngredient":true},{"id":"strawberries","label":"草莓","cat":"produce","catLabel":"水果蔬菜","emoji":"🍓","price":11,"weight":1.12,"promo":10,"freshness":93,"asset":"./assets/supermarket32/products/strawberries.svg","isIngredient":true},{"id":"tomatoes","label":"番茄","cat":"produce","catLabel":"水果蔬菜","emoji":"🍅","price":7,"weight":1.0,"promo":0,"freshness":89,"asset":"./assets/supermarket32/products/tomatoes.svg","isIngredient":true},{"id":"berryYogurt","label":"莓果酸奶","cat":"dairy","catLabel":"冷藏乳品","emoji":"🥣","price":11,"weight":0.55,"promo":0,"freshness":91,"asset":"./assets/supermarket32/products/berryYogurt.svg","isIngredient":true},{"id":"butter","label":"黄油","cat":"dairy","catLabel":"冷藏乳品","emoji":"🧈","price":11,"weight":0.46,"promo":0,"freshness":94,"asset":"./assets/supermarket32/products/butter.svg","isIngredient":true},{"id":"cheese","label":"芝士","cat":"dairy","catLabel":"冷藏乳品","emoji":"🧀","price":6,"weight":0.46,"promo":0,"freshness":98,"asset":"./assets/supermarket32/products/cheese.svg","isIngredient":true},{"id":"cream","label":"鲜奶油","cat":"dairy","catLabel":"冷藏乳品","emoji":"🥛","price":9,"weight":1.06,"promo":0,"freshness":98,"asset":"./assets/supermarket32/products/cream.svg","isIngredient":true},{"id":"eggs","label":"鸡蛋","cat":"dairy","catLabel":"冷藏乳品","emoji":"🥚","price":12,"weight":0.74,"promo":0,"freshness":98,"asset":"./assets/supermarket32/products/eggs.svg","isIngredient":true},{"id":"milk","label":"牛奶","cat":"dairy","catLabel":"冷藏乳品","emoji":"🥛","price":9,"weight":0.64,"promo":0,"freshness":98,"asset":"./assets/supermarket32/products/milk.svg","isIngredient":true},{"id":"plainYogurt","label":"原味酸奶","cat":"dairy","catLabel":"冷藏乳品","emoji":"🥣","price":6,"weight":0.66,"promo":0,"freshness":92,"asset":"./assets/supermarket32/products/plainYogurt.svg","isIngredient":true},{"id":"bacon","label":"培根","cat":"meat","catLabel":"肉类海鲜","emoji":"🥓","price":10,"weight":0.93,"promo":10,"freshness":94,"asset":"./assets/supermarket32/products/bacon.svg","isIngredient":true},{"id":"beef","label":"牛肉","cat":"meat","catLabel":"肉类海鲜","emoji":"🥩","price":19,"weight":1.2,"promo":0,"freshness":91,"asset":"./assets/supermarket32/products/beef.svg","isIngredient":true},{"id":"chicken","label":"鸡肉","cat":"meat","catLabel":"肉类海鲜","emoji":"🍗","price":17,"weight":1.03,"promo":0,"freshness":92,"asset":"./assets/supermarket32/products/chicken.svg","isIngredient":true},{"id":"salmon","label":"三文鱼","cat":"meat","catLabel":"肉类海鲜","emoji":"🐟","price":8,"weight":1.23,"promo":20,"freshness":94,"asset":"./assets/supermarket32/products/salmon.svg","isIngredient":true},{"id":"shrimp","label":"鲜虾","cat":"meat","catLabel":"肉类海鲜","emoji":"🦐","price":17,"weight":1.05,"promo":0,"freshness":94,"asset":"./assets/supermarket32/products/shrimp.svg","isIngredient":true},{"id":"sausage","label":"香肠","cat":"meat","catLabel":"肉类海鲜","emoji":"🌭","price":10,"weight":1.17,"promo":0,"freshness":88,"asset":"./assets/supermarket32/products/sausage.svg","isIngredient":false},{"id":"cocoa","label":"可可粉","cat":"pantry","catLabel":"粮油调味","emoji":"🍫","price":11,"weight":1.07,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/cocoa.svg","isIngredient":true},{"id":"coffeeBeans","label":"咖啡豆","cat":"pantry","catLabel":"粮油调味","emoji":"☕","price":12,"weight":1.38,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/coffeeBeans.svg","isIngredient":true},{"id":"flour","label":"面粉","cat":"pantry","catLabel":"粮油调味","emoji":"🌾","price":11,"weight":1.27,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/flour.svg","isIngredient":true},{"id":"noodles","label":"面条","cat":"pantry","catLabel":"粮油调味","emoji":"🍜","price":9,"weight":1.35,"promo":20,"freshness":null,"asset":"./assets/supermarket32/products/noodles.svg","isIngredient":true},{"id":"oil","label":"食用油","cat":"pantry","catLabel":"粮油调味","emoji":"🫗","price":13,"weight":1.29,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/oil.svg","isIngredient":true},{"id":"pasta","label":"意面","cat":"pantry","catLabel":"粮油调味","emoji":"🍝","price":8,"weight":0.34,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/pasta.svg","isIngredient":true},{"id":"rice","label":"米","cat":"pantry","catLabel":"粮油调味","emoji":"🍚","price":12,"weight":1.18,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/rice.svg","isIngredient":true},{"id":"sauces","label":"综合酱料","cat":"pantry","catLabel":"粮油调味","emoji":"🫙","price":13,"weight":0.49,"promo":10,"freshness":null,"asset":"./assets/supermarket32/products/sauces.svg","isIngredient":true},{"id":"sugar","label":"砂糖","cat":"pantry","catLabel":"粮油调味","emoji":"🧂","price":13,"weight":0.79,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/sugar.svg","isIngredient":true},{"id":"mayonnaise","label":"蛋黄酱","cat":"pantry","catLabel":"粮油调味","emoji":"🫙","price":4,"weight":0.6,"promo":20,"freshness":null,"asset":"./assets/supermarket32/products/mayonnaise.svg","isIngredient":false},{"id":"ketchup","label":"番茄酱","cat":"pantry","catLabel":"粮油调味","emoji":"🍅","price":8,"weight":0.44,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/ketchup.svg","isIngredient":false},{"id":"chiliSauce","label":"辣椒酱","cat":"pantry","catLabel":"粮油调味","emoji":"🌶️","price":12,"weight":1.28,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/chiliSauce.svg","isIngredient":false},{"id":"jam","label":"草莓果酱","cat":"pantry","catLabel":"粮油调味","emoji":"🍓","price":11,"weight":0.47,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/jam.svg","isIngredient":false},{"id":"orangeJuice","label":"橙汁","cat":"snacks","catLabel":"零食饮料","emoji":"🧃","price":8,"weight":0.65,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/orangeJuice.svg","isIngredient":true},{"id":"sparklingWater","label":"气泡水","cat":"snacks","catLabel":"零食饮料","emoji":"💧","price":10,"weight":0.72,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/sparklingWater.svg","isIngredient":false},{"id":"bread","label":"吐司面包","cat":"snacks","catLabel":"零食饮料","emoji":"🍞","price":8,"weight":0.35,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/bread.svg","isIngredient":true},{"id":"chips","label":"薯片","cat":"snacks","catLabel":"零食饮料","emoji":"🥔","price":10,"weight":0.31,"promo":10,"freshness":null,"asset":"./assets/supermarket32/products/chips.svg","isIngredient":false},{"id":"pudding","label":"布丁","cat":"snacks","catLabel":"零食饮料","emoji":"🍮","price":6,"weight":0.32,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/pudding.svg","isIngredient":false},{"id":"cakeSlice","label":"蛋糕切片","cat":"snacks","catLabel":"零食饮料","emoji":"🍰","price":11,"weight":0.81,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/cakeSlice.svg","isIngredient":false},{"id":"dumplings","label":"冷冻水饺","cat":"frozen","catLabel":"冷冻食品","emoji":"🥟","price":10,"weight":0.39,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/dumplings.svg","isIngredient":false},{"id":"nuggets","label":"鸡块","cat":"frozen","catLabel":"冷冻食品","emoji":"🍗","price":15,"weight":0.74,"promo":10,"freshness":null,"asset":"./assets/supermarket32/products/nuggets.svg","isIngredient":false},{"id":"fries","label":"薯条","cat":"frozen","catLabel":"冷冻食品","emoji":"🍟","price":8,"weight":0.97,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/fries.svg","isIngredient":false},{"id":"iceCream","label":"冰淇淋","cat":"frozen","catLabel":"冷冻食品","emoji":"🍨","price":8,"weight":0.37,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/iceCream.svg","isIngredient":false},{"id":"dogFood","label":"Dudu 狗粮","cat":"household","catLabel":"宠物日用","emoji":"🐶","price":14,"weight":0.54,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/dogFood.svg","isIngredient":false},{"id":"catFood","label":"Bubu 猫粮","cat":"household","catLabel":"宠物日用","emoji":"🐱","price":6,"weight":0.82,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/catFood.svg","isIngredient":false},{"id":"detergent","label":"洗衣液","cat":"household","catLabel":"宠物日用","emoji":"🧴","price":10,"weight":1.4,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/detergent.svg","isIngredient":false},{"id":"tissues","label":"纸巾","cat":"household","catLabel":"宠物日用","emoji":"🧻","price":9,"weight":1.28,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/tissues.svg","isIngredient":false},{"id":"shampoo","label":"洗发水","cat":"household","catLabel":"宠物日用","emoji":"🧴","price":11,"weight":0.33,"promo":0,"freshness":null,"asset":"./assets/supermarket32/products/shampoo.svg","isIngredient":false}];
+
+const SM32_BY_ID=Object.fromEntries(SM32_PRODUCTS.map(p=>[p.id,p]));
+const SM32_AISLES=[
+ {id:'produce',name:'Fresh Produce',cn:'水果蔬菜',x:16,y:43,w:13,h:48,side:'right',sign:'🥬'},
+ {id:'dairy',name:'Dairy & Eggs',cn:'冷藏乳品',x:34,y:43,w:13,h:48,side:'right',sign:'🥛'},
+ {id:'meat',name:'Meat & Seafood',cn:'肉类海鲜',x:52,y:43,w:13,h:48,side:'right',sign:'🥩'},
+ {id:'pantry',name:'Pantry',cn:'粮油调味',x:70,y:43,w:13,h:48,side:'right',sign:'🍚'},
+ {id:'snacks',name:'Bakery & Drinks',cn:'零食饮料',x:25,y:79,w:20,h:12,side:'top',sign:'🥐'},
+ {id:'frozen',name:'Frozen',cn:'冷冻食品',x:51,y:79,w:20,h:12,side:'top',sign:'❄️'},
+ {id:'household',name:'Pet & Household',cn:'宠物日用',x:77,y:79,w:20,h:12,side:'top',sign:'🐾'}
+];
+const SM32_AUDIO={
+ ctx:null,gain:null,amb:null,timer:null,on:true,
+ init(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!this.ctx)this.ctx=new AC();if(this.ctx.state==='suspended')this.ctx.resume()}catch(e){}},
+ tone(f=650,d=.07,g=.035,type='sine'){if(!this.on)return;this.init();if(!this.ctx)return;const o=this.ctx.createOscillator(),v=this.ctx.createGain();o.type=type;o.frequency.value=f;v.gain.value=.0001;o.connect(v);v.connect(this.ctx.destination);const t=this.ctx.currentTime;v.gain.exponentialRampToValueAtTime(g,t+.01);v.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.02)},
+ start(){if(!this.on)return;this.init();if(!this.ctx||this.amb)return;const o=this.ctx.createOscillator(),g=this.ctx.createGain(),f=this.ctx.createBiquadFilter();o.type='sine';o.frequency.value=112;f.type='lowpass';f.frequency.value=360;g.gain.value=.0025;o.connect(f);f.connect(g);g.connect(this.ctx.destination);o.start();this.amb={o,g,f};this.timer=setInterval(()=>{if(!this.on)return;this.tone([523,659,784][Math.floor(Math.random()*3)],.14,.007,'sine')},5200)},
+ stop(){try{this.amb?.o.stop()}catch(e){}this.amb=null;if(this.timer)clearInterval(this.timer);this.timer=null}
+};
+
+function ensureSupermarket32State(){
+ state.supermarket32=Object.assign({visits:0,shoppingList:[],supplies:{dogFood:2,catFood:2,detergent:2,tissues:3,shampoo:2},lastReceipt:null},state.supermarket32||{});
+ state.supermarket32.supplies=state.supermarket32.supplies||{};
+}
+function sm32Inventory(id){
+ if(INGREDIENTS[id])return state.fridge[id]||0;
+ return state.supermarket32?.supplies?.[id]||0;
+}
+function sm32BuildList(){
+ ensureSupermarket32State();
+ const essentials=['eggs','milk','chicken','tomatoes','rice','strawberries','bread','onions','salmon','cheese','carrots','mushrooms'];
+ const ingredientCandidates=SM32_PRODUCTS.filter(p=>p.isIngredient)
+   .sort((a,b)=>sm32Inventory(a.id)-sm32Inventory(b.id));
+ let ids=[];
+ for(const p of ingredientCandidates){if(sm32Inventory(p.id)<=5&&!ids.includes(p.id))ids.push(p.id);if(ids.length>=5)break}
+ for(const id of essentials){if(SM32_BY_ID[id]&&!ids.includes(id))ids.push(id);if(ids.length>=7)break}
+ while(ids.length<7){const p=SM32_PRODUCTS[Math.floor(Math.random()*SM32_PRODUCTS.length)];if(p.isIngredient&&!ids.includes(p.id))ids.push(p.id)}
+ return ids.slice(0,7).map(id=>({id,qty:1}));
+}
+function sm32Price(p){
+ const raw=p.price||1,discount=p.promo||0;
+ return Math.max(1,Math.round(raw*(100-discount)/100));
+}
+function sm32IsProduce(p){return p?.cat==='produce'}
+function sm32Img(p){return p?.asset||''}
+function sm32ProductCard(p,stock,cartQty=0,listNeed=false){
+ return `<button class="sm32-product ${listNeed?'needed':''}" data-sm32-product="${p.id}" ${stock<=0?'disabled':''}>
+   <div class="sm32-product-img"><img src="${sm32Img(p)}"><span>${stock<=2&&stock>0?'LAST '+stock:stock<=0?'SOLD OUT':''}</span></div>
+   <b>${p.label}</b><small>${p.freshness?`Fresh ${p.freshness}% · `:''}${p.weight.toFixed(1)}kg</small>
+   <div><strong>${sm32Price(p)} 🪙</strong>${p.promo?`<em>-${p.promo}%</em>`:''}${cartQty?`<i>Cart ×${cartQty}</i>`:''}</div>
+ </button>`;
+}
+function applyMarketItems32(items){
+ ensureSupermarket32State();
+ for(const it of items||[]){
+   const qty=Math.max(1,it.qty||1),id=it.id;
+   if(INGREDIENTS[id])state.fridge[id]=(state.fridge[id]||0)+qty;
+   else state.supermarket32.supplies[id]=(state.supermarket32.supplies[id]||0)+qty;
+ }
+ save();renderTaskUI?.();
+}
+if(typeof CAR_ROUTES!=='undefined'&&!CAR_ROUTES.homeFromMarket32){
+ CAR_ROUTES.homeFromMarket32={name:'Supermarket → Home',km:5.8,difficulty:'EASY',parking:'NORMAL',icon:'🏠',desc:'买完东西开车回家',speedLimit:60,traffic:'normal',road:'住宅区'};
+}
+
+function openSupermarket32(opts={}){
+ ensureSupermarket32State();
+ document.querySelector('.outing-location-overlay')?.remove();closeOuting?.();
+ const arrivedByCar=!!opts.arrivedByCar,carId=opts.carId&&state.cars?.[opts.carId]?opts.carId:null;
+ const driver=opts.driver||state.active,together=opts.together!==false,partner=driver==='elyn'?'shawn':'elyn';
+ const list=sm32BuildList();
+ state.supermarket32.shoppingList=list;state.supermarket32.visits=(state.supermarket32.visits||0)+1;save();
+
+ const stock=Object.fromEntries(SM32_PRODUCTS.map((p,i)=>[p.id,3+((i*7+p.id.length*3)%9)]));
+ const cart={};
+ let player={x:50,y:92},target=null,hasCart=false,activeAisle=null,alive=true,last=performance.now(),targetAction=null,shawnEventDone=false;
+ const keys={},npcPhase=0;
+ const el=document.createElement('section');el.className='sm32-overlay';
+ el.innerHTML=`
+ <div class="sm32-shell">
+   <header class="sm32-header">
+     <div class="sm32-title"><button id="sm32Back">←</button><span>🛒</span><div><b>Little World Market</b><small>${arrivedByCar&&carId?`🚗 ${state.cars[carId].plate} 停在外面`:'步行到店'} · ${together?`${carPersonName(partner)} 一起逛 ♡`:'Solo shopping'}</small></div></div>
+     <div class="sm32-money"><small>COINS</small><b id="sm32Money">${state.coins} 🪙</b></div>
+     <div class="sm32-cart-head"><small>CART</small><b><span id="sm32CartCount">0</span>/18</b><em id="sm32CartTotal">0 🪙</em></div>
+     <button id="sm32Sound">🔊</button>
+   </header>
+
+   <div class="sm32-main">
+     <aside class="sm32-list-panel">
+       <div class="sm32-list-title"><b>Shopping List</b><span id="sm32ListProgress">0/7</span></div>
+       <p>冰箱库存较少的东西已经帮你列出来。</p>
+       <div id="sm32ListItems"></div>
+       <div class="sm32-tip" id="sm32Tip">先去入口拿一辆购物车。</div>
+     </aside>
+
+     <div class="sm32-world-wrap">
+       <div class="sm32-world" id="sm32World">
+         <div class="sm32-ceiling-sign">WELCOME · FRESH EVERY DAY</div>
+         <div class="sm32-freezer-wall"><span>Fresh Milk</span><span>Cold Drinks</span><span>Frozen</span></div>
+         <div class="sm32-entry"><i></i><i></i><b>Automatic Door</b></div>
+         <button class="sm32-trolley-bay" id="sm32TrolleyBay"><span class="sm32-cart-shape"><i></i></span><b>TROLLEYS</b><small>Tap to take one</small></button>
+         <button class="sm32-checkout-zone" id="sm32Checkout"><span>▥ ▥ ▥</span><b>CHECKOUT</b><small>结账区</small></button>
+         ${SM32_AISLES.map(a=>`<button class="sm32-aisle ${a.id}" data-sm32-aisle="${a.id}" style="left:${a.x}%;top:${a.y}%;width:${a.w}%;height:${a.h}%">
+           <strong>${a.sign} ${a.cn}</strong><span>${a.name}</span>
+           <i></i><i></i><i></i><i></i>
+         </button>`).join('')}
+         <div class="sm32-promo-island"><span>20% OFF</span><b>Weekend Specials</b></div>
+         <div class="sm32-npc n1"><span>🧑🏻</span><i class="mini-cart"></i></div>
+         <div class="sm32-npc n2"><span>👩🏻</span><i class="mini-cart"></i></div>
+         <div class="sm32-npc n3"><span>🧓🏻</span></div>
+         <div class="sm32-cart-avatar" id="sm32CartAvatar"><span class="sm32-cart-shape"><i></i></span><div id="sm32CartVisual"></div></div>
+         <img class="sm32-partner ${together?'':'hide'}" id="sm32Partner" src="${carActorImg(partner)}" alt="${carPersonName(partner)}">
+         <img class="sm32-player" id="sm32Player" src="${carActorImg(driver)}" alt="${carPersonName(driver)}">
+         <div class="sm32-floor-hint" id="sm32FloorHint">点击地面移动 · WASD / Arrow Keys</div>
+       </div>
+
+       <div class="sm32-mobile-pad">
+         <div><button data-sm32-move="up">▲</button><span><button data-sm32-move="left">◀</button><button data-sm32-move="down">▼</button><button data-sm32-move="right">▶</button></span></div>
+         <button class="action" id="sm32MobileAction">拿购物车</button>
+       </div>
+     </div>
+
+     <aside class="sm32-cart-panel">
+       <div><b>My Trolley</b><button id="sm32ClearCart">Clear</button></div>
+       <div id="sm32CartItems"><p>购物车还是空的。</p></div>
+       <button id="sm32CheckoutBtn" disabled>前往结账</button>
+     </aside>
+   </div>
+
+   <div class="sm32-shelf-sheet" id="sm32ShelfSheet">
+     <div class="sm32-sheet-head"><div><span id="sm32ShelfIcon">🥬</span><b id="sm32ShelfName">Fresh Produce</b><small id="sm32ShelfSub"></small></div><button id="sm32ShelfClose">×</button></div>
+     <div class="sm32-product-grid" id="sm32Products"></div>
+   </div>
+
+   <div class="sm32-event" id="sm32Event"></div>
+ </div>`;
+ document.body.appendChild(el);
+
+ SM32_AUDIO.on=true;SM32_AUDIO.start();
+
+ const $s=q=>el.querySelector(q),$$s=q=>[...el.querySelectorAll(q)];
+ const obstacles=SM32_AISLES.map(a=>({x:a.x-a.w/2,y:a.y-a.h/2,w:a.w,h:a.h}));
+ function cartCount(){return Object.values(cart).reduce((s,n)=>s+n,0)}
+ function totalCost(){return Object.entries(cart).reduce((s,[id,n])=>s+sm32Price(SM32_BY_ID[id])*n,0)}
+ function listDone(){return list.filter(li=>(cart[li.id]||0)>=li.qty).length}
+ function aisleForProduct(id){return SM32_BY_ID[id]?.cat}
+ function collides(x,y){
+   // Keep a comfortable body radius around shelves.
+   return obstacles.some(o=>x>o.x-2&&x<o.x+o.w+2&&y>o.y-2&&y<o.y+o.h+2);
+ }
+ function clampPos(pos){return{x:Math.max(4,Math.min(96,pos.x)),y:Math.max(8,Math.min(95,pos.y))}}
+ function near(x1,y1,x2,y2,d=10){return Math.hypot(x1-x2,y1-y2)<=d}
+ function nearestAisle(){
+   return SM32_AISLES.map(a=>({a,d:Math.hypot(player.x-a.x,player.y-a.y)})).sort((a,b)=>a.d-b.d)[0];
+ }
+ function aisleApproach(a){
+   if(a.side==='top')return{x:a.x,y:a.y-a.h/2-7};
+   return{x:a.x+a.w/2+7,y:a.y};
+ }
+ function setTarget(x,y,action=null){
+   let p=clampPos({x,y});
+   if(collides(p.x,p.y)){target=null;return}
+   target=p;targetAction=action;
+ }
+ function moveToAisle(id){
+   const a=SM32_AISLES.find(x=>x.id===id);if(!a)return;
+   const p=aisleApproach(a);setTarget(p.x,p.y,()=>openShelf(a.id));
+ }
+ function showEvent(html,actions=[]){
+   const ev=$s('#sm32Event');ev.innerHTML=`<div>${html}</div>${actions.map((a,i)=>`<button data-sm32-ev="${i}">${a.label}</button>`).join('')}`;ev.classList.add('show');
+   actions.forEach((a,i)=>ev.querySelector(`[data-sm32-ev="${i}"]`).onclick=()=>{a.run();ev.classList.remove('show')});
+   if(!actions.length)setTimeout(()=>ev.classList.remove('show'),1200);
+ }
+ function takeCart(){
+   if(hasCart)return;
+   if(!near(player.x,player.y,10,88,18)){setTarget(13,87,takeCart);$s('#sm32Tip').textContent='正在走去购物车区…';return}
+   hasCart=true;$s('#sm32CartAvatar').classList.add('show');$s('#sm32TrolleyBay').classList.add('taken');
+   $s('#sm32Tip').textContent='购物车拿好了。点击货架开始找 Shopping List。';
+   $s('#sm32MobileAction').textContent='浏览附近货架';SM32_AUDIO.tone(620,.08,.035);render();
+ }
+ function openShelf(id){
+   if(!hasCart){showEvent('🛒 先拿购物车，这样商品才有地方放。',[{label:'去拿购物车',run:()=>setTarget(13,87,takeCart)}]);return}
+   const a=SM32_AISLES.find(x=>x.id===id);if(!a)return;activeAisle=id;
+   $s('#sm32ShelfIcon').textContent=a.sign;$s('#sm32ShelfName').textContent=a.name;$s('#sm32ShelfSub').textContent=a.cn;
+   renderShelf();$s('#sm32ShelfSheet').classList.add('open');
+ }
+ function renderShelf(){
+   const needed=new Set(list.filter(li=>(cart[li.id]||0)<li.qty).map(li=>li.id));
+   $s('#sm32Products').innerHTML=SM32_PRODUCTS.filter(p=>p.cat===activeAisle).map(p=>sm32ProductCard(p,stock[p.id],cart[p.id]||0,needed.has(p.id))).join('');
+   $$s('[data-sm32-product]').forEach(b=>b.onclick=()=>pickProduct(b.dataset.sm32Product));
+ }
+ function pickProduct(id){
+   const p=SM32_BY_ID[id];if(!p||stock[id]<=0)return;
+   if(cartCount()>=18){showEvent('购物车已经满了（18件）。先去结账吧。');return}
+   cart[id]=(cart[id]||0)+1;stock[id]--;SM32_AUDIO.tone(760,.06,.035);
+   showEvent(`<b>${p.emoji} ${p.label}</b> 放进购物车 · ${sm32Price(p)} 🪙${p.promo?` · SALE -${p.promo}%`:''}`);
+   if(together&&!shawnEventDone&&cartCount()>=3){shawnEventDone=true;setTimeout(()=>partnerSnackEvent(),700)}
+   render();renderShelf();
+ }
+ function partnerSnackEvent(){
+   if(cartCount()>=18)return;
+   showEvent(`<b>${carPersonName(partner)} 偷偷放了一包薯片 😂</b><br><small>不是 Shopping List 里的东西。</small>`,[
+     {label:'Keep it 😂',run:()=>{if(stock.chips>0){cart.chips=(cart.chips||0)+1;stock.chips--;SM32_AUDIO.tone(820,.07,.035);render();renderShelf()} }},
+     {label:'Put it back',run:()=>{SM32_AUDIO.tone(420,.05,.02)}}
+   ]);
+ }
+ function render(){
+   const done=listDone(),count=cartCount(),total=totalCost();
+   $s('#sm32Money').textContent=state.coins+' 🪙';$s('#sm32CartCount').textContent=count;$s('#sm32CartTotal').textContent=total+' 🪙';
+   $s('#sm32ListProgress').textContent=`${done}/${list.length}`;
+   $s('#sm32ListItems').innerHTML=list.map(li=>{const p=SM32_BY_ID[li.id],ok=(cart[li.id]||0)>=li.qty;return `<button data-sm32-list="${li.id}" class="${ok?'done':''}"><img src="${p.asset}"><span><b>${p.label}</b><small>${p.catLabel}</small></span><em>${ok?'✓':'×1'}</em></button>`}).join('');
+   $$s('[data-sm32-list]').forEach(b=>b.onclick=()=>{const id=b.dataset.sm32List,a=aisleForProduct(id);$s('#sm32Tip').textContent=`${SM32_BY_ID[id].label} 在 ${SM32_AISLES.find(x=>x.id===a)?.cn||''}`;moveToAisle(a)});
+   const entries=Object.entries(cart).filter(([,n])=>n>0);
+   $s('#sm32CartItems').innerHTML=entries.length?entries.map(([id,n])=>{const p=SM32_BY_ID[id];return `<div><img src="${p.asset}"><span><b>${p.label}</b><small>${sm32Price(p)}🪙 × ${n}</small></span><button data-sm32-minus="${id}">−</button></div>`}).join(''):'<p>购物车还是空的。</p>';
+   $$s('[data-sm32-minus]').forEach(b=>b.onclick=()=>{const id=b.dataset.sm32Minus;if(cart[id]>0){cart[id]--;stock[id]++;if(!cart[id])delete cart[id];render();if(activeAisle)renderShelf()}});
+   $s('#sm32CheckoutBtn').disabled=count===0;$s('#sm32CheckoutBtn').textContent=done===list.length?'✓ Shopping List 完成 · 去结账':`去结账 · List ${done}/${list.length}`;
+   // small products visible in trolley
+   const visuals=entries.slice(-5).map(([id])=>`<img src="${SM32_BY_ID[id].asset}">`).join('');$s('#sm32CartVisual').innerHTML=visuals;
+ }
+ function mobileAction(){
+   if(!hasCart)return takeCart();
+   if(near(player.x,player.y,87,84,13)&&cartCount())return beginCheckout();
+   const n=nearestAisle();if(n&&n.d<24)return moveToAisle(n.a.id);
+   $s('#sm32Tip').textContent='靠近货架后再按「浏览附近货架」。';
+ }
+ function beginCheckout(){
+   if(!cartCount())return;
+   $s('#sm32ShelfSheet').classList.remove('open');
+   setTarget(87,83,()=>openCheckout32({cart,stock,list,arrivedByCar,carId,driver,together,partner,onBack:()=>{}}));
+ }
+ // World click-to-move
+ $s('#sm32World').addEventListener('pointerdown',e=>{
+   if(e.target.closest('button,.sm32-player,.sm32-partner,.sm32-cart-avatar'))return;
+   const r=$s('#sm32World').getBoundingClientRect();setTarget((e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100);
+ });
+ $$s('[data-sm32-aisle]').forEach(b=>b.onclick=e=>{e.stopPropagation();moveToAisle(b.dataset.sm32Aisle)});
+ $s('#sm32TrolleyBay').onclick=e=>{e.stopPropagation();setTarget(13,87,takeCart)};
+ $s('#sm32Checkout').onclick=e=>{e.stopPropagation();if(!cartCount())showEvent('购物车还是空的。');else setTarget(87,83,beginCheckout)};
+ $s('#sm32CheckoutBtn').onclick=beginCheckout;$s('#sm32MobileAction').onclick=mobileAction;
+ $s('#sm32ShelfClose').onclick=()=>$s('#sm32ShelfSheet').classList.remove('open');
+ $s('#sm32ClearCart').onclick=()=>{for(const[id,n]of Object.entries(cart))stock[id]+=n;Object.keys(cart).forEach(k=>delete cart[k]);render();if(activeAisle)renderShelf()};
+ $s('#sm32Sound').onclick=()=>{SM32_AUDIO.on=!SM32_AUDIO.on;$s('#sm32Sound').textContent=SM32_AUDIO.on?'🔊':'🔇';if(SM32_AUDIO.on)SM32_AUDIO.start();else SM32_AUDIO.stop()};
+ function cleanup(){alive=false;SM32_AUDIO.stop();window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
+ $s('#sm32Back').onclick=()=>{cleanup();el.remove();openOutingMap('supermarket')};
+
+ function kd(e){const k=e.key.toLowerCase();if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){keys[k]=true;e.preventDefault()}}
+ function ku(e){keys[e.key.toLowerCase()]=false}
+ window.addEventListener('keydown',kd);window.addEventListener('keyup',ku);
+ $$s('[data-sm32-move]').forEach(b=>{
+   const k=b.dataset.sm32Move;
+   b.onpointerdown=e=>{e.preventDefault();keys['touch_'+k]=true;b.setPointerCapture?.(e.pointerId)};
+   b.onpointerup=()=>keys['touch_'+k]=false;b.onpointercancel=()=>keys['touch_'+k]=false;
+ });
+ function loop(now){
+   if(!alive)return;const dt=Math.min(.04,(now-last)/1000);last=now;
+   let dx=((keys.d||keys.arrowright||keys.touch_right)?1:0)-((keys.a||keys.arrowleft||keys.touch_left)?1:0);
+   let dy=((keys.s||keys.arrowdown||keys.touch_down)?1:0)-((keys.w||keys.arrowup||keys.touch_up)?1:0);
+   if(dx||dy){target=null;targetAction=null;const mag=Math.hypot(dx,dy)||1;dx/=mag;dy/=mag;const nx=player.x+dx*dt*22,ny=player.y+dy*dt*22;if(!collides(nx,player.y))player.x=nx;if(!collides(player.x,ny))player.y=ny}
+   if(target){const dx=target.x-player.x,dy=target.y-player.y,d=Math.hypot(dx,dy);if(d<1.2){player=target;target=null;const a=targetAction;targetAction=null;a?.()}else{const step=Math.min(d,dt*24),nx=player.x+dx/d*step,ny=player.y+dy/d*step;if(!collides(nx,player.y))player.x=nx;if(!collides(player.x,ny))player.y=ny}}
+   player=clampPos(player);
+   const pl=$s('#sm32Player');pl.style.left=player.x+'%';pl.style.top=player.y+'%';
+   const cartEl=$s('#sm32CartAvatar');if(hasCart){cartEl.style.left=(player.x-2.6)+'%';cartEl.style.top=(player.y+4.2)+'%'}
+   if(together){const pa=$s('#sm32Partner');pa.style.left=(player.x+4.6)+'%';pa.style.top=(player.y+2)+'%'}
+   // Context hint/action
+   if(!hasCart&&near(player.x,player.y,10,88,15))$s('#sm32MobileAction').textContent='🛒 拿购物车';
+   else if(hasCart&&near(player.x,player.y,87,84,14)&&cartCount())$s('#sm32MobileAction').textContent='💳 开始结账';
+   else if(hasCart)$s('#sm32MobileAction').textContent='🛍 浏览附近货架';
+   requestAnimationFrame(loop);
+ }
+ render();requestAnimationFrame(loop);
+}
+
+function openCheckout32(ctx){
+ const market=document.querySelector('.sm32-overlay');if(!market)return;
+ const items=Object.entries(ctx.cart).filter(([,n])=>n>0).flatMap(([id,n])=>Array.from({length:n},()=>SM32_BY_ID[id]));
+ const subtotal=items.reduce((s,p)=>s+(p.price||0),0),total=items.reduce((s,p)=>s+sm32Price(p),0),discount=subtotal-total;
+ const layer=document.createElement('div');layer.className='sm32-checkout-layer';
+ layer.innerHTML=`<div class="sm32-checkout">
+   <header><button id="sm32CheckoutBack">← Store</button><div><b>Checkout Lane 03</b><small>Scan → Weigh → Bag → Pay</small></div><span>${items.length} items</span></header>
+   <div class="sm32-queue" id="sm32Queue"><span>🧑🏻 🛒</span><span>👩🏻 🛒</span><b>你是第 3 位…</b></div>
+   <div class="sm32-scan-area hidden" id="sm32ScanArea">
+     <div class="sm32-belt"><div class="sm32-scan-zone">SCAN</div><img id="sm32ScanProduct"><i id="sm32BeltItem"></i></div>
+     <div class="sm32-scan-copy"><b id="sm32ScanName">商品</b><span id="sm32ScanStep">1/${items.length}</span><small id="sm32ScanHint">商品经过绿色区域时按 SCAN。</small></div>
+     <button id="sm32ScanBtn">SCAN</button>
+   </div>
+   <div class="sm32-receipt-live">
+     <b>Receipt</b><div id="sm32ReceiptLines"></div><hr><span>Subtotal <b>${subtotal} 🪙</b></span><span>Discount <b>−${discount} 🪙</b></span><strong>Total <b>${total} 🪙</b></strong>
+   </div>
+ </div>`;
+ market.querySelector('.sm32-shell').appendChild(layer);
+ let idx=0,scanScores=[],pos=0,dir=1,raf=null,alive=true,queueStep=0,queueTimer=null,scanned=[];
+ const q=s=>layer.querySelector(s);
+ q('#sm32CheckoutBack').onclick=()=>{alive=false;cancelAnimationFrame(raf);clearInterval(queueTimer);layer.remove()};
+ // queue animation
+ queueTimer=setInterval(()=>{queueStep++;const spans=[...q('#sm32Queue').querySelectorAll('span')];if(queueStep===1){spans[0].classList.add('gone');q('#sm32Queue b').textContent='前面还有 1 位…';SM32_AUDIO.tone(480,.05,.015)}if(queueStep===2){spans[1].classList.add('gone');q('#sm32Queue b').textContent='轮到你了！';SM32_AUDIO.tone(720,.08,.025)}if(queueStep>=3){clearInterval(queueTimer);q('#sm32Queue').classList.add('done');q('#sm32ScanArea').classList.remove('hidden');next()}},720);
+ function receipt(){q('#sm32ReceiptLines').innerHTML=scanned.map(s=>`<span><i>${s.p.emoji}</i>${s.p.label}<em>${s.price} 🪙</em></span>`).join('')}
+ function next(){
+   if(idx>=items.length){alive=false;cancelAnimationFrame(raf);return openBagging32(layer,ctx,items,total,discount,scanScores)}
+   const p=items[idx];pos=0;dir=1;q('#sm32ScanProduct').src=p.asset;q('#sm32ScanName').textContent=p.label;q('#sm32ScanStep').textContent=`${idx+1}/${items.length}`;
+   q('#sm32ScanHint').textContent=sm32IsProduce(p)?'先扫描，蔬果之后还要称重。':'商品经过绿色区域时按 SCAN。';
+   q('#sm32ScanBtn').textContent='SCAN';q('#sm32ScanBtn').disabled=false;
+ }
+ function loop(){
+   if(!alive)return;pos+=dir*1.35;if(pos>92){pos=92;dir=-1}else if(pos<2){pos=2;dir=1}
+   q('#sm32BeltItem').style.left=pos+'%';q('#sm32ScanProduct').style.left=pos+'%';raf=requestAnimationFrame(loop)
+ }
+ q('#sm32ScanBtn').onclick=()=>{
+   const p=items[idx],accuracy=Math.max(0,100-Math.abs(pos-53)*4),ok=accuracy>=55;
+   scanScores.push(accuracy);SM32_AUDIO.tone(ok?880:260,.07,ok?.035:.05,ok?'sine':'square');
+   q('#sm32ScanBtn').disabled=true;
+   if(sm32IsProduce(p))return openWeigh32(layer,p,()=>{
+     scanned.push({p,price:sm32Price(p)});idx++;receipt();setTimeout(next,180)
+   },accuracy);
+   scanned.push({p,price:sm32Price(p)});idx++;receipt();setTimeout(next,180);
+ };
+ loop();
+}
+function openWeigh32(layer,p,done,scanAccuracy){
+ const box=document.createElement('div');box.className='sm32-weigh-pop';
+ const target=.45+(p.id.length%7)*.08;box.innerHTML=`<div><img src="${p.asset}"><h3>称重 · ${p.label}</h3><p>目标约 ${target.toFixed(2)} kg</p><div class="sm32-scale"><i id="sm32ScaleNeedle"></i><b>0.00 kg</b></div><button id="sm32WeighBtn">WEIGH</button></div>`;layer.appendChild(box);
+ let value=.1,dir=1,alive=true,last=performance.now();
+ const needle=box.querySelector('#sm32ScaleNeedle'),txt=box.querySelector('.sm32-scale b');
+ const loop=t=>{if(!alive)return;value+=dir*(t-last)*.00042;last=t;if(value>1.25){value=1.25;dir=-1}if(value<.12){value=.12;dir=1}needle.style.left=((value-.1)/1.2*100)+'%';txt.textContent=value.toFixed(2)+' kg';requestAnimationFrame(loop)};requestAnimationFrame(loop);
+ box.querySelector('#sm32WeighBtn').onclick=()=>{alive=false;const acc=Math.max(0,100-Math.abs(value-target)*180);SM32_AUDIO.tone(acc>65?790:310,.08,.035);box.innerHTML=`<div class="sm32-weigh-result"><b>${acc>88?'PERFECT WEIGHT':acc>65?'GOOD':'A LITTLE OFF'}</b><span>${Math.round(acc)}/100</span></div>`;setTimeout(()=>{box.remove();done(acc)},500)};
+}
+function openBagging32(layer,ctx,items,total,discount,scanScores){
+ layer.innerHTML=`<div class="sm32-bagging">
+   <header><b>Bagging Station</b><span>不要让一袋太重</span></header>
+   <div class="sm32-bag-items" id="sm32BagItems"></div>
+   <div class="sm32-bags"><button data-sm32-bag="0"><span>🛍️</span><b>Bag A</b><em id="sm32Bag0">0.0 / 4.5kg</em></button><button data-sm32-bag="1"><span>🛍️</span><b>Bag B</b><em id="sm32Bag1">0.0 / 4.5kg</em></button><button data-sm32-bag="2"><span>🛍️</span><b>Bag C</b><em id="sm32Bag2">0.0 / 4.5kg</em></button></div>
+   <p id="sm32BagHint">先点一个商品，再选择 Bag A / B / C。</p>
+   <button id="sm32FinishBag" disabled>完成装袋 → 付款</button>
+ </div>`;
+ let assign=Array(items.length).fill(null),selected=null;
+ const q=s=>layer.querySelector(s),weights=[0,0,0];
+ function render(){
+   q('#sm32BagItems').innerHTML=items.map((p,i)=>`<button data-sm32-bi="${i}" class="${assign[i]!=null?'packed':''} ${selected===i?'selected':''}"><img src="${p.asset}"><b>${p.label}</b><small>${p.weight.toFixed(1)}kg</small><em>${assign[i]!=null?'Bag '+String.fromCharCode(65+assign[i]):'选择'}</em></button>`).join('');
+   [...layer.querySelectorAll('[data-sm32-bi]')].forEach(b=>b.onclick=()=>{selected=+b.dataset.sm32Bi;render()});
+   weights.fill(0);assign.forEach((a,i)=>{if(a!=null)weights[a]+=items[i].weight});
+   weights.forEach((w,i)=>q('#sm32Bag'+i).textContent=`${w.toFixed(1)} / 4.5kg`);
+   q('#sm32FinishBag').disabled=assign.some(a=>a==null);
+ }
+ [...layer.querySelectorAll('[data-sm32-bag]')].forEach(b=>b.onclick=()=>{
+   if(selected==null)return;assign[selected]=+b.dataset.sm32Bag;selected=null;SM32_AUDIO.tone(540,.05,.02);render()
+ });
+ q('#sm32FinishBag').onclick=()=>{
+   const overload=weights.reduce((s,w)=>s+Math.max(0,w-4.5),0),bagScore=Math.max(0,100-overload*28);
+   openPayment32(layer,ctx,items,total,discount,scanScores,bagScore,weights);
+ };
+ render();
+}
+function openPayment32(layer,ctx,items,total,discount,scanScores,bagScore,weights){
+ const scanAvg=scanScores.length?scanScores.reduce((a,b)=>a+b,0)/scanScores.length:100;
+ const listDone=ctx.list.filter(li=>(ctx.cart[li.id]||0)>=li.qty).length;
+ const checkoutScore=Math.round(scanAvg*.55+bagScore*.30+(listDone/ctx.list.length*100)*.15);
+ layer.innerHTML=`<div class="sm32-payment">
+   <div class="sm32-receipt-paper"><small>LITTLE WORLD MARKET</small><h2>RECEIPT</h2>
+   ${Object.entries(ctx.cart).filter(([,n])=>n).map(([id,n])=>{const p=SM32_BY_ID[id];return `<span>${p.label} ×${n}<b>${sm32Price(p)*n} 🪙</b></span>`}).join('')}
+   <hr><span>Discount<b>−${discount} 🪙</b></span><strong>TOTAL <b>${total} 🪙</b></strong></div>
+   <div class="sm32-pay-side"><h2>${checkoutScore>=90?'✨ Efficient Shopper':checkoutScore>=75?'🛒 Good Shopping':'🙂 Shopping Complete'}</h2>
+     <div class="sm32-pay-score"><span>Scan Accuracy <b>${Math.round(scanAvg)}</b></span><span>Bag Balance <b>${Math.round(bagScore)}</b></span><span>Shopping List <b>${listDone}/${ctx.list.length}</b></span></div>
+     <p>Coins: ${state.coins} → <b>${state.coins-total}</b></p>
+     <button id="sm32Pay" ${state.coins<total?'disabled':''}>${state.coins<total?'Coins 不够':'PAY '+total+' 🪙'}</button>
+     <button id="sm32CancelPay" class="secondary">返回商店</button>
+   </div>
+ </div>`;
+ layer.querySelector('#sm32CancelPay').onclick=()=>layer.remove();
+ layer.querySelector('#sm32Pay')?.addEventListener('click',()=>{
+   if(state.coins<total)return;state.coins-=total;
+   const receipt={time:Date.now(),total,discount,score:checkoutScore,items:Object.entries(ctx.cart).map(([id,qty])=>({id,qty}))};
+   state.supermarket32.lastReceipt=receipt;save();renderTaskUI?.();SM32_AUDIO.tone(990,.09,.045);setTimeout(()=>SM32_AUDIO.tone(1260,.12,.04),90);
+   layer.remove();openAfterCheckout32(ctx,receipt,checkoutScore);
+ });
+}
+function openAfterCheckout32(ctx,receipt,score){
+ const market=document.querySelector('.sm32-overlay');if(!market)return;
+ const purchased=receipt.items;
+ const pop=document.createElement('div');pop.className='sm32-afterpay';
+ pop.innerHTML=`<div><span>🧾</span><h2>付款成功</h2><p>Checkout Score ${score}/100</p><strong>${purchased.reduce((s,x)=>s+x.qty,0)} items · ${receipt.total} 🪙</strong>
+ ${ctx.arrivedByCar&&ctx.carId?`<button id="sm32ToCar">推购物车去 ${state.cars[ctx.carId].plate}</button>`:`<button id="sm32CarryHome">提购物袋回家</button>`}</div>`;market.querySelector('.sm32-shell').appendChild(pop);
+ if(ctx.arrivedByCar&&ctx.carId)pop.querySelector('#sm32ToCar').onclick=()=>{SM32_AUDIO.stop();market.remove();openMarketBootLoad32(ctx.carId,purchased,receipt,ctx.driver,ctx.together)};
+ else pop.querySelector('#sm32CarryHome').onclick=()=>{applyMarketItems32(purchased);SM32_AUDIO.stop();market.remove();state.room='kitchen';save();showGame();rewardPop('购物已经分类放好 · Fridge / Pantry / Supplies 更新 ✓')};
+}
+function openMarketBootLoad32(carId,items,receipt,driver,together){
+ const car=state.cars[carId],bagCount=Math.max(1,Math.min(3,Math.ceil(items.reduce((s,x)=>s+x.qty,0)/6)));
+ const el=carOverlay(`<div class="sm32-boot-scene">
+   <div class="sm32-parking-bg"><span>SUPERMARKET PARKING</span></div>
+   <img class="sm32-boot-car" src="${car.model}">
+   <div class="sm32-boot-lid" id="sm32BootLid"></div>
+   <div class="sm32-boot-copy"><h1>${car.plate}</h1><p id="sm32BootText">先打开后备箱。</p></div>
+   <div class="sm32-bag-row">${Array.from({length:bagCount},(_,i)=>`<button class="sm32-load-bag" data-sm32-load="${i}" disabled>🛍️<small>Bag ${i+1}</small></button>`).join('')}</div>
+   <button class="mama-btn" id="sm32OpenBoot">① 打开后备箱</button>
+   <button class="mama-btn" id="sm32DriveHome" disabled>🚗 开车回家</button>
+ </div>`,'sm32-boot-mode');
+ let open=false,loaded=0;
+ $('#sm32OpenBoot').onclick=()=>{open=true;$('#sm32BootLid').classList.add('open');$('#sm32OpenBoot').disabled=true;$('#sm32BootText').textContent='一袋一袋放进去。';document.querySelectorAll('[data-sm32-load]').forEach(b=>b.disabled=false);SM32_AUDIO.tone(430,.08,.035)};
+ document.querySelectorAll('[data-sm32-load]').forEach(b=>b.onclick=()=>{if(!open||b.classList.contains('done'))return;b.classList.add('done');b.disabled=true;loaded++;SM32_AUDIO.tone(580+loaded*70,.06,.03);$('#sm32BootText').textContent=`已放 ${loaded}/${bagCount} 袋`;if(loaded>=bagCount){car.storage.boot.push({type:'supermarket32',label:`Little World Market · ${items.reduce((s,x)=>s+x.qty,0)}件`,qty:bagCount,items,receipt});save();$('#sm32DriveHome').disabled=false;$('#sm32BootText').textContent='购物袋都在后备箱了。现在开车回家。'}});
+ $('#sm32DriveHome').onclick=()=>{el.remove();prepareCarTrip(carId,'homeFromMarket32',driver,together)};
+}
+function openHomeUnload32(carId){
+ const car=state.cars[carId],marketPacks=car.storage.boot.filter(x=>x.type==='supermarket32');
+ if(!marketPacks.length){toast('没有超市购物袋要搬。');return}
+ const allItems=marketPacks.flatMap(x=>x.items||[]),totalQty=allItems.reduce((s,x)=>s+x.qty,0);
+ const el=carOverlay(`<div class="sm32-unload">
+   <div class="sm32-unload-header"><h1>🏠 到家了</h1><p>不要瞬间进冰箱。先从 Lexus 后备箱把购物袋拿出来。</p></div>
+   <div class="sm32-unload-flow"><div class="active" id="sm32UF1">🚗<b>Open Boot</b></div><i>→</i><div id="sm32UF2">🛍️<b>Carry Bags</b></div><i>→</i><div id="sm32UF3">🧊<b>Fridge</b></div><div id="sm32UF4">🥫<b>Pantry</b></div><div id="sm32UF5">🐾<b>Supplies</b></div></div>
+   <div class="sm32-unload-body"><img src="${car.model}"><div id="sm32UnloadItems">${allItems.slice(0,8).map(x=>`<img src="${SM32_BY_ID[x.id]?.asset||''}">`).join('')}</div></div>
+   <p id="sm32UnloadText">${totalQty} 件商品 · Step 1/4</p>
+   <button class="mama-btn" id="sm32UnloadNext">打开后备箱</button>
+ </div>`,'sm32-unload-mode');
+ let step=0;
+ $('#sm32UnloadNext').onclick=()=>{
+   step++;SM32_AUDIO.on=true;SM32_AUDIO.tone(520+step*90,.07,.03);
+   if(step===1){$('#sm32UF2').classList.add('active');$('#sm32UnloadText').textContent='把购物袋搬进 Kitchen · Step 2/4';$('#sm32UnloadNext').textContent='提购物袋进屋'}
+   else if(step===2){$('#sm32UF3').classList.add('active');$('#sm32UnloadText').textContent='冷藏 / 蔬果 / 肉类 → Fridge · Step 3/4';$('#sm32UnloadNext').textContent='放冷藏食品'}
+   else if(step===3){$('#sm32UF4').classList.add('active');$('#sm32UF5').classList.add('active');$('#sm32UnloadText').textContent='Dry goods → Pantry · Pet/Household → Supplies · Step 4/4';$('#sm32UnloadNext').textContent='完成分类'}
+   else{
+     applyMarketItems32(allItems);car.storage.boot=car.storage.boot.filter(x=>x.type!=='supermarket32');save();el.remove();state.room='kitchen';save();showGame();recordEvent?.('openFridge',1);rewardPop(`超市购物完成 ✓ ${totalQty} 件已经收好 · Fridge / Pantry / Supplies 已更新`);
+   }
+ };
 }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="180" viewBox="0 0 160 180">
+<rect width="160" height="180" rx="28" fill="#e4effb"/>
+<circle cx="46" cy="38" r="8" fill="#5c7fb2" opacity=".14"/>
+<circle cx="112" cy="37" r="9" fill="#5c7fb2" opacity=".11"/>
+<path d="M38 45 H122 L113 136 H47 Z" fill="#fff" stroke="#5c7fb2" stroke-width="5"/><path d="M46 60 H114 L109 113 H51 Z" fill="#5c7fb2" opacity=".86"/><path d="M80 64 v45 M58 86 h44 M64 70 l32 32 M96 70 l-32 32" stroke="#fff" stroke-width="3" opacity=".7"/>
+<text x="80" y="94" text-anchor="middle" font-size="24">🍟</text>
+<rect x="20" y="145" width="120" height="25" rx="12" fill="#ffffff" opacity=".88"/>
+<text x="80" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="11" fill="#3b3432">薯条</text>
+</svg>

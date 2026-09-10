@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="180" viewBox="0 0 160 180">
+<rect width="160" height="180" rx="28" fill="#f5ead7"/>
+<circle cx="32" cy="22" r="8" fill="#a77b49" opacity=".14"/>
+<circle cx="128" cy="42" r="11" fill="#a77b49" opacity=".11"/>
+<rect x="47" y="35" width="66" height="105" rx="11" fill="#fff" stroke="#a77b49" stroke-width="5"/><rect x="53" y="60" width="54" height="46" rx="7" fill="#a77b49" opacity=".9"/><rect x="58" y="43" width="44" height="11" rx="5" fill="#a77b49" opacity=".45"/>
+<text x="80" y="94" text-anchor="middle" font-size="24">🧂</text>
+<rect x="20" y="145" width="120" height="25" rx="12" fill="#ffffff" opacity=".88"/>
+<text x="80" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="11" fill="#3b3432">砂糖</text>
+</svg>

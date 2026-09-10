@@ -1267,7 +1267,19 @@ function openCarInterior(carId,driver,together,dest=null,preview=false){
  update();
 }
 
-function carCameraMarkup(car,driver,together,camera){const passenger=carPartner(driver);return `<div class="car10-camera car10-${camera}" id="carCamera"><div class="car10-sky"></div><div class="car10-road" id="carRoad"><div class="car10-road-center"></div><div class="car10-road-edge l"></div><div class="car10-road-edge r"></div><div id="carTraffic"></div><div id="carRoadEvent"></div></div><div class="car10-rain" id="rainLayer"></div><div class="car10-night" id="nightLayer"></div><div class="car10-third-car"><img src="${car.model}"><b>${car.plate}</b></div><div class="car10-first-cockpit"><div class="car10-first-wheel" id="driveWheel">◯</div><div class="car10-first-hood"><img src="${car.model}"></div><div class="car10-drive-passenger ${together?'':'hidden'}" id="drivePassenger"><img src="${carActorImg(passenger)}"><span id="passengerBubble"></span><em id="passengerProp"></em></div></div><div class="car10-reverse-view"><div class="reverse-guides"><i></i><i></i><i></i></div><small>REVERSE CAMERA</small></div><div class="car10-wipers" id="wiperLayer"><i></i><i></i></div></div>`}
+function carCameraMarkup(car,driver,together,camera){
+ const passenger=carPartner(driver);
+ const scenic=car.id==='black'?'./assets/cars/ui28/drive-black.jpg':'./assets/cars/ui28/drive-white.jpg';
+ return `<div class="car10-camera car10-${camera}" id="carCamera">
+   <div class="car28-scenic" style="background-image:url('${scenic}')"></div>
+   <div class="car10-sky"></div>
+   <div class="car10-road" id="carRoad"><div class="car10-road-center"></div><div class="car10-road-edge l"></div><div class="car10-road-edge r"></div><div id="carTraffic"></div><div id="carRoadEvent"></div></div>
+   <div class="car10-rain" id="rainLayer"></div><div class="car10-night" id="nightLayer"></div>
+   <div class="car10-third-car"><img src="${car.model}"><b>${car.plate}</b></div>
+   <div class="car10-first-cockpit"><div class="car28-first-windshield"></div><div class="car10-first-wheel">♡</div><div class="car10-first-hood"><img src="${car.model}"></div><div class="car10-drive-passenger ${together?'':'hidden'}" id="drivePassenger"><img src="${carActorImg(passenger)}"><span id="passengerBubble"></span><em id="passengerProp"></em></div></div>
+   <div class="car10-reverse-view"><div class="reverse-guides"><i></i><i></i><i></i></div><small>REVERSE CAMERA</small></div>
+   <div class="car10-wipers" id="wiperLayer"><i></i><i></i></div>
+ </div>`}
 function startCarDrive10(carId,dest,driver,together,tripInit){
  const car=state.cars[carId],route=CAR_ROUTES[dest],night=new Date().getHours()>=19||new Date().getHours()<6;stopEngineSound();startEngineSound();
  let camera=state.carSettings.camera||'third',gear='D',speed=0,lateral=0,steer=0,curve=0,targetCurve=0,progress=0,last=performance.now(),alive=true,signal='off',headlights=night,wipers=false,handbrake=false,rain=(state.weather==='小雨'||state.weather==='阵雨'),event=null,eventIndex=0,nextEventKm=.65,traffic=[],trafficTimer=0,passengerTimer=0,stoppedRed=0;
@@ -1382,9 +1394,78 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
  let camera=state.carSettings.camera||'third',gear='D',speed=0,lateral=0,steer=0,curve=0,targetCurve=0,progress=0,last=performance.now(),alive=true,signal='off',headlights=night,wipers=false,handbrake=false,rain=(state.weather==='小雨'||state.weather==='阵雨'),event=null,eventIndex=0,nextEventKm=.55+Math.random()*.25,traffic=[],trafficTimer=0,passengerTimer=0,stoppedRed=0,currentLimit=route.speedLimit||60,frontGap=999;
  const metrics={safety:100,smooth:100,rules:100,lane:100,speedScore:100,following:100,signalGood:0,signalNeed:0,collisions:0,hardBrakes:0,redStops:0,curb:0,eventsGood:0,eventsBad:0};
  const keys={},controls={gas:false,brake:false,left:false,right:false};
- const el=carOverlay(`${carCameraMarkup(car,driver,together,camera)}<div class="car10-drive-hud car20-drive-hud"><div class="car10-drive-title"><b>${route.icon} ${route.name}</b><span>${route.km} km · ${profile.label} · ${route.road||'道路'}</span></div><div class="car10-speed"><span id="driveSpeed">0</span><small>km/h</small><b id="driveGear">D</b></div><div class="car10-hud-bars"><span>⛽ <b id="driveFuel">${Math.round(car.fuel)}%</b></span><span>🛠️ <b id="driveCondition">${Math.round(car.condition)}%</b></span><span>⭐ <b id="driveSafety">100</b></span><span>🛣️ <b id="driveDistance">0.0/${route.km}</b></span></div></div><div class="car20-driver-aids"><div><small>限速</small><b id="car2Limit">${currentLimit}</b></div><div><small>车道</small><b id="car2Lane">CENTER</b></div><div><small>跟车</small><b id="car2Gap">SAFE</b></div><div><small>预计</small><b id="car2Eta">--</b></div></div><div class="car10-nav"><b id="driveEventTitle">导航：继续直行</b><span id="driveEventHint">限速 ${currentLimit} · 保持车道和安全距离</span><em id="driveSignalText">SIGNAL OFF</em></div><div class="car10-drive-message" id="driveMessage">W/↑ 油门 · S/↓ 刹车 · A/D 转向 · Q/E 灯 · C 镜头</div><div class="car10-mobile-controls"><button data-car10="left">←</button><button data-car10="gas">油门</button><button data-car10="brake">刹车</button><button data-car10="right">→</button><button id="gearControl">D / R</button><button id="signalLeft">↙</button><button id="signalRight">↘</button><button id="cameraControl">📷</button><button id="hornControl">📣</button><button id="lightControl">💡</button><button id="wiperControl">🌧️</button><button id="handbrakeControl">P</button></div><button class="drive-exit" id="driveAbort">结束驾驶</button>`, 'drive10-mode car20-mode');
+ const destInfo=OUTING_DESTINATIONS[dest]||{name:route.name,icon:route.icon,preview:'./assets/cars/ui28/destination-cafe.jpg',desc:route.desc};
+ const destPreview=destInfo.preview||'./assets/cars/ui28/destination-cafe.jpg';
+ const driverName=carPersonName(driver),passengerName=carPersonName(carPartner(driver));
+ const weatherLabel=state.weather||'晴天';
+ const el=carOverlay(`${carCameraMarkup(car,driver,together,camera)}
+ <header class="car28-topbar">
+   <div class="car28-brand"><strong>Shawn & Elyn ♡</strong><small>Our Little World</small></div>
+   <div class="car28-slogan">More Places, More Memories ♡</div>
+   <nav class="car28-navtabs">
+     <button class="active">🚗<span>Drive</span></button>
+     <button data-car28-menu="Explore">📍<span>Explore</span></button>
+     <button data-car28-menu="Shop">🛍️<span>Shop</span></button>
+     <button data-car28-menu="Get Fit">🏋️<span>Get Fit</span></button>
+     <button data-car28-menu="Eat">🍴<span>Eat</span></button>
+     <button data-car28-menu="Play">🎮<span>Play</span></button>
+     <button data-car28-menu="Date">📷<span>Date</span></button>
+   </nav>
+ </header>
+ <aside class="car28-left-stack">
+   <div class="car28-route-card"><span class="big">${route.icon}</span><div><b>Drive to ${destInfo.name}</b><small>${route.desc}</small></div></div>
+   <div class="car28-info-card"><span>⏱️</span><div><small>ETA</small><b id="car2Eta">--</b><em>${route.km} km</em></div></div>
+   <div class="car28-info-card"><span>🏎️</span><div><small>Speed</small><b><i id="driveSpeed">0</i> km/h</b><em>Speed Limit <strong id="car2Limit">${currentLimit}</strong></em></div></div>
+   <div class="car28-info-card"><span>🚗</span><div><small>Follow Distance</small><b id="car2Gap" class="ok">SAFE</b><em class="car28-gap-bars"><i></i><i></i><i></i><i></i></em></div></div>
+   <div class="car28-info-card"><span>🚦</span><div><small>Traffic Light</small><b id="car28Traffic" class="ok">✓ Clear</b><em id="driveSignalText">SIGNAL OFF</em></div></div>
+   <div class="car28-info-card"><span>☀️</span><div><small>Weather</small><b>${weatherLabel}</b><em>${rain?'Wet road':'Comfort drive'}</em></div></div>
+ </aside>
+ <section class="car28-destination-panel">
+   <h3>Destination</h3>
+   <img class="car28-dest-photo" src="${destPreview}" onerror="this.src='./assets/cars/ui28/destination-cafe.jpg'">
+   <h2>${destInfo.name}</h2>
+   <p>${destInfo.desc||route.desc} ♡</p>
+   <button id="car28ViewDetails">View Details</button>
+   <img class="car28-mini-map" src="./assets/outing/city-map.jpg">
+ </section>
+ <div class="car10-nav car28-live-nav"><b id="driveEventTitle">导航：继续直行</b><span id="driveEventHint">限速 ${currentLimit} · 保持车道和安全距离</span></div>
+ <div class="car10-drive-message car28-toast" id="driveMessage">W/↑ 油门 · S/↓ 刹车 · A/D 转向 · Q/E 方向灯</div>
+ <div class="car28-steering">
+   <button data-car10="left" aria-label="left">◀</button>
+   <div class="car28-wheel" id="driveWheel"><span>♡</span></div>
+   <button data-car10="right" aria-label="right">▶</button>
+ </div>
+ <div class="car28-pedals">
+   <button data-car10="brake" class="brake"><span>▤</span><b>Brake</b></button>
+   <button data-car10="gas" class="accel"><span>▤</span><b>Accel</b></button>
+ </div>
+ <section class="car28-bottom-zone">
+   <div class="car28-camera-tabs">
+     <button data-camera-mode="third" class="active">📷<span>Third Person</span></button>
+     <button data-camera-mode="first">📷<span>First Person</span></button>
+     <button data-camera-mode="reverse">📷<span>Reverse</span></button>
+   </div>
+   <div class="car28-couple-card">
+     <div><img src="${carActorImg(driver)}"><b>${driverName}</b><span>♡</span></div>
+     <p>Driving Together<br><em>To More Places ♡</em></p>
+     ${together?`<div><img src="${carActorImg(carPartner(driver))}"><b>${passengerName}</b><span>♡</span></div>`:''}
+   </div>
+   <div class="car28-score-live">
+     <header><b>🏅 Driving Score</b><strong id="car28ScoreTotal">100/100</strong></header>
+     <div><span>🛡️<b id="car28ScoreSafety">100</b><small>Safety</small></span><span>📋<b id="car28ScoreRules">100</b><small>Rules</small></span><span>🛣️<b id="car28ScoreLane">100</b><small>Lane</small></span><span>🏎️<b id="car28ScoreSpeed">100</b><small>Speed</small></span><span>↔️<b id="car28ScoreSignals">100</b><small>Signals</small></span><span>🅿️<b>--</b><small>Parking</small></span></div>
+   </div>
+   <div class="car28-parking-next"><div><b>🅿️ Parking Challenge (Next)</b><span>Park in the marked spot at ${destInfo.name}!</span></div><img src="./assets/cars/ui28/parking-preview.jpg"></div>
+ </section>
+ <div class="car28-tools">
+   <button id="gearControl">D / R</button><button id="signalLeft">↙</button><button id="signalRight">↘</button><button id="cameraControl">📷</button><button id="hornControl">📣</button><button id="lightControl">💡</button><button id="wiperControl">🌧️</button><button id="handbrakeControl">P</button>
+ </div>
+ <div class="car28-telemetry"><span>⛽ <b id="driveFuel">${Math.round(car.fuel)}%</b></span><span>🛠️ <b id="driveCondition">${Math.round(car.condition)}%</b></span><span>⭐ <b id="driveSafety">100</b></span><span>🛣️ <b id="driveDistance">0.0/${route.km}</b></span><span>车道 <b id="car2Lane">CENTER</b></span><span>档位 <b id="driveGear">D</b></span></div>
+ <button class="drive-exit car28-exit" id="driveAbort">结束驾驶</button>`, 'drive10-mode car20-mode car28-mode');
  const cam=$('#carCamera');
- const setCamera=c=>{camera=c;state.carSettings.camera=c;cam.classList.remove('car10-third','car10-first','car10-reverse');cam.classList.add('car10-'+c);save()};setCamera(camera);
+ const setCamera=c=>{camera=c;state.carSettings.camera=c;cam.classList.remove('car10-third','car10-first','car10-reverse');cam.classList.add('car10-'+c);document.querySelectorAll('[data-camera-mode]').forEach(b=>b.classList.toggle('active',b.dataset.cameraMode===c));save()};setCamera(camera);
+ document.querySelectorAll('[data-camera-mode]').forEach(b=>b.onclick=()=>setCamera(b.dataset.cameraMode));
+ document.querySelectorAll('[data-car28-menu]').forEach(b=>b.onclick=()=>flashDrive('🚗 驾驶中 · 到达目的地后再打开 '+b.dataset.car28Menu));
+ if($('#car28ViewDetails'))$('#car28ViewDetails').onclick=()=>flashDrive(`${destInfo.icon||route.icon} ${destInfo.name} · ${destInfo.desc||route.desc}`);
  const cycleCamera=()=>setCamera(camera==='third'?'first':camera==='first'?'reverse':'third');
  const flashDrive=t=>{const m=$('#driveMessage');if(!m)return;m.textContent=t;m.classList.add('alert');clearTimeout(m._t);m._t=setTimeout(()=>{m.classList.remove('alert');m.textContent='W/↑ 油门 · S/↓ 刹车 · A/D 转向 · Q/E 灯 · C 镜头'},1450)};
  const passengerReact=(kind='calm')=>{if(!together)return;const b=$('#passengerBubble'),p=$('#passengerProp'),box=$('#drivePassenger');if(!b)return;b.textContent=randomFrom(COUPLE_CAR_LINES[kind]||COUPLE_CAR_LINES.calm);p.textContent=kind==='phone'?'📱':kind==='drink'?'🧋':kind==='sleep'?'💤':'';box.className='car10-drive-passenger '+kind;clearTimeout(box._t);box._t=setTimeout(()=>{box.className='car10-drive-passenger';b.textContent='';p.textContent=''},4200)};
@@ -1443,7 +1524,9 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
    if(gear==='D')progress+=speed*dt/3600;else progress=Math.max(0,progress-speed*dt/7200);car.fuel=Math.max(0,car.fuel-speed*dt*.00042);car.clean=Math.max(0,car.clean-dt*.010*(1+speed/100)*(rain?1.8:1));revEngine(speed/(profile.maxSpeed||140));if(!event&&progress>=nextEventKm&&progress<route.km-.45)makeEvent();if(event){event.distance-=Math.max(1,speed)*dt*.42;const n=$('.car10-road-event');if(n){const z=Math.max(.18,1-event.distance/240);n.style.transform=`translate(-50%,-50%) scale(${.38+z*1.15})`;n.style.top=(16+z*60)+'%'}if(event.type==='redLight'&&!event.green&&event.distance<34&&speed<4){stoppedRed+=dt;event.stopped=stoppedRed>.45}else if(event.type==='pedestrian'&&event.distance<34&&speed<4)event.stopped=true;if(event.distance<=0)resolveEvent()}
    trafficTimer+=dt;const spawnEvery=(1.95-Math.min(.5,speed/260))/(trafficBase*profile.traffic);if(trafficTimer>spawnEvery){trafficTimer=0;spawnTraffic()}frontGap=999;traffic.forEach(t=>{t.z+=dt*(.12+speed/240)*t.pace;const p=Math.min(1.18,t.z),px=50+t.lane*29/(1.1-Math.min(.95,p)*.48)+curve*9,py=15+p*74;t.node.style.left=px+'%';t.node.style.top=py+'%';t.node.style.transform=`translate(-50%,-50%) scale(${.28+p*1.0})`;if(Math.abs(t.lane-lateral)<.34&&p>.45&&p<1.05)frontGap=Math.min(frontGap,(1.05-p)*95);if(!t.hit&&p>.81&&p<1.05&&Math.abs(t.lane-lateral)<.34){t.hit=true;metrics.collisions++;car.stats.collisions++;metrics.safety=Math.max(0,metrics.safety-20*profile.penalty);car.condition=Math.max(0,car.condition-7);speed*=.46;t.node.classList.add('hit');flashDrive('💥 碰撞！更早刹车或打灯变道');passengerReact('brake')}if(p>1.2){t.node.remove();t.dead=true}});for(let i=traffic.length-1;i>=0;i--)if(traffic[i].dead)traffic.splice(i,1);if(frontGap<22&&speed>45){metrics.following=Math.max(0,metrics.following-dt*7*profile.penalty);metrics.safety=Math.max(0,metrics.safety-dt*3*profile.penalty)}
    passengerTimer+=dt;if(together&&passengerTimer>10+Math.random()*8){passengerTimer=0;passengerReact(randomFrom(['calm','phone','drink','sleep']))}
-   const road=$('#carRoad');if(road)road.style.transform=`perspective(720px) rotateZ(${curve*3.2}deg) translateX(${curve*80-lateral*22}px)`;const wheel=$('#driveWheel');if(wheel)wheel.style.transform=`rotate(${steer*48-curve*10}deg)`;$('#driveSpeed').textContent=Math.round(speed);$('#driveGear').textContent=gear;$('#driveFuel').textContent=Math.round(car.fuel)+'%';$('#driveCondition').textContent=Math.round(car.condition)+'%';$('#driveSafety').textContent=Math.round(metrics.safety);$('#driveDistance').textContent=`${Math.min(route.km,progress).toFixed(1)}/${route.km}`;$('#car2Lane').textContent=Math.abs(lateral)<.42?'CENTER':lateral<0?'LEFT':'RIGHT';$('#car2Lane').className=Math.abs(lateral)<.78?'ok':'warn';$('#car2Gap').textContent=frontGap>35?'SAFE':frontGap>20?'CLOSE':'BRAKE';$('#car2Gap').className=frontGap>35?'ok':frontGap>20?'warn':'danger';const remain=Math.max(0,route.km-progress),eta=speed>12?Math.ceil(remain/Math.max(25,speed)*60):'--';$('#car2Eta').textContent=eta==='--'?'--':eta+'m';cam.style.setProperty('--lateral',lateral);cam.style.setProperty('--curve',curve);
+   const road=$('#carRoad');if(road)road.style.transform=`perspective(720px) rotateZ(${curve*1.1}deg) translateX(${curve*18-lateral*8}px)`;const wheel=$('#driveWheel');if(wheel)wheel.style.transform=`rotate(${steer*48-curve*10}deg)`;$('#driveSpeed').textContent=Math.round(speed);$('#driveGear').textContent=gear;$('#driveFuel').textContent=Math.round(car.fuel)+'%';$('#driveCondition').textContent=Math.round(car.condition)+'%';$('#driveSafety').textContent=Math.round(metrics.safety);$('#driveDistance').textContent=`${Math.min(route.km,progress).toFixed(1)}/${route.km}`;$('#car2Lane').textContent=Math.abs(lateral)<.42?'CENTER':lateral<0?'LEFT':'RIGHT';$('#car2Lane').className=Math.abs(lateral)<.78?'ok':'warn';$('#car2Gap').textContent=frontGap>35?'SAFE':frontGap>20?'CLOSE':'BRAKE';$('#car2Gap').className=frontGap>35?'ok':frontGap>20?'warn':'danger';const remain=Math.max(0,route.km-progress),eta=speed>12?Math.ceil(remain/Math.max(25,speed)*60):'--';$('#car2Eta').textContent=eta==='--'?'--':eta+' min';cam.style.setProperty('--lateral',lateral);cam.style.setProperty('--curve',curve);
+   const sigScore=metrics.signalNeed?Math.min(100,metrics.signalGood/metrics.signalNeed*100):100,liveTotal=Math.round((metrics.safety+metrics.rules+metrics.lane+metrics.speedScore+sigScore)/5);
+   if($('#car28ScoreTotal'))$('#car28ScoreTotal').textContent=liveTotal+'/100';if($('#car28ScoreSafety'))$('#car28ScoreSafety').textContent=Math.round(metrics.safety);if($('#car28ScoreRules'))$('#car28ScoreRules').textContent=Math.round(metrics.rules);if($('#car28ScoreLane'))$('#car28ScoreLane').textContent=Math.round(metrics.lane);if($('#car28ScoreSpeed'))$('#car28ScoreSpeed').textContent=Math.round(metrics.speedScore);if($('#car28ScoreSignals'))$('#car28ScoreSignals').textContent=Math.round(sigScore);if($('#car28Traffic')){$('#car28Traffic').textContent=event?.type==='redLight'?(event.green?'✓ Green':'● Red'):frontGap<20?'⚠ Busy':'✓ Clear';$('#car28Traffic').className=event?.type==='redLight'&&!event.green?'danger':frontGap<20?'warn':'ok'};
    if(car.fuel<=0){alive=false;cleanup();state.coins=Math.max(0,state.coins-80);save();modal('没油了 😵','<p>道路救援扣除 80 Coins。下次出发前先检查油量。</p>');return}if(progress>=route.km){finishRoad();return}requestAnimationFrame(loop)
  };requestAnimationFrame(loop)
 }

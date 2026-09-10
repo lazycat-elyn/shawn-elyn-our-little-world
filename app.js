@@ -611,7 +611,7 @@ function keyboardLoop(ts){if(!last)last=ts;const dt=Math.min(.04,(ts-last)/1000)
 window.addEventListener('keydown',e=>{if(e.key==='Enter'){if(document.activeElement===$('#chatInput')){e.preventDefault();sendTypedChat();return}if(!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)){e.preventDefault();$('#chatInput')?.focus();return}}if(e.key==='Escape'&&document.activeElement===$('#chatInput')){$('#chatInput').blur();return}if(document.activeElement===$('#chatInput'))return;keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});window.addEventListener('keyup',e=>{keys[e.key]=false;save()});
 function openMap(){save();$('#gameScreen').classList.add('hidden');$('#mapScreen').classList.remove('hidden');renderMapHud()}
 function buildMap(){const root=$('#mapPins');root.innerHTML='';ROOM_ORDER.forEach(id=>{const [x,y]=MAP_POS[id],b=document.createElement('button');b.style.left=x+'%';b.style.top=y+'%';b.setAttribute('aria-label','进入'+ROOMS[id].label);b.title='进入'+ROOMS[id].label;b.onclick=()=>{state.room=id;showGame()};root.appendChild(b)})}
-function closeOuting(){document.querySelector('.outing-overlay')?.remove()}
+function closeOuting(){document.querySelector('.outing-overlay')?.remove();document.querySelector('.outing331-overlay')?.remove()}
 function openOutingMap(selected='supermarket'){
  closeOuting();
  const d=OUTING_DESTINATIONS[selected]||OUTING_DESTINATIONS.supermarket;
@@ -647,7 +647,7 @@ function openOutingLocation(id,arrivedByCar=false){
   convenience:[['🥪 快速补给 · 28 Coins','snack'],['🧃 买饮料 · 15 Coins','quickdrink']]
  };
  const actions=actionSets[id]||[];
- const el=document.createElement('section');el.className='outing-location-overlay';el.innerHTML=`<div class="outing-location"><button class="outing-back" id="outingLocBack">← 地图</button><div class="outing-location-hero"><img src="${o.preview}"><div><span>${o.icon}</span><h1>${o.name}</h1><p>${o.desc}</p>${arrivedByCar?'<b>🚗 已完成驾驶和停车，抵达目的地</b>':''}</div></div><div class="outing-actions">${actions.map(([label,a])=>`<button data-outing-action="${a}">${label}</button>`).join('')}</div></div>`;document.body.appendChild(el);$('#outingLocBack').onclick=()=>{el.remove();openOutingMap(id)};document.querySelectorAll('[data-outing-action]').forEach(b=>b.onclick=()=>runOutingAction(id,b.dataset.outingAction));
+ const el=document.createElement('section');el.className='outing-location-overlay';el.innerHTML=`<div class="outing-location"><button class="outing-back" id="outingLocBack">← 地图</button><div class="outing-location-hero"><img src="${o.preview}"><div><span>${o.icon}</span><h1>${o.name}</h1><p>${o.desc}</p>${arrivedByCar?'<b>🚗 已完成驾驶和停车，抵达目的地</b>':''}</div></div><div class="outing-actions">${actions.map(([label,a])=>`<button data-outing-action="${a}">${label}</button>`).join('')}</div></div>`;document.body.appendChild(el);$('#outingLocBack').onclick=()=>{el.remove();openGoOut331(id)};document.querySelectorAll('[data-outing-action]').forEach(b=>b.onclick=()=>runOutingAction(id,b.dataset.outingAction));
 }
 function spendCoins(n){if(state.coins<n){toast(`Coins 不够，需要 ${n}`);return false}state.coins-=n;return true}
 function runOutingAction(place,a){const me=state.active,partner=me==='elyn'?'shawn':'elyn';
@@ -1636,7 +1636,7 @@ function renderCoopStatus(){const e=$('#coopCurrent');if(e)e.innerHTML=`<b>当�
 function openCoopPanel(){modal('双人游戏 👥',`<div class="coop-shell"><section><h3>本机双人 · 立即可玩</h3><p>Elyn=WASD，Shawn=方向键，可以同时移动。</p><button class="small-button" id="localCoopBtn">开启本机双人</button></section><section><h3>同浏览器同步房间</h3><p>两个相同游戏标签页输入同一房间码，一个控制 Elyn，一个控制 Shawn。位置和文字对话实时同步。</p><div class="coop-form"><input id="roomCodeInput" class="search" maxlength="10" placeholder="例如 LOVE0309"><select id="roomRole"><option value="elyn">我是 Elyn</option><option value="shawn">我是 Shawn</option></select><button class="small-button" id="joinRoomBtn">加入房间</button></div></section><section class="coop-note"><h3>跨设备联机</h3><p>不同手机/电脑真正联网仍需要 Firebase / Supabase / WebRTC 信令后端；纯静态 StackBlitz 本身没有服务器。这版已经把双人控制、房间码、同步协议与聊天做好。</p></section><button class="small-button secondary" id="singleModeBtn">切回单人</button><div id="coopCurrent"></div></div>`);$('#localCoopBtn').onclick=()=>{closeNetChannel();state.playMode='localCoop';state.netRoom='';state.netRole='';save();renderCoopStatus();$('#modalRoot').innerHTML='';toast('Elyn=WASD · Shawn=方向键')};$('#joinRoomBtn').onclick=()=>{const c=$('#roomCodeInput').value.trim().replace(/[^A-Za-z0-9]/g,'').slice(0,10);if(c.length<4){toast('房间码至少4位');return}joinBroadcastRoom(c,$('#roomRole').value);$('#modalRoot').innerHTML=''};$('#singleModeBtn').onclick=()=>{closeNetChannel();state.playMode='single';state.netRoom='';state.netRole='';save();renderCoopStatus();$('#modalRoot').innerHTML='';toast('切回单人')};renderCoopStatus()}
 
 function openSimple(title,text){modal(title,`<p>${text}</p>`)}
-$('#continueBtn').onclick=()=>{state.started=true;ensureAudio();showGame()};$('#newBtn').onclick=()=>{localStorage.removeItem('worldRebuild1');location.reload()};$('#albumBtn').onclick=()=>openSimple('相册','之后会收录钓鱼、种花、约会、情侣互动和生活照片。');$('#settingsBtn').onclick=openSoundSettings;$('#taskBookBtn').onclick=()=>openTaskHandbook('daily');$('#outingBtn').onclick=()=>openOutingMap();$('#musicBtn').onclick=toggleBgm;$('#mapBtn').onclick=openMap;$('#closeMapBtn').onclick=showGame;$('#switchBtn').onclick=switchActor;$('#coopBtn').onclick=openCoopPanel;$('#sendChatBtn').onclick=()=>sendTypedChat();$('#phoneBtn').onclick=openChatHistory;$('#bagBtn').onclick=()=>{const li=levelInfo(),l=loveInfo();openSimple('背包 & 成长',`🪙 <b>${state.coins} Coins</b>：买东西，会花掉。<br>✨ <b>Lv.${li.level} · ${li.inLevel}/${li.need} EXP</b>：升级，不会花掉。<br>❤️ <b>${state.love}/1000 · ${l.name}</b>：情侣关系。<br><br>🌱 种子 ${state.seeds} · 🎣 鱼饵 ${state.bait}`)};
+$('#continueBtn').onclick=()=>{state.started=true;ensureAudio();showGame()};$('#newBtn').onclick=()=>{localStorage.removeItem('worldRebuild1');location.reload()};$('#albumBtn').onclick=()=>openSimple('相册','之后会收录钓鱼、种花、约会、情侣互动和生活照片。');$('#settingsBtn').onclick=openSoundSettings;$('#taskBookBtn').onclick=()=>openTaskHandbook('daily');$('#outingBtn').onclick=()=>openGoOut331();$('#musicBtn').onclick=toggleBgm;$('#mapBtn').onclick=openMap;$('#closeMapBtn').onclick=showGame;$('#switchBtn').onclick=switchActor;$('#coopBtn').onclick=openCoopPanel;$('#sendChatBtn').onclick=()=>sendTypedChat();$('#phoneBtn').onclick=openChatHistory;$('#bagBtn').onclick=()=>{const li=levelInfo(),l=loveInfo();openSimple('背包 & 成长',`🪙 <b>${state.coins} Coins</b>：买东西，会花掉。<br>✨ <b>Lv.${li.level} · ${li.inLevel}/${li.need} EXP</b>：升级，不会花掉。<br>❤️ <b>${state.love}/1000 · ${l.name}</b>：情侣关系。<br><br>🌱 种子 ${state.seeds} · 🎣 鱼饵 ${state.bait}`)};
 function clock(){const d=new Date(),h=d.getHours(),m=String(d.getMinutes()).padStart(2,'0');$('#clockText').textContent=`${String(h).padStart(2,'0')}:${m} ${h<12?'早上':h<18?'下午':'晚上'}`}
 buildTabs();buildMap();clock();applyNeedsElapsed();initTasks();initExtendedTasks();renderNeedsUI();renderMapHud();renderOutfitSprites();renderCoopStatus();updateMusicButton();
 setInterval(()=>{clock();applyNeedsElapsed();initTasksIfNeededOnly();renderTaskUI();renderNeedsUI();renderMapHud();needComment();save();},30000);
@@ -3069,7 +3069,7 @@ function openSupermarket32(opts={}){
  $s('#sm32ClearCart').onclick=()=>{for(const[id,n]of Object.entries(cart))stock[id]+=n;Object.keys(cart).forEach(k=>delete cart[k]);render();if(activeAisle)renderShelf()};
  $s('#sm32Sound').onclick=()=>{SM32_AUDIO.on=!SM32_AUDIO.on;$s('#sm32Sound').textContent=SM32_AUDIO.on?'🔊':'🔇';if(SM32_AUDIO.on)SM32_AUDIO.start();else SM32_AUDIO.stop()};
  function cleanup(){alive=false;SM32_AUDIO.stop();window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
- $s('#sm32Back').onclick=()=>{cleanup();el.remove();openOutingMap('supermarket')};
+ $s('#sm32Back').onclick=()=>{cleanup();el.remove();openGoOut331('supermarket')};
 
  function kd(e){const k=e.key.toLowerCase();if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){keys[k]=true;e.preventDefault()}}
  function ku(e){keys[e.key.toLowerCase()]=false}
@@ -3470,7 +3470,7 @@ function openSupermarket32(opts={}){
   $s('#sm321Sound').onclick=()=>{SM32_AUDIO.on=!SM32_AUDIO.on;$s('#sm321Sound').textContent=SM32_AUDIO.on?'🔊':'🔇';if(SM32_AUDIO.on)SM32_AUDIO.start();else SM32_AUDIO.stop()};
 
   function cleanup(){alive=false;SM32_AUDIO.stop();window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
-  $s('#sm321Back').onclick=()=>{cleanup();el.remove();openOutingMap('supermarket')};
+  $s('#sm321Back').onclick=()=>{cleanup();el.remove();openGoOut331('supermarket')};
 
   function kd(e){const k=e.key.toLowerCase();if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){keys[k]=true;e.preventDefault()}}
   function ku(e){keys[e.key.toLowerCase()]=false}
@@ -3842,7 +3842,7 @@ function openDateVenue33(venueId='cafe',opts={}){
  $d('#date33MenuQuick').onclick=openMenu;
  $d('#date33Sound').onclick=()=>{DATE33_AUDIO.on=!DATE33_AUDIO.on;$d('#date33Sound').textContent=DATE33_AUDIO.on?'🔊':'🔇';if(DATE33_AUDIO.on)DATE33_AUDIO.start(venue.theme);else DATE33_AUDIO.stop()};
  function cleanup(){alive=false;DATE33_AUDIO.stop();window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
- $d('#date33Back').onclick=()=>{cleanup();el.remove();openOutingMap(venueId)};
+ $d('#date33Back').onclick=()=>{cleanup();el.remove();openGoOut331(venueId)};
 
  function kd(e){const k=e.key.toLowerCase();if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){keys[k]=true;e.preventDefault()}}
  function ku(e){keys[e.key.toLowerCase()]=false}
@@ -3933,7 +3933,7 @@ for(const s of OUT331_SHOPS){
 OUTING_DESTINATIONS.cafe.name='Brew & Bloom Café';
 OUTING_DESTINATIONS.cafe.desc='Flowers · latte · brunch · date spot';
 
-function openOutingMap(selected='fluffed'){
+function openGoOut331(selected='fluffed'){
  closeOuting();
  const allPlaces=[
   ...OUT331_SHOPS.map(s=>({...s,type:s.group})),
@@ -3956,7 +3956,7 @@ function openOutingMap(selected='fluffed'){
  el.innerHTML=`
  <div class="outing331-shell">
   <header class="outing331-header">
-   <div class="outing331-title">
+   <div class="outing331-version">GO OUT 3.3.2</div><div class="outing331-title">
     <div><small>SHAWN & ELYN · GO OUT</small><h1>Where should we go today? ♡</h1><p>先选你想要的气氛，不用一打开就看整张地图。</p></div>
    </div>
    <div class="outing331-header-actions">
@@ -4059,3 +4059,5 @@ function openOutingMap(selected='fluffed'){
 }
 
 // Slight visual variation between café/dessert venues while keeping the full Date 3.3 gameplay.
+
+/* MASTER 3.3.2 GO OUT FORCE WIRE HOTFIX */

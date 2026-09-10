@@ -426,3 +426,199 @@
 .car28-mode .car10-mobile-controls,.car28-mode .car20-driver-aids,.car28-mode .car20-drive-hud{display:none!important}.car28-mode .car10-camera.dark-vision .car28-scenic{filter:brightness(.58) saturate(.9)}.car28-mode .car10-camera.rain-blur .car28-scenic{filter:blur(1px) saturate(.9)}.car28-mode .car10-camera.raining .car28-scenic{filter:saturate(.85) brightness(.92)}.car28-mode .car10-camera.night-driving .car28-scenic{filter:brightness(.55) saturate(.8)}.car28-mode .car10-camera.headlights .car28-scenic{filter:brightness(.78) saturate(.85)}.car28-mode .car10-light{transform:scale(.78)}.car28-mode .car10-sign{font-size:16px;padding:4px 8px}.car28-mode .car10-event-car,.car28-mode .car10-crossing,.car28-mode .car10-cones{font-size:34px}
 @media(max-width:1200px){.car28-topbar{grid-template-columns:240px 1fr auto}.car28-brand strong{font-size:21px}.car28-brand small{margin-left:25px}.car28-navtabs button{width:48px}.car28-left-stack{width:235px}.car28-destination-panel{width:230px}.car28-bottom-zone{left:280px;right:250px;grid-template-columns:160px 190px 1fr}.car28-steering{left:0;transform:scale(.8);transform-origin:left bottom}.car28-pedals{right:5px;transform:scale(.83);transform-origin:right bottom}}
 @media(max-width:850px){.car28-topbar{height:58px;grid-template-columns:1fr auto}.car28-slogan{display:none}.car28-brand small{display:none}.car28-navtabs button{width:42px;height:43px;font-size:15px}.car28-navtabs button span{display:none}.car28-mode .car10-camera{inset:58px 0 0}.car28-left-stack{top:70px;left:8px;width:185px}.car28-route-card{min-height:55px}.car28-route-card small{display:none}.car28-info-card{min-height:45px;grid-template-columns:32px 1fr;padding:5px}.car28-info-card>span{font-size:18px}.car28-info-card b{font-size:11px}.car28-info-card b i{font-size:17px}.car28-destination-panel{top:70px;right:8px;width:180px;padding:7px}.car28-destination-panel h3{display:none}.car28-dest-photo{height:70px}.car28-destination-panel h2{font-size:12px}.car28-destination-panel p{display:none}.car28-mini-map{height:95px}.car28-live-nav{top:65px!important;width:230px!important;font-size:9px}.car28-steering{bottom:50px;transform:scale(.62)}.car28-pedals{bottom:58px;transform:scale(.64)}.car28-bottom-zone{left:205px;right:195px;height:105px;grid-template-columns:110px 1fr;grid-template-rows:50px 48px}.car28-camera-tabs{grid-row:1/3}.car28-couple-card{display:none}.car28-score-live{grid-column:2}.car28-score-live>div{grid-template-columns:repeat(3,1fr)}.car28-score-live span:nth-child(n+4){display:none}.car28-parking-next{grid-column:2;grid-template-columns:1fr 90px}.car28-parking-next img{width:90px;height:36px}.car28-tools{bottom:112px;max-width:320px;overflow:auto}.car28-telemetry{display:none}.car28-toast{bottom:112px!important}}
+
+
+/* ==========================================================
+   MASTER 2.9 — LIVE MOVING ROAD
+   The scenic image is now only a distant backdrop.
+   The road, lane markers, roadside scenery, traffic and player
+   car move in real time with speed/steering.
+   ========================================================== */
+.car29-live-world .car29-backdrop{
+  z-index:0;
+  transform-origin:50% 34%;
+  will-change:transform;
+  transition:none!important;
+}
+.car29-road-canvas{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+.car29-road-events{
+  z-index:7!important;
+  inset:20% 17% 10%!important;
+  overflow:visible!important;
+}
+.car29-live-world .car10-road{
+  background:transparent!important;
+}
+.car29-live-world .car10-road:before,
+.car29-live-world .car10-road-edge,
+.car29-live-world .car10-road-center{
+  display:none!important;
+}
+.car29-player-car{
+  --body:#f5f2ef;
+  --body2:#ddd8d4;
+  --glass:#2f3d46;
+  position:absolute;
+  z-index:13;
+  left:50%;
+  bottom:8.5%;
+  width:clamp(220px,29vw,420px);
+  height:clamp(120px,18vw,220px);
+  transform:translateX(-50%);
+  transform-origin:50% 90%;
+  pointer-events:none;
+  filter:drop-shadow(0 18px 16px rgba(25,20,18,.36));
+}
+.car29-player-car.black{--body:#17191c;--body2:#07080a;--glass:#283037}
+.car29-player-car.white{--body:#fbfaf8;--body2:#d8d8d9;--glass:#2d3840}
+.car29-cabin{
+  position:absolute;
+  left:19%;
+  right:19%;
+  top:4%;
+  height:45%;
+  border-radius:46% 46% 15% 15%;
+  background:linear-gradient(155deg,#a9c1cc 0 9%,var(--glass) 12% 100%);
+  border:6px solid var(--body);
+  overflow:hidden;
+  box-shadow:inset 0 -8px 18px #0005;
+}
+.car29-heads{
+  position:absolute;
+  inset:2% 12% 0;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  gap:2%;
+}
+.car29-heads img{
+  width:38%;
+  height:86%;
+  object-fit:contain;
+  object-position:center bottom;
+  filter:drop-shadow(0 2px 2px #0004);
+}
+.car29-rear-shell{
+  position:absolute;
+  left:5%;
+  right:5%;
+  top:33%;
+  bottom:0;
+  border-radius:26% 26% 18% 18% / 32% 32% 18% 18%;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.45),transparent 18%),
+    linear-gradient(180deg,var(--body) 0 70%,var(--body2) 71% 100%);
+  border:2px solid rgba(60,53,50,.32);
+  box-shadow:inset 0 -14px 18px rgba(0,0,0,.22),inset 0 4px 5px rgba(255,255,255,.26);
+}
+.car29-rear-shell:before{
+  content:"";
+  position:absolute;
+  left:28%;
+  right:28%;
+  top:12%;
+  height:24%;
+  border-radius:45%;
+  background:linear-gradient(#0002,#0000);
+}
+.car29-rear-shell:after{
+  content:"";
+  position:absolute;
+  left:18%;
+  right:18%;
+  bottom:3%;
+  height:13%;
+  border-radius:999px;
+  background:#131518;
+  box-shadow:inset 0 4px 0 #53575a;
+}
+.car29-rear-shell .tail{
+  position:absolute;
+  top:23%;
+  width:26%;
+  height:17%;
+  border-radius:45% 18% 40% 22%;
+  background:linear-gradient(90deg,#ff4b58,#c40718 70%);
+  box-shadow:0 0 12px rgba(255,40,58,.45),inset 0 2px 0 #ffb0b7;
+}
+.car29-rear-shell .tail.left{left:7%}
+.car29-rear-shell .tail.right{right:7%;transform:scaleX(-1)}
+.car29-lexus{
+  position:absolute;
+  left:50%;
+  top:14%;
+  transform:translateX(-50%);
+  color:rgba(90,90,90,.75);
+  font-size:clamp(7px,.8vw,11px);
+  font-weight:900;
+  letter-spacing:.12em;
+}
+.car29-player-car.black .car29-lexus{color:#aaa}
+.car29-plate{
+  position:absolute;
+  left:50%;
+  top:49%;
+  transform:translateX(-50%);
+  min-width:34%;
+  text-align:center;
+  padding:3px 9px;
+  border:2px solid #444;
+  border-radius:4px;
+  background:#f8f8f4;
+  color:#111;
+  font-size:clamp(9px,1.15vw,16px);
+  letter-spacing:.08em;
+  box-shadow:0 2px 4px #0004;
+}
+.car29-rear-shell .exhaust{
+  position:absolute;
+  z-index:2;
+  bottom:5%;
+  width:16%;
+  height:7%;
+  border:3px solid #a9adb0;
+  border-radius:999px;
+  background:#111;
+}
+.car29-rear-shell .exhaust.left{left:12%}
+.car29-rear-shell .exhaust.right{right:12%}
+.car29-traffic-car{
+  width:54px;
+  height:33px;
+  font-size:0!important;
+  border-radius:13px 13px 9px 9px;
+  background:#d9dce0;
+  border:2px solid #4b4e51;
+  box-shadow:0 5px 5px #0004,inset 0 -6px 0 #b6bbc0;
+}
+.car29-traffic-car.rose{background:#d87983}.car29-traffic-car.blue{background:#6c98b8}.car29-traffic-car.silver{background:#c7c9ca}.car29-traffic-car.charcoal{background:#3d4146}.car29-traffic-car.cream{background:#e7d7ba}
+.car29-traffic-car .glass{
+  position:absolute;left:15%;right:15%;top:5%;height:35%;
+  background:#4f6875;border-radius:10px 10px 3px 3px;
+}
+.car29-traffic-car .tail{
+  position:absolute;top:53%;width:18%;height:15%;background:#ff4858;border-radius:999px;box-shadow:0 0 5px #ff3d50;
+}
+.car29-traffic-car .tail.l{left:9%}.car29-traffic-car .tail.r{right:9%}
+.car29-traffic-car .wheel{
+  position:absolute;bottom:-3px;width:10px;height:8px;background:#151719;border-radius:3px;
+}
+.car29-traffic-car .wheel.wl{left:7px}.car29-traffic-car .wheel.wr{right:7px}
+.car29-live-world.car10-third .car29-player-car{display:block}
+.car29-live-world.car10-first .car29-player-car{display:none}
+.car29-live-world.car10-reverse .car29-player-car,
+.car29-live-world.car10-reverse .car29-road-canvas{display:none}
+.car29-live-world.car10-first .car29-road-canvas{display:block}
+.car29-live-world .car10-traffic.hit{animation:hitShake .3s;box-shadow:0 0 0 4px #ff5358,0 8px 12px #0006}
+.car29-live-world.raining .car29-road-canvas{filter:saturate(.85) brightness(.9)}
+.car29-live-world.night-driving .car29-road-canvas{filter:brightness(.62) saturate(.8)}
+@media(max-width:850px){
+  .car29-player-car{width:clamp(170px,36vw,260px);bottom:12%}
+}

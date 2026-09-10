@@ -1,15 +1,10 @@
 {
-  "safe_character_mode": true,
-  "car28_markup": true,
-  "car28_css": true,
-  "startCarDrive10_count": 2,
-  "carCameraMarkup_count": 1,
-  "assets_ui28": [
-    "destination-cafe.jpg",
-    "drive-black.jpg",
-    "drive-white.jpg",
-    "mini-map.jpg",
-    "parking-preview.jpg"
-  ],
-  "outing_asset_count": 11
+  "version": "2.9",
+  "dynamic_canvas": true,
+  "draw_loop": true,
+  "moving_lane_flow": true,
+  "moving_scenery": true,
+  "moving_traffic_css": true,
+  "player_car": true,
+  "clean_character_mode_preserved": true
 }

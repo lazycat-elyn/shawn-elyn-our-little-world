@@ -1270,10 +1270,25 @@ function openCarInterior(carId,driver,together,dest=null,preview=false){
 function carCameraMarkup(car,driver,together,camera){
  const passenger=carPartner(driver);
  const scenic=car.id==='black'?'./assets/cars/ui28/drive-black.jpg':'./assets/cars/ui28/drive-white.jpg';
- return `<div class="car10-camera car10-${camera}" id="carCamera">
-   <div class="car28-scenic" style="background-image:url('${scenic}')"></div>
+ return `<div class="car10-camera car10-${camera} car29-live-world" id="carCamera">
+   <div class="car28-scenic car29-backdrop" id="car29Backdrop" style="background-image:url('${scenic}')"></div>
+   <canvas id="car29RoadCanvas" class="car29-road-canvas" aria-hidden="true"></canvas>
    <div class="car10-sky"></div>
-   <div class="car10-road" id="carRoad"><div class="car10-road-center"></div><div class="car10-road-edge l"></div><div class="car10-road-edge r"></div><div id="carTraffic"></div><div id="carRoadEvent"></div></div>
+   <div class="car10-road car29-road-events" id="carRoad"><div id="carTraffic"></div><div id="carRoadEvent"></div></div>
+   <div class="car29-player-car ${car.id==='black'?'black':'white'}" id="car29PlayerCar">
+     <div class="car29-cabin">
+       <div class="car29-heads">
+         <img src="${carActorImg(driver)}" alt="">
+         ${together?`<img src="${carActorImg(passenger)}" alt="">`:''}
+       </div>
+     </div>
+     <div class="car29-rear-shell">
+       <i class="tail left"></i><i class="tail right"></i>
+       <span class="car29-lexus">LEXUS</span>
+       <b class="car29-plate">${car.plate}</b>
+       <i class="exhaust left"></i><i class="exhaust right"></i>
+     </div>
+   </div>
    <div class="car10-rain" id="rainLayer"></div><div class="car10-night" id="nightLayer"></div>
    <div class="car10-third-car"><img src="${car.model}"><b>${car.plate}</b></div>
    <div class="car10-first-cockpit"><div class="car28-first-windshield"></div><div class="car10-first-wheel">♡</div><div class="car10-first-hood"><img src="${car.model}"></div><div class="car10-drive-passenger ${together?'':'hidden'}" id="drivePassenger"><img src="${carActorImg(passenger)}"><span id="passengerBubble"></span><em id="passengerProp"></em></div></div>
@@ -1462,6 +1477,35 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
  <div class="car28-telemetry"><span>⛽ <b id="driveFuel">${Math.round(car.fuel)}%</b></span><span>🛠️ <b id="driveCondition">${Math.round(car.condition)}%</b></span><span>⭐ <b id="driveSafety">100</b></span><span>🛣️ <b id="driveDistance">0.0/${route.km}</b></span><span>车道 <b id="car2Lane">CENTER</b></span><span>档位 <b id="driveGear">D</b></span></div>
  <button class="drive-exit car28-exit" id="driveAbort">结束驾驶</button>`, 'drive10-mode car20-mode car28-mode');
  const cam=$('#carCamera');
+ const roadCanvas=$('#car29RoadCanvas'),roadCtx=roadCanvas?.getContext('2d'),playerCar=$('#car29PlayerCar'),backdrop=$('#car29Backdrop');
+ let roadFlow=0,visualClock=0,worldScenery=[];
+ const resizeRoadCanvas=()=>{if(!roadCanvas||!roadCtx)return;const r=roadCanvas.getBoundingClientRect(),d=Math.min(2,window.devicePixelRatio||1),w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(roadCanvas.width!==w||roadCanvas.height!==h){roadCanvas.width=w;roadCanvas.height=h;roadCtx.setTransform(d,0,0,d,0,0)}};
+ const roadPoint=(z,lane=0)=>{const w=roadCanvas?.clientWidth||1,h=roadCanvas?.clientHeight||1,hor=h*.29,t=Math.max(0,Math.min(1,z)),p=Math.pow(t,1.62),halfTop=w*.075,halfBottom=w*.46,half=halfTop+(halfBottom-halfTop)*Math.pow(t,1.14),center=w*.5+curve*w*.035-lateral*w*.018;return{x:center+lane*half,y:hor+p*(h-hor),half,p}};
+ const addWorldScenery=()=>{const count=2+Math.floor(Math.random()*2);for(let i=0;i<count;i++)worldScenery.push({z:.02+Math.random()*.05,side:Math.random()<.5?-1:1,type:randomFrom(['tree','lamp','flower','house']),variant:Math.random()})};
+ const drawTree=(ctx,x,y,s,flower=false)=>{ctx.save();ctx.translate(x,y);ctx.fillStyle='#5f4a3c';ctx.fillRect(-s*.05,-s*.35,s*.10,s*.42);ctx.fillStyle=flower?'#ef9fb0':'#6b9b69';for(const [dx,dy,rr] of [[0,-.52,.24],[-.18,-.45,.18],[.19,-.43,.18],[0,-.33,.20]]){ctx.beginPath();ctx.arc(dx*s,dy*s,rr*s,0,Math.PI*2);ctx.fill()}ctx.restore()};
+ const drawLamp=(ctx,x,y,s)=>{ctx.save();ctx.strokeStyle='#2c3437';ctx.lineWidth=Math.max(1,s*.035);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y-s*.65);ctx.stroke();ctx.fillStyle='#ffe5a6';ctx.beginPath();ctx.arc(x,y-s*.69,s*.09,0,Math.PI*2);ctx.fill();ctx.restore()};
+ const drawHouse=(ctx,x,y,s,v)=>{ctx.save();ctx.translate(x,y);ctx.fillStyle=v>.5?'#efc5ae':'#f4d8c4';ctx.fillRect(-s*.28,-s*.42,s*.56,s*.42);ctx.fillStyle='#9a6658';ctx.beginPath();ctx.moveTo(-s*.34,-s*.42);ctx.lineTo(0,-s*.68);ctx.lineTo(s*.34,-s*.42);ctx.closePath();ctx.fill();ctx.fillStyle='#8ac0d0';ctx.fillRect(-s*.17,-s*.31,s*.12,s*.13);ctx.fillRect(s*.05,-s*.31,s*.12,s*.13);ctx.restore()};
+ const drawDynamicWorld=(dt)=>{if(!roadCanvas||!roadCtx)return;resizeRoadCanvas();const w=roadCanvas.clientWidth,h=roadCanvas.clientHeight,ctx=roadCtx;ctx.clearRect(0,0,w,h);const hor=h*.29,center=w*.5+curve*w*.035-lateral*w*.018,topHalf=w*.075,bottomHalf=w*.46;
+   roadFlow=(roadFlow+Math.max(0,speed)*dt*.0075)%1;visualClock+=dt;
+   const sideGrad=ctx.createLinearGradient(0,hor,0,h);sideGrad.addColorStop(0,'rgba(233,221,204,.88)');sideGrad.addColorStop(1,'rgba(206,187,166,.98)');
+   ctx.fillStyle=sideGrad;ctx.beginPath();ctx.moveTo(0,hor);ctx.lineTo(center-topHalf,hor);ctx.lineTo(center-bottomHalf,h);ctx.lineTo(0,h);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(w,hor);ctx.lineTo(center+topHalf,hor);ctx.lineTo(center+bottomHalf,h);ctx.lineTo(w,h);ctx.closePath();ctx.fill();
+   const roadGrad=ctx.createLinearGradient(0,hor,0,h);roadGrad.addColorStop(0,'#747779');roadGrad.addColorStop(.6,'#66696c');roadGrad.addColorStop(1,'#56595c');ctx.fillStyle=roadGrad;ctx.beginPath();ctx.moveTo(center-topHalf,hor);ctx.lineTo(center+topHalf,hor);ctx.lineTo(center+bottomHalf,h);ctx.lineTo(center-bottomHalf,h);ctx.closePath();ctx.fill();
+   // warm edge lines
+   for(const side of [-1,1]){ctx.strokeStyle='rgba(250,239,208,.92)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(center+side*topHalf,hor);ctx.lineTo(center+side*bottomHalf,h);ctx.stroke()}
+   // lane dashes move toward the player with speed
+   for(const lane of [-1/3,1/3]){for(let i=0;i<15;i++){const z=((i/15+roadFlow)%1),z2=Math.min(1,z+.038+.045*z),a=roadPoint(z,lane),b=roadPoint(z2,lane);ctx.strokeStyle=`rgba(255,248,222,${.30+.65*z})`;ctx.lineWidth=1+z*6;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}}
+   // cross-road texture bands make forward motion obvious
+   for(let i=0;i<9;i++){const z=((i/9+roadFlow*.68)%1),p=roadPoint(z,0);ctx.strokeStyle=`rgba(255,255,255,${.018+.035*z})`;ctx.lineWidth=1+z*2;ctx.beginPath();ctx.moveTo(p.x-p.half*.97,p.y);ctx.lineTo(p.x+p.half*.97,p.y);ctx.stroke()}
+   // world scenery moves from horizon to foreground
+   const move=Math.max(0,speed)*dt*.00135;
+   if(speed>1&&Math.random()<Math.min(.35,dt*(1.5+speed/18)))addWorldScenery();
+   for(const o of worldScenery){o.z+=move*(.72+o.variant*.55);const p=roadPoint(o.z,o.side*1.28),s=10+o.z*115,x=p.x+o.side*(12+o.z*34),y=p.y;if(o.type==='tree')drawTree(ctx,x,y,s,o.variant>.58);else if(o.type==='lamp')drawLamp(ctx,x,y,s*.82);else if(o.type==='house')drawHouse(ctx,x,y,s*.8,o.variant);else drawTree(ctx,x,y,s*.72,true)}
+   worldScenery=worldScenery.filter(o=>o.z<1.12);
+   // subtle speed streaks only at higher speeds
+   if(speed>70){ctx.strokeStyle=`rgba(255,255,255,${Math.min(.12,(speed-70)/500)})`;for(let i=0;i<8;i++){const side=i%2?-1:1,x=side<0?Math.random()*w*.18:w*(.82+Math.random()*.18),y=hor+Math.random()*(h-hor);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+side*18,y+22);ctx.stroke()}}
+   if(playerCar){const xShift=lateral*58;playerCar.style.transform=`translateX(calc(-50% + ${xShift}px)) rotate(${steer*2.8-curve*1.5}deg) translateY(${Math.sin(visualClock*9)*Math.min(2.2,speed/45)}px)`;playerCar.style.setProperty('--car-speed',Math.min(1,speed/120))}
+   if(backdrop){const zoom=1.012+Math.min(.028,speed/5000),bx=curve*-10-lateral*4,by=-Math.min(8,speed/24);backdrop.style.transform=`translate(${bx}px,${by}px) scale(${zoom})`}
+ };
  const setCamera=c=>{camera=c;state.carSettings.camera=c;cam.classList.remove('car10-third','car10-first','car10-reverse');cam.classList.add('car10-'+c);document.querySelectorAll('[data-camera-mode]').forEach(b=>b.classList.toggle('active',b.dataset.cameraMode===c));save()};setCamera(camera);
  document.querySelectorAll('[data-camera-mode]').forEach(b=>b.onclick=()=>setCamera(b.dataset.cameraMode));
  document.querySelectorAll('[data-car28-menu]').forEach(b=>b.onclick=()=>flashDrive('🚗 驾驶中 · 到达目的地后再打开 '+b.dataset.car28Menu));
@@ -1480,7 +1524,7 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
  const kd=e=>{const k=e.key.toLowerCase();keys[k]=true;if(k==='g')toggleGear();if(k==='q')setSignal('left');if(k==='e')setSignal('right');if(k==='c')cycleCamera();if(k==='h')horn();if(k==='l')toggleLights();if(k==='x')toggleWipers();if(e.code==='Space'){e.preventDefault();toggleHandbrake()}};const ku=e=>{keys[e.key.toLowerCase()]=false};window.addEventListener('keydown',kd);window.addEventListener('keyup',ku);
  const cleanup=()=>{window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku);stopEngineSound();el.remove()};$('#driveAbort').onclick=()=>{alive=false;cleanup();toast('已结束驾驶')};
  const trafficBase=route.traffic==='busy'?1.22:route.traffic==='light'?.76:1;
- const spawnTraffic=()=>{const root=$('#carTraffic');if(!root)return;const node=document.createElement('div');const lane=randomFrom([-0.72,0,.72])+(Math.random()-.5)*.12;node.className='car10-traffic';node.textContent=Math.random()<.12?'🚚':Math.random()<.30?'🚕':'🚙';root.appendChild(node);traffic.push({node,lane,z:0,hit:false,pace:.55+Math.random()*.4})};
+ const spawnTraffic=()=>{const root=$('#carTraffic');if(!root)return;const node=document.createElement('div');const lane=randomFrom([-0.72,0,.72])+(Math.random()-.5)*.12;const tone=randomFrom(['rose','blue','silver','charcoal','cream']);node.className='car10-traffic car29-traffic-car '+tone;node.innerHTML='<i class="glass"></i><i class="tail l"></i><i class="tail r"></i><i class="wheel wl"></i><i class="wheel wr"></i>';root.appendChild(node);traffic.push({node,lane,z:0,hit:false,pace:.55+Math.random()*.4})};
  const setEventLimit=n=>{currentLimit=n;$('#car2Limit').textContent=n};
  const makeEvent=()=>{eventIndex++;let type=CAR2_EVENT_TYPES[(hashString(dest)+eventIndex*5+Math.floor(Math.random()*3))%CAR2_EVENT_TYPES.length];if(type==='rain'&&rain)type='pothole';if(dest==='ski'&&eventIndex===1)type='rain';if((dest==='supermarket'||dest==='store'||dest==='mall')&&eventIndex===1)type='redLight';if(dest==='park'&&eventIndex===1)type='schoolZone';const side=Math.random()<.5?'left':'right';event={type,side,distance:235,resolved:false,green:false,stopped:false};const title=$('#driveEventTitle'),hint=$('#driveEventHint'),root=$('#carRoadEvent');root.innerHTML='';const n=document.createElement('div');n.className='car10-road-event '+type;root.appendChild(n);setEventLimit(route.speedLimit||60);
    if(type==='redLight'){title.textContent='🚦 前方红灯';hint.textContent='停止线前完全停下，等绿灯';n.innerHTML='<div class="car10-light"><i class="red"></i><i></i><i></i></div><div class="car10-stopline"></div>';setTimeout(()=>{if(event&&event.type==='redLight'){event.green=true;n.classList.add('green');title.textContent='🟢 绿灯';hint.textContent='确认安全后继续'}},2800+Math.random()*1100)}
@@ -1516,7 +1560,7 @@ function startCarDrive10(carId,dest,driver,together,tripInit){
  };
  const finishRoad=()=>{alive=false;save();cleanup();startParkingGame10(carId,dest,driver,together,metrics)};
  if(night){cam.classList.add('night-driving');if(headlights)cam.classList.add('headlights')}if(rain)cam.classList.add('raining');
- const loop=now=>{if(!alive)return;const dt=Math.min(.045,(now-last)/1000);last=now;const gas=keys['w']||keys['arrowup']||controls.gas,brake=keys['s']||keys['arrowdown']||controls.brake,left=keys['a']||keys['arrowleft']||controls.left,right=keys['d']||keys['arrowright']||controls.right;
+ const loop=now=>{if(!alive)return;const dt=Math.min(.045,(now-last)/1000);last=now;drawDynamicWorld(dt);const gas=keys['w']||keys['arrowup']||controls.gas,brake=keys['s']||keys['arrowdown']||controls.brake,left=keys['a']||keys['arrowleft']||controls.left,right=keys['d']||keys['arrowright']||controls.right;
    const oldSpeed=speed;if(handbrake)speed=Math.max(0,speed-120*dt);else{if(gas)speed+=gear==='D'?45*dt:30*dt;else speed-=8*dt;if(brake)speed-=90*dt*(rain?.88:1)}speed=Math.max(0,Math.min(gear==='D'?profile.maxSpeed:32,speed));const hardDecel=(oldSpeed-speed)/Math.max(dt,.001);if(hardDecel>62&&oldSpeed>35){metrics.hardBrakes++;metrics.smooth=Math.max(0,metrics.smooth-dt*24*profile.penalty);if(together&&Math.random()<.25)passengerReact('brake')}
    const steerInput=(right?1:0)-(left?1:0);steer+=(steerInput-steer)*dt*(speed<25?5.5:3.0)*profile.steer;const grip=(rain?.72:1)*profile.grip;lateral+=steer*(.31+.0105*speed)*dt*grip*(gear==='R'?-1:1);lateral-=curve*speed*.00062*dt;if(profile===CAR2_PROFILES.easy&&Math.abs(steerInput)<.1)lateral*=Math.pow(.994,dt*60);lateral=Math.max(-1.48,Math.min(1.48,lateral));if(Math.random()<dt*.075)targetCurve=(Math.random()-.5)*(route.road==='山路'?1.35:.95);curve+=(targetCurve-curve)*dt*.45;
    const curveLimit=Math.abs(curve)>.65?45:Math.abs(curve)>.38?55:(route.speedLimit||60);const effectiveLimit=Math.min(currentLimit,curveLimit);if(speed>effectiveLimit+8){metrics.speedScore=Math.max(0,metrics.speedScore-dt*5*profile.penalty);metrics.safety=Math.max(0,metrics.safety-dt*2.6*profile.penalty)}if(Math.abs(lateral)>.82){metrics.lane=Math.max(0,metrics.lane-dt*5*profile.penalty)}if(Math.abs(lateral)>1.05){metrics.safety=Math.max(0,metrics.safety-dt*8*profile.penalty);car.condition=Math.max(0,car.condition-dt*.7);metrics.curb++;if(Math.abs(lateral)>1.34)speed*=.991}
@@ -1570,3 +1614,5 @@ function clock(){const d=new Date(),h=d.getHours(),m=String(d.getMinutes()).padS
 buildTabs();buildMap();clock();applyNeedsElapsed();initTasks();initExtendedTasks();renderNeedsUI();renderMapHud();renderOutfitSprites();renderCoopStatus();updateMusicButton();
 setInterval(()=>{clock();applyNeedsElapsed();initTasksIfNeededOnly();renderTaskUI();renderNeedsUI();renderMapHud();needComment();save();},30000);
 requestAnimationFrame(keyboardLoop);if(state.started)showGame();
+
+/* MASTER 2.9 — LIVE MOVING ROAD: canvas road + scenery flow + real moving traffic + player car */

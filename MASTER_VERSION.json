@@ -1,9 +1,9 @@
 {
   "project": "Shawn & Elyn — Our Little World",
-  "master_version": "3.4.2",
-  "milestone": "HOME DECOR 1.2 — true room shell + independent furniture layers",
-  "baseline": "MASTER 3.4.1 — HOME DECOR 1.1 visual rebuild",
-  "home_decor_version": "1.2",
+  "master_version": "3.4.3",
+  "milestone": "HOME DECOR 1.3 — edit furniture directly inside the live room",
+  "baseline": "MASTER 3.4.2 — HOME DECOR 1.2 true room shell + independent furniture layers",
+  "home_decor_version": "1.3",
   "decor_rooms": [
     "living",
     "kitchen",
@@ -32,15 +32,16 @@
     "coop"
   ],
   "rules": [
+    "Home Decor is edited directly inside the existing #scene; no separate full-screen decoration page is used",
+    "The same room remains visible while editing; characters and pets remain visible but movement/interactions are paused",
+    "Click an actual furniture object in the room to select it, then drag, rotate, store, undo or change day/night",
+    "Furniture purchases use the original state.coins balance and enter the existing owned inventory",
+    "Owned furniture is placed directly into the current live room and replacement-group items reuse the old furniture position",
+    "Finish Decor keeps the player in the same room and rebuilds normal interaction hotspots",
+    "Room shell and furniture remain separate game objects so furniture is not baked into a replacement screenshot",
     "Home Decor remains additive; app.js is unchanged",
-    "Entering Home Decor converts that eligible room to a true structural room shell",
-    "Baked room furniture is removed for converted rooms so saved furniture becomes the visible furniture layer",
-    "Original-style starter layouts are migrated into independent owned furniture at no coin cost",
-    "New furniture still uses the existing coin balance, Owned and Placed inventories, replacement groups and worldRebuild1 save",
-    "Study room starts with two independent desks and two chairs for Elyn and Shawn",
-    "Kitchen structural cook/wash stations remain fixed so Cooking, Fridge, Dining and Washing gameplay stay available",
-    "Saved interactive replacement furniture keeps compatible hotspot anchoring",
-    "Garage, Garden and Lake keep their original scenes and gameplay"
+    "Study room keeps two independent desks and two chairs",
+    "Kitchen cooking/fridge/washing systems and all other protected gameplay remain untouched"
   ],
-  "next": "HOME DECOR 1.3 — dedicated high-detail furniture art assets, better occlusion/anchor tuning and room-specific placement zones without touching protected gameplay"
+  "next": "HOME DECOR 1.4 — replace placeholder SVG furniture with high-detail matching assets and tune per-furniture collision/interaction anchors in the live room"
 }

@@ -1,0 +1,81 @@
+/* LIVING ROOM VISUAL REBUILD 3 — high-detail playable hybrid, test branch only */
+body.v3-living-mode{background:#17110d}
+body.v3-living-mode #scene{background:none!important;overflow:hidden}
+body.v3-living-mode #scene::after{display:none!important}
+body.v3-living-mode #scene>#interactionLayer,
+body.v3-living-mode #scene>#destination,
+body.v3-living-mode #scene>.actor,
+body.v3-living-mode #scene>.pet-sprite{opacity:0!important;pointer-events:none!important}
+
+#v3LivingRoot{position:absolute;inset:0;z-index:5;overflow:hidden;background:#4b2f22;isolation:isolate;touch-action:none;user-select:none}
+#v3LivingWorld{position:absolute;inset:-4%;width:108%;height:108%;transform-origin:50% 58%;will-change:transform;transition:filter .25s ease}
+#v3LivingWorld .v3-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none}
+#v3BasePhoto{z-index:1;filter:saturate(1.08) contrast(1.035) brightness(1.025)}
+#v3Warmth{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at 75% 22%,rgba(255,205,115,.26),transparent 28%),linear-gradient(180deg,rgba(255,215,166,.07),transparent 48%,rgba(85,43,22,.08));mix-blend-mode:screen}
+#v3Vignette{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(ellipse at center,transparent 48%,rgba(45,24,15,.12) 100%)}
+#v3FloorGlow{position:absolute;left:20%;right:6%;bottom:4%;height:42%;z-index:3;pointer-events:none;background:linear-gradient(100deg,transparent 4%,rgba(255,202,119,.07) 48%,rgba(255,229,171,.16) 82%,transparent 100%);transform:skewX(-7deg);filter:blur(10px)}
+
+.v3-actor{position:absolute;z-index:30;transform:translate(-50%,-100%);transform-origin:50% 100%;pointer-events:auto;filter:drop-shadow(0 12px 9px rgba(58,31,19,.25));transition:filter .16s ease;will-change:left,top,transform}
+.v3-actor img{display:block;width:auto;pointer-events:none;user-select:none}
+.v3-actor.human img{height:clamp(155px,17.6vw,300px)}
+.v3-actor.pet img{height:clamp(72px,7vw,118px)}
+.v3-actor.active{filter:drop-shadow(0 0 13px rgba(255,186,197,.76)) drop-shadow(0 12px 10px rgba(58,31,19,.22))}
+.v3-actor.moving{animation:v3WalkBob .34s ease-in-out infinite alternate}
+@keyframes v3WalkBob{from{margin-top:0}to{margin-top:-7px}}
+.v3-actor .v3-name{position:absolute;left:50%;bottom:-6px;transform:translate(-50%,100%);background:rgba(255,248,243,.93);border:1px solid rgba(255,255,255,.75);box-shadow:0 5px 16px rgba(68,42,28,.18);padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900;color:#523d34;white-space:nowrap;pointer-events:none}
+.v3-actor.pet .v3-name{font-size:10px;padding:3px 8px}
+
+.v3-occluder{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none}
+#v3OccSofa{z-index:46;clip-path:polygon(38% 41%,83% 39%,88% 66%,79% 71%,61% 69%,51% 62%,40% 64%,35% 55%)}
+#v3OccTable{z-index:61;clip-path:polygon(34% 53%,61% 52%,62% 78%,34% 78%)}
+#v3OccRight{z-index:74;clip-path:polygon(59% 62%,100% 54%,100% 100%,63% 100%,58% 79%)}
+#v3OccLeft{z-index:76;clip-path:polygon(0 64%,27% 64%,28% 100%,0 100%)}
+
+#v3FloorHint{position:absolute;z-index:25;width:34px;height:19px;border:2px solid rgba(255,255,255,.95);border-radius:50%;background:rgba(255,186,169,.30);box-shadow:0 0 0 6px rgba(255,185,168,.11),0 5px 12px rgba(66,33,20,.18);transform:translate(-50%,-50%);opacity:0;pointer-events:none;transition:opacity .18s}
+
+#v3ContextLayer{position:absolute;inset:0;z-index:100;pointer-events:none}
+.v3-context{position:absolute;display:flex;align-items:center;gap:7px;transform:translate(-50%,-50%);padding:7px 11px;border-radius:17px;background:rgba(255,249,244,.91);border:1px solid rgba(255,255,255,.83);box-shadow:0 8px 22px rgba(58,37,27,.19);backdrop-filter:blur(8px);font-size:12px;font-weight:900;color:#4f3b33;pointer-events:auto;cursor:pointer;transition:.18s ease;white-space:nowrap}
+.v3-context:hover{transform:translate(-50%,-50%) scale(1.04);background:#fff}
+.v3-context span{font-size:16px}.v3-context small{font-size:10px;color:#8c7469;font-weight:800}
+.v3-context.near{box-shadow:0 0 0 3px rgba(255,186,197,.28),0 10px 26px rgba(58,37,27,.20)}
+
+#v3Brand{position:absolute;z-index:120;left:18px;top:16px;display:flex;align-items:center;gap:9px;color:#fff;text-shadow:0 2px 12px rgba(39,21,12,.55);pointer-events:none}
+#v3Brand .home{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:rgba(255,249,244,.18);border:1px solid rgba(255,255,255,.36);backdrop-filter:blur(8px);font-size:23px}
+#v3Brand b{display:block;font-size:18px;line-height:1.05}#v3Brand span{display:block;font-size:10px;margin-top:2px;opacity:.92}
+#v3Stats{position:absolute;z-index:121;right:275px;top:17px;display:flex;align-items:center;gap:11px;padding:9px 14px;border-radius:16px;background:rgba(255,248,242,.89);border:1px solid rgba(255,255,255,.8);box-shadow:0 8px 20px rgba(56,35,24,.15);backdrop-filter:blur(10px);font-size:12px;font-weight:900;color:#533f36}
+#v3Stats .love{color:#db5e77}
+
+#v3Joystick{position:absolute;z-index:122;left:58px;bottom:118px;width:150px;height:150px;border:2px solid rgba(255,255,255,.55);border-radius:50%;background:rgba(56,40,30,.18);box-shadow:inset 0 0 35px rgba(255,255,255,.14),0 10px 30px rgba(39,24,16,.18);backdrop-filter:blur(7px)}
+#v3Joystick .stick{position:absolute;left:50%;top:50%;width:76px;height:76px;transform:translate(-50%,-50%);border-radius:50%;background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(230,224,219,.70));box-shadow:0 8px 18px rgba(46,29,20,.24),inset 0 1px 1px white}
+#v3Joystick button{position:absolute;width:42px;height:42px;border:0;background:transparent;color:rgba(255,255,255,.9);font-size:26px;font-weight:900;text-shadow:0 2px 7px rgba(0,0,0,.38);cursor:pointer}
+#v3JoyUp{left:53px;top:0}#v3JoyDown{left:53px;bottom:0}#v3JoyLeft{left:0;top:53px}#v3JoyRight{right:0;top:53px}
+
+#v3ActionDock{position:absolute;z-index:122;right:38px;bottom:112px;display:flex;align-items:flex-end;gap:12px}
+.v3-round-action{border:2px solid rgba(255,255,255,.7);border-radius:50%;background:rgba(74,54,44,.35);color:#fff;backdrop-filter:blur(9px);box-shadow:0 10px 25px rgba(45,27,17,.20),inset 0 0 24px rgba(255,255,255,.08);font-weight:900;text-shadow:0 2px 7px rgba(0,0,0,.25);cursor:pointer;display:grid;place-items:center;gap:2px}
+.v3-round-action.run{width:92px;height:92px;font-size:27px}.v3-round-action.interact{width:112px;height:112px;font-size:30px}.v3-round-action em{font-style:normal;font-size:13px}.v3-round-action:hover{background:rgba(86,61,49,.5)}
+
+#v3BottomDock{position:absolute;z-index:123;left:50%;bottom:18px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;max-width:min(900px,74vw)}
+#v3ChatBox{width:min(400px,36vw);height:50px;display:flex;align-items:center;gap:9px;padding:7px 10px 7px 14px;border-radius:18px;background:rgba(88,62,49,.48);border:1px solid rgba(255,255,255,.55);box-shadow:0 9px 28px rgba(47,28,18,.20);backdrop-filter:blur(10px);color:white}
+#v3ChatBox b{font-size:11px;white-space:nowrap}#v3ChatBox input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:white;font:inherit;font-size:12px}#v3ChatBox input::placeholder{color:rgba(255,255,255,.78)}
+#v3ChatBox button{border:0;background:transparent;color:white;font-size:20px;cursor:pointer}
+#v3BottomDock>.v3-dock-btn{height:50px;padding:0 13px;border-radius:14px;border:1px solid rgba(255,255,255,.5);background:rgba(88,62,49,.43);backdrop-filter:blur(10px);box-shadow:0 8px 22px rgba(47,28,18,.17);color:#fff;font-weight:900;cursor:pointer;white-space:nowrap}
+
+#v3ModeBadge{position:absolute;z-index:119;left:50%;top:85px;transform:translateX(-50%);padding:7px 11px;border-radius:999px;background:rgba(45,29,20,.53);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(9px);color:#fff;font-size:10px;font-weight:900;pointer-events:none;opacity:.9}
+
+/* Re-style the existing HUD only while the rebuilt living room is active. */
+body.v3-living-mode .topbar{left:255px;right:200px;top:11px;min-height:54px;height:54px;padding:6px 8px;background:rgba(255,248,242,.78);border-radius:17px;box-shadow:0 8px 20px rgba(57,35,22,.13);backdrop-filter:blur(10px)}
+body.v3-living-mode .datebox{display:none}
+body.v3-living-mode .roomtabs{gap:6px;justify-content:flex-start;overflow:hidden}
+body.v3-living-mode .roomtabs button{padding:8px 17px;border-radius:11px;font-size:12px;background:rgba(255,255,255,.62)}
+body.v3-living-mode .roomtabs button.active{background:#fff0e7;box-shadow:inset 0 0 0 1px rgba(228,168,143,.35)}
+body.v3-living-mode .topbar>#homeDecorBtn{display:none}
+body.v3-living-mode .topbar>.iconbtn{padding:8px 10px;font-size:15px;border-radius:11px}
+body.v3-living-mode .status{left:18px;top:84px;width:220px;border-radius:18px;padding:8px;background:rgba(255,248,243,.88);box-shadow:0 12px 28px rgba(55,34,22,.16);backdrop-filter:blur(11px)}
+body.v3-living-mode .status-card{padding:5px 7px;min-height:53px;background:rgba(255,255,255,.52);border-radius:13px}
+body.v3-living-mode .status-card img{width:42px;height:42px}body.v3-living-mode .status-card.pet img{width:44px}
+body.v3-living-mode .tasks{display:none!important}
+body.v3-living-mode .bottom{display:none!important}
+body.v3-living-mode #quickAccessDock{display:none!important}
+
+@media(max-width:1200px){#v3Brand{display:none}body.v3-living-mode .topbar{left:14px;right:14px}#v3Stats{display:none}body.v3-living-mode .status{width:185px}#v3Joystick{left:22px;bottom:92px;transform:scale(.86);transform-origin:left bottom}#v3ActionDock{right:18px;bottom:94px;transform:scale(.88);transform-origin:right bottom}#v3BottomDock{max-width:82vw}#v3ModeBadge{top:72px}}
+@media(max-width:760px){body.v3-living-mode .status{display:none}body.v3-living-mode .topbar{height:52px}.roomtabs button:nth-child(n+5){display:none}#v3Joystick{width:128px;height:128px;left:10px;bottom:72px}#v3Joystick .stick{width:62px;height:62px}#v3JoyUp,#v3JoyDown{left:43px}#v3JoyLeft,#v3JoyRight{top:43px}#v3ActionDock{right:5px;bottom:72px}.v3-round-action.run{width:76px;height:76px}.v3-round-action.interact{width:88px;height:88px}#v3BottomDock{bottom:8px;max-width:96vw}#v3ChatBox{width:58vw}#v3BottomDock>.v3-dock-btn:nth-last-child(-n+2){display:none}.v3-context{font-size:10px;padding:6px 9px}}

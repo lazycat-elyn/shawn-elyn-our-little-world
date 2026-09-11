@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shawn & Elyn · Our Little World · True 3D Test</title>
+  <title>Shawn & Elyn · Our Little World · Living Visual Rebuild 3</title>
   <link rel="stylesheet" href="./styles.css" />
   <link rel="stylesheet" href="./goout-photo-333.css?v=333" />
   <link rel="stylesheet" href="./ski-work-integration.css?v=351" />
-  <link rel="stylesheet" href="./true-3d-integrated.css?v=360" />
+  <link rel="stylesheet" href="./living-visual-rebuild-3.css?v=370" />
 </head>
 <body>
   <main id="app">
     <section id="titleScreen" class="screen title-screen">
       <div class="title-overlay">
         <div class="title-copy">
-          <div class="eyebrow">SHAWN & ELYN · TRUE 3D TEST</div>
+          <div class="eyebrow">SHAWN & ELYN · LIVING VISUAL REBUILD 3</div>
           <h1>我们的小小世界</h1>
           <p>家 · 日常 · Dudu · Bubu · 更多未来</p>
         </div>
@@ -31,7 +31,7 @@
       <div class="topbar glass">
         <div class="datebox"><b>4月8日 · 星期二</b><span id="clockText">07:30 早上</span></div>
         <div class="roomtabs" id="roomTabs"></div>
-        <button id="homeDecorBtn" class="iconbtn" title="3D 装修下一阶段接入">🏠 装修</button>
+        <button id="homeDecorBtn" class="iconbtn" title="装修">🏠 装修</button>
         <button id="taskBookBtn" class="iconbtn taskbook-top" title="任务手册">📖 任务</button><button id="outingBtn" class="iconbtn outing-top" title="出去玩">🚗 出去</button><button id="musicBtn" class="iconbtn" title="背景音乐">🎵</button><button id="mapBtn" class="iconbtn" title="远景地图">🗺️</button>
       </div>
 
@@ -83,12 +83,12 @@
   <script src="./app.js"></script>
   <script src="./goout-photo-333.js?v=333"></script>
   <script src="./ski-work-integration.js?v=351"></script>
-  <script src="./true-3d-integrated.js?v=360"></script>
+  <script src="./living-visual-rebuild-3.js?v=370"></script>
   <script>
     document.getElementById('homeDecorBtn')?.addEventListener('click',()=>{
-      if(document.getElementById('scene')?.classList.contains('true3d-living-active')){
-        if(typeof toast==='function') toast('3D 装修会在下一阶段接入 · 这版先测试走路、碰撞和镜头');
-      }else if(typeof toast==='function') toast('这个测试分支暂时只改 3D 客厅，主游戏装修系统没有被删除');
+      if(document.body.classList.contains('v3-living-mode')){
+        if(typeof toast==='function') toast('先把图三视觉做到位，再接 3D 装修系统');
+      }
     });
   </script>
 </body>

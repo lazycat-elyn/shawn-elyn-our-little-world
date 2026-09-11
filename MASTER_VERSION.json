@@ -1,10 +1,18 @@
 {
   "project": "Shawn & Elyn — Our Little World",
-  "master_version": "3.5.0",
-  "milestone": "HOME DECOR 2.0 — same-room high-detail living room editing",
-  "baseline": "MASTER 3.4.2 — HOME DECOR 1.2",
+  "master_version": "3.5.1",
+  "milestone": "ALPINE RUSH — Work ski game integrated into Go Out Activities",
+  "baseline": "MASTER 3.5.0 — HOME DECOR 2.0 living room",
   "home_decor_version": "2.0",
   "decor_rooms": ["living"],
+  "external_game_integrations": {
+    "ski": {
+      "name": "Alpine Rush",
+      "url": "https://alpine-rush-snow.hongcaerra.chatgpt.site",
+      "entry": "Go Out > Activities > Ski Resort > Enter Alpine Rush",
+      "mode": "fullscreen iframe with external-window fallback"
+    }
+  },
   "protected_gameplay": [
     "fishing",
     "kitchen_and_cooking",
@@ -12,7 +20,7 @@
     "dining_and_washing",
     "racing",
     "driving_and_cars",
-    "go_out",
+    "go_out_core",
     "supermarket",
     "restaurant_and_cafe_dates",
     "garden",
@@ -25,14 +33,12 @@
   ],
   "rules": [
     "app.js remains unchanged",
-    "The original high-detail living.jpg remains the living-room visual source",
-    "Home Decor opens inside the current living-room scene instead of a second full-page editor",
-    "The sofa, coffee table and TV-console visual regions become directly selectable and draggable in-place",
-    "Furniture variants use the existing coin balance and persist in state.homeDecor20",
-    "The sofa Sit hotspot follows the sofa movement",
-    "Legacy Home Decor 1.x custom-room visuals are disabled so old simplified room shells do not replace the original detailed room",
-    "Other rooms keep their original detailed scenes while Home Decor 2.0 is migrated room-by-room",
-    "Fishing, Kitchen, Racing, Go Out and other established gameplay must not be changed"
+    "The existing Ski Resort card remains inside the Activities category",
+    "Enter & Play for Ski Resort is intercepted by an additive module and opens the completed Alpine Rush Work site",
+    "Drive Here keeps the original Go Out driving flow",
+    "Alpine Rush opens in a fullscreen in-game iframe overlay and includes an external-window fallback if the site blocks embedding",
+    "Closing Alpine Rush returns the player to the same Go Out Ski Resort detail view",
+    "No Fishing, Kitchen, Racing, supermarket, cafe, wardrobe, task, pet or other established gameplay is rewritten"
   ],
-  "next": "HOME DECOR 2.1 — refine furniture masks/occlusion, add rug/lamp/plants and migrate Kitchen without changing Kitchen gameplay"
+  "next": "Validate Alpine Rush iframe behavior in StackBlitz; if the Work host blocks framing, keep the same Ski Resort entry and use direct full-window launch/return flow instead"
 }

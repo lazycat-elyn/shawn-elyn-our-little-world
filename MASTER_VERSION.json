@@ -1,35 +1,38 @@
 {
   "project": "Shawn & Elyn — Our Little World",
   "branch": "living-visual-rebuild-3",
-  "test_version": "3.7.0-VISUAL3",
-  "milestone": "LIVING ROOM VISUAL REBUILD 3 — master-reference-first playable living room",
+  "test_version": "3.7.1-VISUAL3.1",
+  "milestone": "LIVING ROOM VISUAL REBUILD 3.1 — cinematic polish + physical interactions",
   "baseline": "MASTER 3.5.1",
   "main_untouched": true,
-  "visual_direction": "Reference image 3 is the visual contract. High-detail warm cozy life-sim presentation has priority over unrestricted 360-degree 3D.",
+  "visual_direction": "Reference image 3 remains the visual contract. High-detail warm cozy life-sim presentation has priority over unrestricted 360-degree 3D.",
   "living_room_architecture": {
     "mode": "high-detail 2.5D / spatial hybrid",
-    "visual_source": "existing high-detail living.jpg plus depth occluder layers",
+    "visual_source": "existing high-detail living.jpg plus depth occluder layers and cinematic light overlays",
     "characters": "existing high-quality wardrobe sprites and dedicated sit sprites",
     "features": [
-      "Elyn starts in a third-person back-facing composition inspired by the master reference",
-      "Shawn starts naturally seated on the sofa",
-      "Dudu and Bubu use the existing polished pet sprites instead of crude low-poly models",
+      "Elyn remains in a third-person foreground composition inspired by the master reference",
+      "Shawn remains naturally seated when not controlled",
+      "Dudu and Bubu use the existing polished pet sprites",
       "floor-only click movement",
       "WASD and touch direction controls",
       "furniture and room collision regions",
       "smooth camera pan and zoom based on player position",
       "foreground occlusion using sofa, table and foreground depth layers",
-      "context interaction bubbles for sofa, TV, Shawn, Dudu and Bubu",
-      "compact master-reference-inspired HUD",
+      "decluttered proximity interaction chips",
+      "golden-hour window bloom, light ray, floor warmth and floating dust ambience",
+      "contact shadows and stronger character depth integration",
+      "sofa interaction now approaches and settles physically instead of instant teleporting",
+      "short dedicated motion for petting, couple conversation and TV interaction",
       "existing Needs, tasks, coins, EXP, love, chat, Go Out, rooms and saves remain available"
     ]
   },
   "safety": [
     "main remains untouched",
     "app.js remains unchanged",
-    "all changes are isolated to this test branch",
+    "changes remain isolated to the living-visual-rebuild-3 test branch",
     "leaving the living room restores the existing room systems",
     "no Kitchen, Fishing, Racing, Go Out, wardrobe, pets, tasks or other protected gameplay is rewritten"
   ],
-  "next": "User visually reviews this branch. Continue tightening composition, character scale, occlusion and controls toward reference image 3 before any merge to main."
+  "next": "Visually test 3.7.1 in StackBlitz, then tighten furniture depth masks, character scale and living-room composition based on the user's screenshot feedback."
 }

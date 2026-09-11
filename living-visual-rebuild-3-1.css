@@ -1,0 +1,47 @@
+/* LIVING ROOM VISUAL REBUILD 3.1 — polish layer only; app.js remains untouched */
+body.v3-living-mode #v3ModeBadge{display:none!important}
+
+/* Golden-hour depth: light shafts, soft bloom and tiny floating dust. */
+#v371Cinematic{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+#v371Cinematic .v371-window-bloom{position:absolute;right:-4%;top:-9%;width:48%;height:66%;background:radial-gradient(ellipse at 70% 12%,rgba(255,244,211,.46) 0%,rgba(255,214,146,.18) 35%,transparent 72%);filter:blur(7px);mix-blend-mode:screen;opacity:.78}
+#v371Cinematic .v371-ray{position:absolute;right:2%;top:4%;width:48%;height:77%;background:linear-gradient(116deg,transparent 12%,rgba(255,236,190,.04) 24%,rgba(255,218,155,.18) 45%,rgba(255,239,204,.08) 61%,transparent 76%);clip-path:polygon(27% 0,67% 0,100% 100%,0 100%);filter:blur(8px);mix-blend-mode:screen;opacity:.64;transform:rotate(-2deg)}
+#v371Cinematic .v371-floor-warmth{position:absolute;left:22%;right:3%;bottom:1%;height:38%;background:radial-gradient(ellipse at 70% 80%,rgba(255,189,109,.15),transparent 62%);filter:blur(14px);opacity:.72}
+.v371-dust{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(255,246,214,.72);box-shadow:0 0 7px rgba(255,233,184,.6);opacity:0;animation:v371Dust 7.8s linear infinite;animation-delay:var(--delay);left:var(--x);top:var(--y)}
+@keyframes v371Dust{0%{opacity:0;transform:translate3d(0,8px,0) scale(.7)}15%{opacity:.52}55%{opacity:.22;transform:translate3d(18px,-24px,0) scale(1)}100%{opacity:0;transform:translate3d(34px,-54px,0) scale(.72)}}
+
+/* Characters feel grounded rather than pasted on top of the room photo. */
+.v3-actor::before{content:"";position:absolute;left:50%;bottom:-3px;width:52%;height:12%;transform:translate(-50%,50%);border-radius:50%;background:radial-gradient(ellipse,rgba(58,34,22,.30),rgba(58,34,22,.08) 52%,transparent 72%);filter:blur(4px);z-index:-1;pointer-events:none}
+.v3-actor.pet::before{width:70%;height:17%;bottom:0}
+.v3-actor[data-v3-actor="elyn"] img{height:clamp(172px,19vw,320px)}
+.v3-actor[data-v3-actor="shawn"] img{height:clamp(160px,17.4vw,294px)}
+
+/* Less UI clutter: interaction chips stay compact until the player is actually close. */
+.v3-context{font-size:0;padding:6px 8px;opacity:.58;transform:translate(-50%,-50%) scale(.9);transition:opacity .18s ease,transform .18s ease,padding .18s ease,background .18s ease,font-size .18s ease}
+.v3-context span{font-size:15px}
+.v3-context.near{font-size:12px;padding:7px 11px;opacity:1;transform:translate(-50%,-50%) scale(1.03);background:rgba(255,250,246,.96)}
+.v3-context:hover{font-size:12px;padding:7px 11px;opacity:1}
+
+/* Physical interaction motion. These are short transition poses, not teleports. */
+.v3-actor.v371-action{transition:left .42s cubic-bezier(.22,.78,.25,1),top .42s cubic-bezier(.22,.78,.25,1),filter .18s ease!important}
+.v3-actor.v371-sit-prep img{animation:v371SitPrep .22s ease both}
+.v3-actor.v371-seated img{animation:v371SitLand .28s cubic-bezier(.2,.9,.3,1) both}
+.v3-actor.v371-petting img{animation:v371PetLean .72s ease-in-out 2 alternate}
+.v3-actor.v371-talking img{animation:v371Talk .65s ease-in-out 2 alternate}
+.v3-actor.v371-watching img{animation:v371Watch .8s ease-in-out 2 alternate}
+.v3-actor.v371-pet-happy img{animation:v371PetHappy .34s ease-in-out 4 alternate}
+@keyframes v371SitPrep{0%{transform:translateY(0) scale(1)}100%{transform:translateY(5px) scale(.985,1.015)}}
+@keyframes v371SitLand{0%{transform:translateY(-9px) scale(1.02)}100%{transform:translateY(0) scale(1)}}
+@keyframes v371PetLean{0%{transform:rotate(0deg) translateY(0)}100%{transform:rotate(4deg) translateY(9px) scale(.99)}}
+@keyframes v371Talk{0%{transform:translateY(0) rotate(-.3deg)}100%{transform:translateY(-4px) rotate(.6deg)}}
+@keyframes v371Watch{0%{filter:brightness(1)}100%{filter:brightness(1.055)}}
+@keyframes v371PetHappy{0%{transform:translateY(0) rotate(-1deg)}100%{transform:translateY(-7px) rotate(2deg)}}
+
+#v371FxLayer{position:absolute;inset:0;z-index:115;pointer-events:none;overflow:hidden}
+.v371-fx{position:absolute;transform:translate(-50%,-50%);font-size:23px;filter:drop-shadow(0 3px 6px rgba(68,37,22,.22));animation:v371Fx 1.15s ease-out forwards}
+@keyframes v371Fx{0%{opacity:0;transform:translate(-50%,2px) scale(.7)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-54px) scale(1.22)}}
+
+/* The active character reads more like the controlled foreground avatar. */
+.v3-actor.active{filter:drop-shadow(0 0 10px rgba(255,206,189,.42)) drop-shadow(0 13px 11px rgba(58,31,19,.24))}
+#v3LivingRoot.v371-busy #v3InteractBtn{opacity:.62;pointer-events:none}
+
+@media(max-width:760px){.v3-actor[data-v3-actor="elyn"] img{height:clamp(142px,29vw,228px)}.v3-actor[data-v3-actor="shawn"] img{height:clamp(136px,27vw,214px)}.v3-context{opacity:.45}.v3-context.near{opacity:1}}

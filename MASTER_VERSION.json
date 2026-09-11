@@ -1,44 +1,33 @@
 {
   "project": "Shawn & Elyn — Our Little World",
-  "master_version": "3.5.1",
-  "milestone": "ALPINE RUSH — Work ski game integrated into Go Out Activities",
-  "baseline": "MASTER 3.5.0 — HOME DECOR 2.0 living room",
-  "home_decor_version": "2.0",
-  "decor_rooms": ["living"],
-  "external_game_integrations": {
-    "ski": {
-      "name": "Alpine Rush",
-      "url": "https://alpine-rush-snow.hongcaerra.chatgpt.site",
-      "entry": "Go Out > Activities > Ski Resort > Enter Alpine Rush",
-      "mode": "fullscreen iframe with external-window fallback"
-    }
+  "branch": "integrated-true-3d-living-v1",
+  "test_version": "3.6.0-3DTEST1",
+  "milestone": "INTEGRATED TRUE 3D LIVING ROOM — original HUD with real 3D room scene",
+  "baseline": "MASTER 3.5.1",
+  "main_untouched": true,
+  "true_3d_living": {
+    "engine": "Three.js",
+    "entry": "Original game > 客厅",
+    "features": [
+      "real 3D floor, walls, windows and furniture",
+      "WASD floor-only movement",
+      "click-to-move on the real floor plane",
+      "furniture collision",
+      "Q/E camera rotation",
+      "mouse-wheel zoom",
+      "camera follows the active character",
+      "Elyn and Shawn 3D prototype avatars",
+      "Dudu and Bubu 3D prototype pets",
+      "sofa and TV proximity interactions",
+      "original HUD, Needs, tasks, coins, EXP, chat, Go Out and room tabs remain"
+    ]
   },
-  "protected_gameplay": [
-    "fishing",
-    "kitchen_and_cooking",
-    "fridge",
-    "dining_and_washing",
-    "racing",
-    "driving_and_cars",
-    "go_out_core",
-    "supermarket",
-    "restaurant_and_cafe_dates",
-    "garden",
-    "wardrobe",
-    "needs",
-    "tasks_coins_exp_love",
-    "pets",
-    "chat",
-    "coop"
-  ],
-  "rules": [
+  "test_branch_safety": [
+    "main is not modified by this prototype",
     "app.js remains unchanged",
-    "The existing Ski Resort card remains inside the Activities category",
-    "Enter & Play for Ski Resort is intercepted by an additive module and opens the completed Alpine Rush Work site",
-    "Drive Here keeps the original Go Out driving flow",
-    "Alpine Rush opens in a fullscreen in-game iframe overlay and includes an external-window fallback if the site blocks embedding",
-    "Closing Alpine Rush returns the player to the same Go Out Ski Resort detail view",
-    "No Fishing, Kitchen, Racing, supermarket, cafe, wardrobe, task, pet or other established gameplay is rewritten"
+    "only the living-room visual scene is replaced while the player is in living",
+    "leaving the living room restores the normal 2D rooms",
+    "legacy Home Decor scripts are disabled only on this test branch to avoid overlay conflicts with the 3D canvas"
   ],
-  "next": "Validate Alpine Rush iframe behavior in StackBlitz; if the Work host blocks framing, keep the same Ski Resort entry and use direct full-window launch/return flow instead"
+  "next": "User tests walking, collision and camera; then improve 3D character quality, room fidelity, interaction animations and eventually 3D furniture editing"
 }

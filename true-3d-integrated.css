@@ -1,0 +1,28 @@
+/* INTEGRATED TRUE 3D LIVING ROOM v1 — test branch only */
+#scene.true3d-living-active{
+  background-image:none!important;
+  background:#17120f!important;
+}
+#scene.true3d-living-active::after{display:none!important}
+#scene.true3d-living-active > .actor,
+#scene.true3d-living-active > .pet-sprite,
+#scene.true3d-living-active > #destination,
+#scene.true3d-living-active > #interactionLayer{opacity:0!important;pointer-events:none!important}
+#true3dLivingRoot{position:absolute;inset:0;z-index:2;overflow:hidden;background:#18120f}
+#true3dLivingCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
+.true3d-badge{position:absolute;z-index:8;top:88px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(42,30,24,.72);color:#fff;font-size:11px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.22);backdrop-filter:blur(10px);pointer-events:none}
+.true3d-badge i{width:7px;height:7px;border-radius:50%;background:#8ee09d;box-shadow:0 0 10px rgba(142,224,157,.75)}
+.true3d-controls{position:absolute;z-index:8;right:24px;bottom:105px;display:grid;grid-template-columns:repeat(2,54px);gap:7px;padding:8px;border-radius:17px;background:rgba(255,248,242,.90);box-shadow:0 10px 28px rgba(45,28,19,.20);backdrop-filter:blur(10px)}
+.true3d-controls button{border:0;border-radius:11px;min-height:48px;background:#fffaf6;color:#5b463d;font-weight:900;cursor:pointer;display:grid;place-items:center;gap:1px;font-size:17px}
+.true3d-controls button small{font-size:8px;font-weight:800;color:#8d756a}
+.true3d-help{position:absolute;z-index:8;left:220px;bottom:102px;padding:8px 11px;border-radius:13px;background:rgba(255,248,242,.90);color:#604a40;box-shadow:0 10px 26px rgba(42,27,19,.18);font-size:10px;font-weight:750;pointer-events:none;backdrop-filter:blur(10px)}
+.true3d-interact{position:absolute;z-index:9;left:50%;bottom:128px;transform:translateX(-50%);display:none;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(255,249,244,.94);box-shadow:0 10px 28px rgba(43,29,20,.22);backdrop-filter:blur(10px)}
+.true3d-interact.show{display:flex}
+.true3d-interact b{font-size:11px;color:#5c463e}
+.true3d-interact button{border:0;border-radius:10px;background:#43342e;color:white;padding:8px 12px;font-weight:900;cursor:pointer}
+.true3d-name{position:absolute;z-index:7;transform:translate(-50%,-100%);background:rgba(255,248,244,.94);border-radius:999px;padding:3px 7px;font-size:10px;font-weight:900;color:#5a443b;box-shadow:0 4px 12px rgba(50,30,20,.15);pointer-events:none;white-space:nowrap}
+.true3d-name.active{outline:2px solid rgba(255,167,192,.8)}
+.true3d-loading{position:absolute;z-index:20;inset:0;display:grid;place-items:center;align-content:center;gap:7px;background:radial-gradient(circle at 50% 38%,#6b4c3b,#1a1310 70%);color:#fff;transition:opacity .35s}
+.true3d-loading.done{opacity:0;pointer-events:none}
+.true3d-loading b{font-size:18px}.true3d-loading span{font-size:10px;opacity:.75}
+@media(max-width:900px){.true3d-help{display:none}.true3d-controls{right:12px;bottom:88px}.true3d-badge{top:78px}.true3d-interact{bottom:112px}}

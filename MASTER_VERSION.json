@@ -1,9 +1,9 @@
 {
   "project": "Shawn & Elyn — Our Little World",
-  "master_version": "3.4.0",
-  "milestone": "HOME DECOR 1.0 — real purchase, placement, replace and save system",
-  "baseline": "MASTER 3.3.3 — Go Out crisp photo UI",
-  "home_decor_version": "1.0",
+  "master_version": "3.4.1",
+  "milestone": "HOME DECOR 1.1 — visual rebuild while preserving real purchase / replace / save",
+  "baseline": "MASTER 3.4.0 — HOME DECOR 1.0",
+  "home_decor_version": "1.1",
   "decor_rooms": [
     "living",
     "kitchen",
@@ -32,12 +32,13 @@
     "coop"
   ],
   "rules": [
-    "Home Decor is additive only",
-    "app.js remains untouched by Home Decor 1.0",
-    "Furniture is purchased with the existing coin balance",
-    "Owned and placed furniture persist inside the existing worldRebuild1 save",
-    "Study room supports two desks for Elyn and Shawn",
-    "Saved interactive replacements re-anchor compatible existing hotspots"
+    "Home Decor remains additive only",
+    "app.js remains untouched by Home Decor 1.1",
+    "Furniture still uses the existing coin balance and save data",
+    "Owned and placed furniture persist inside worldRebuild1",
+    "Study room still supports two desks for Elyn and Shawn",
+    "Visual rebuild adds characters/pets into editor, larger stage, premium catalog cards and placement controls",
+    "Legacy Fishing / Kitchen / Racing / Go Out and other protected systems are not rewritten"
   ],
-  "next": "HOME DECOR 1.1 — visual polish, furniture depth/occlusion and room-by-room asset expansion without altering protected gameplay"
+  "next": "HOME DECOR 1.2 — replace baked room furniture with true room-shell + independent furniture asset layers room-by-room"
 }

@@ -1,33 +1,35 @@
 {
   "project": "Shawn & Elyn — Our Little World",
-  "branch": "integrated-true-3d-living-v1",
-  "test_version": "3.6.0-3DTEST1",
-  "milestone": "INTEGRATED TRUE 3D LIVING ROOM — original HUD with real 3D room scene",
+  "branch": "living-visual-rebuild-3",
+  "test_version": "3.7.0-VISUAL3",
+  "milestone": "LIVING ROOM VISUAL REBUILD 3 — master-reference-first playable living room",
   "baseline": "MASTER 3.5.1",
   "main_untouched": true,
-  "true_3d_living": {
-    "engine": "Three.js",
-    "entry": "Original game > 客厅",
+  "visual_direction": "Reference image 3 is the visual contract. High-detail warm cozy life-sim presentation has priority over unrestricted 360-degree 3D.",
+  "living_room_architecture": {
+    "mode": "high-detail 2.5D / spatial hybrid",
+    "visual_source": "existing high-detail living.jpg plus depth occluder layers",
+    "characters": "existing high-quality wardrobe sprites and dedicated sit sprites",
     "features": [
-      "real 3D floor, walls, windows and furniture",
-      "WASD floor-only movement",
-      "click-to-move on the real floor plane",
-      "furniture collision",
-      "Q/E camera rotation",
-      "mouse-wheel zoom",
-      "camera follows the active character",
-      "Elyn and Shawn 3D prototype avatars",
-      "Dudu and Bubu 3D prototype pets",
-      "sofa and TV proximity interactions",
-      "original HUD, Needs, tasks, coins, EXP, chat, Go Out and room tabs remain"
+      "Elyn starts in a third-person back-facing composition inspired by the master reference",
+      "Shawn starts naturally seated on the sofa",
+      "Dudu and Bubu use the existing polished pet sprites instead of crude low-poly models",
+      "floor-only click movement",
+      "WASD and touch direction controls",
+      "furniture and room collision regions",
+      "smooth camera pan and zoom based on player position",
+      "foreground occlusion using sofa, table and foreground depth layers",
+      "context interaction bubbles for sofa, TV, Shawn, Dudu and Bubu",
+      "compact master-reference-inspired HUD",
+      "existing Needs, tasks, coins, EXP, love, chat, Go Out, rooms and saves remain available"
     ]
   },
-  "test_branch_safety": [
-    "main is not modified by this prototype",
+  "safety": [
+    "main remains untouched",
     "app.js remains unchanged",
-    "only the living-room visual scene is replaced while the player is in living",
-    "leaving the living room restores the normal 2D rooms",
-    "legacy Home Decor scripts are disabled only on this test branch to avoid overlay conflicts with the 3D canvas"
+    "all changes are isolated to this test branch",
+    "leaving the living room restores the existing room systems",
+    "no Kitchen, Fishing, Racing, Go Out, wardrobe, pets, tasks or other protected gameplay is rewritten"
   ],
-  "next": "User tests walking, collision and camera; then improve 3D character quality, room fidelity, interaction animations and eventually 3D furniture editing"
+  "next": "User visually reviews this branch. Continue tightening composition, character scale, occlusion and controls toward reference image 3 before any merge to main."
 }

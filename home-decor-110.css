@@ -1,0 +1,88 @@
+/* ============================================================
+   SHAWN & ELYN — HOME DECOR 1.1 VISUAL REBUILD
+   Visual-only override on top of 1.0. Legacy game systems untouched.
+   ============================================================ */
+
+.hd-overlay[data-hd-visual="110"]{
+  background:
+    radial-gradient(circle at 50% 15%,rgba(255,248,237,.96),rgba(232,220,205,.94) 54%,rgba(213,198,181,.98));
+}
+.hd-overlay[data-hd-visual="110"] .hd-head{
+  left:12px;right:12px;top:10px;height:72px;border-radius:22px;
+  background:rgba(255,252,248,.985);box-shadow:0 12px 34px rgba(72,48,31,.14);
+  padding:9px 12px;gap:9px;
+}
+.hd-overlay[data-hd-visual="110"] .hd-brand{min-width:200px}.hd-overlay[data-hd-visual="110"] .hd-brand b{font-size:18px}.hd-overlay[data-hd-visual="110"] .hd-brand span{font-size:11px;color:#8a7266}
+.hd-overlay[data-hd-visual="110"] .hd-room-tabs button{font-size:13px;padding:10px 14px;border-radius:14px;background:#f7efe9;color:#57473f}
+.hd-overlay[data-hd-visual="110"] .hd-room-tabs button.active{background:#f7d8cc;box-shadow:inset 0 0 0 1px #dfb29e,0 5px 12px rgba(122,79,57,.1)}
+.hd-overlay[data-hd-visual="110"] .hd-balance{font-size:12px;padding:9px 12px;border:1px solid #eee3dc;box-shadow:0 5px 15px rgba(60,40,30,.06)}
+.hd-overlay[data-hd-visual="110"] .hd-head-btn{font-size:12px;padding:10px 13px;border-radius:13px}
+
+.hd-overlay[data-hd-visual="110"] .hd-stage-wrap{
+  left:0;right:0;top:0;bottom:204px;padding:92px 108px 10px 110px;
+}
+.hd-overlay[data-hd-visual="110"] .hd-stage{
+  border-radius:30px;border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 25px 65px rgba(69,44,28,.25),0 0 0 8px rgba(255,255,255,.28);
+  background-size:cover;background-position:center 58%;
+  isolation:isolate;
+}
+.hd-overlay[data-hd-visual="110"] .hd-stage:before{
+  content:"";position:absolute;z-index:0;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,243,226,.04),rgba(255,239,219,.02) 48%,rgba(48,31,22,.14));
+}
+.hd-overlay[data-hd-visual="110"] .hd-stage:after{
+  content:"";position:absolute;z-index:2;left:3.2%;right:3.2%;bottom:2.8%;height:18%;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(38,24,18,.13));filter:blur(6px);border-radius:50%;
+}
+.hd-overlay[data-hd-visual="110"] .hd-stage.night:after{left:0;right:0;bottom:0;height:auto;inset:0;background:linear-gradient(180deg,rgba(27,40,72,.25),rgba(17,24,47,.44));filter:none;border-radius:0;mix-blend-mode:multiply;z-index:88}
+.hd-overlay[data-hd-visual="110"] .hd-stage-shade{z-index:1;background:linear-gradient(90deg,rgba(21,16,13,.06),transparent 17%,transparent 83%,rgba(21,16,13,.06))}
+.hd-overlay[data-hd-visual="110"] .hd-gridlines{z-index:4;opacity:.08;background-size:38px 38px;mask-image:linear-gradient(to bottom,transparent 0,black 18%,black 84%,transparent 100%)}
+
+.hd-overlay[data-hd-visual="110"] .hd-room-name{
+  top:102px;left:126px;border-radius:16px;padding:9px 13px;background:rgba(48,39,34,.72);backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.18);max-width:360px
+}
+.hd-overlay[data-hd-visual="110"] .hd-room-name b{font-size:15px}.hd-overlay[data-hd-visual="110"] .hd-room-name span{font-size:10px;line-height:1.45}
+.hd110-hero{position:absolute;inset:0;z-index:5;pointer-events:none}.hd110-room-chip{position:absolute;right:18px;top:16px;display:grid;justify-items:end;gap:2px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.38)}.hd110-room-chip small{letter-spacing:.15em;font-size:8px;opacity:.8}.hd110-room-chip strong{font-size:17px}.hd110-room-chip em{font-style:normal;font-size:9px;background:rgba(56,43,36,.55);padding:4px 7px;border-radius:999px;backdrop-filter:blur(8px)}
+
+.hd110-person,.hd110-pet{position:absolute;transform:translate(-50%,-90%);filter:drop-shadow(0 12px 9px rgba(33,23,19,.26));z-index:82;pointer-events:none}.hd110-person img{height:190px;max-width:160px;object-fit:contain}.hd110-person b{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);font-size:10px;background:#fff8f2;color:#473934;padding:4px 9px;border-radius:999px;box-shadow:0 4px 10px rgba(0,0,0,.12)}.hd110-person>span{position:absolute;right:-1px;top:4px;width:26px;height:26px;border-radius:50%;background:#fff7ef;display:grid;place-items:center;font-size:13px;box-shadow:0 5px 13px rgba(0,0,0,.14)}.hd110-pet img{height:76px;max-width:118px;object-fit:contain}.hd110-pet span{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);background:#fff8f2;padding:3px 7px;border-radius:999px;font-size:9px;font-weight:800;color:#56443b}
+
+.hd-overlay[data-hd-visual="110"] .hd-left{left:14px;top:102px;width:80px;border-radius:24px;padding:8px;background:rgba(255,250,245,.985);box-shadow:0 16px 38px rgba(60,40,27,.16);gap:7px}.hd-overlay[data-hd-visual="110"] .hd-side-title{font-size:11px;letter-spacing:.08em}.hd-overlay[data-hd-visual="110"] .hd-left button{min-height:62px;border-radius:16px;background:#fffaf7;border:1px solid rgba(238,226,218,.8)}.hd-overlay[data-hd-visual="110"] .hd-left button i{font-size:22px}.hd-overlay[data-hd-visual="110"] .hd-left button span{font-size:10px}.hd-overlay[data-hd-visual="110"] .hd-left button.active{background:#fde4d9;box-shadow:inset 0 0 0 1px #e8baa8,0 5px 13px rgba(100,64,49,.09)}
+
+.hd-overlay[data-hd-visual="110"] .hd-right{right:14px;top:112px;width:78px;gap:8px}.hd-overlay[data-hd-visual="110"] .hd-right button{min-height:67px;border-radius:17px;background:rgba(255,251,246,.985);border:1px solid rgba(239,228,220,.85);font-size:22px;box-shadow:0 10px 24px rgba(61,42,31,.14)}.hd-overlay[data-hd-visual="110"] .hd-right button span{font-size:10px}
+
+.hd-overlay[data-hd-visual="110"] .hd-furniture{
+  z-index:40;filter:drop-shadow(0 12px 9px rgba(42,29,21,.25));
+}
+.hd-overlay[data-hd-visual="110"] .hd-furniture svg{
+  filter:saturate(1.04) contrast(1.02);transform:scale(1.12);transform-origin:50% 70%;
+}
+.hd-overlay[data-hd-visual="110"] .hd-furniture.selected{filter:drop-shadow(0 0 12px rgba(96,216,153,.95)) drop-shadow(0 14px 9px rgba(42,29,21,.25));z-index:96!important}
+.hd-overlay[data-hd-visual="110"] .hd-main-item:before{
+  left:-6%;right:-6%;top:8%;bottom:-4%;background:rgba(241,226,207,.38);backdrop-filter:blur(12px) brightness(.95);border-radius:32px;box-shadow:0 0 26px rgba(241,226,207,.28)
+}
+.hd-overlay[data-hd-visual="110"] .hd-select-ring{inset:1% -1%;border:3px solid #72daa3;border-radius:20px;box-shadow:0 0 0 5px rgba(105,214,161,.19)}
+.hd110-select-actions{position:absolute;left:50%;top:-36px;transform:translateX(-50%) rotate(calc(var(--rot,0deg) * -1));display:flex;gap:5px;z-index:120;pointer-events:auto}.hd110-select-actions button{border:0;width:29px;height:29px;border-radius:50%;background:#fffaf6;color:#4f423b;font-size:15px;font-weight:900;box-shadow:0 5px 13px rgba(0,0,0,.17);cursor:pointer}.hd110-select-actions button:first-child{color:#3a9f68}.hd110-select-actions button:last-child{color:#d35c4d}
+
+.hd-overlay[data-hd-visual="110"] .hd-dock{
+  left:12px;right:12px;bottom:10px;height:184px;border-radius:26px;background:rgba(255,252,249,.99);box-shadow:0 -12px 38px rgba(69,46,31,.17);grid-template-rows:32px 34px 1fr;grid-template-columns:1fr 202px;padding:10px 12px;gap:4px 10px
+}
+.hd-overlay[data-hd-visual="110"] .hd-mode-tabs button{padding:7px 14px;border-radius:11px;font-size:11px;background:#f1e7e1}.hd-overlay[data-hd-visual="110"] .hd-mode-tabs button.active{background:#ffd9cc;color:#6d493e}
+.hd-overlay[data-hd-visual="110"] .hd-category-tabs button{padding:6px 11px;border-radius:12px;font-size:10px;background:#fff;border:1px solid #f0e5de}.hd-overlay[data-hd-visual="110"] .hd-category-tabs button.active{background:#f6ded2;border-color:#e5bca9}
+.hd-overlay[data-hd-visual="110"] .hd-catalog{gap:10px;padding:1px 2px 4px}
+.hd-overlay[data-hd-visual="110"] .hd-card{flex:0 0 156px;grid-template-rows:82px auto 30px;border-radius:18px;border:1px solid #eadfd8;box-shadow:0 7px 18px rgba(67,45,31,.07);transition:transform .16s,box-shadow .16s}.hd-overlay[data-hd-visual="110"] .hd-card:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(67,45,31,.12)}.hd-overlay[data-hd-visual="110"] .hd-thumb{background:radial-gradient(circle at 50% 30%,#fffdf9,#f1e6dc 72%)}.hd-overlay[data-hd-visual="110"] .hd-thumb svg{width:118px;height:78px;filter:drop-shadow(0 6px 5px rgba(70,47,34,.13))}.hd-overlay[data-hd-visual="110"] .hd-card-copy{padding:5px 8px 2px}.hd-overlay[data-hd-visual="110"] .hd-card-copy b{font-size:11px}.hd-overlay[data-hd-visual="110"] .hd-card-copy small{font-size:9px}.hd110-price{color:#b27822;font-size:9px}.hd-overlay[data-hd-visual="110"] .hd-card>button{margin:0 7px 6px;border-radius:9px;background:#5c4b43;font-size:9px}.hd-overlay[data-hd-visual="110"] .hd-card>button:not(:disabled):hover{background:#3f342f}.hd-overlay[data-hd-visual="110"] .hd-dock-actions{padding:4px 5px;gap:8px}.hd-overlay[data-hd-visual="110"] .hd-dock-actions button{padding:12px 8px;border-radius:15px}.hd-overlay[data-hd-visual="110"] .hd-dock-actions .hd-save{background:linear-gradient(135deg,#74a875,#679769);font-size:13px;box-shadow:0 10px 20px rgba(70,121,72,.27)}
+
+/* make furniture feel like placed objects rather than flat HUD stickers */
+.hd-overlay[data-hd-visual="110"] .hd-furniture[data-type="rug"]{z-index:8!important;filter:drop-shadow(0 5px 4px rgba(50,35,25,.12))}.hd-overlay[data-hd-visual="110"] .hd-furniture[data-type="stringlights"],.hd-overlay[data-hd-visual="110"] .hd-furniture[data-type="wallart"],.hd-overlay[data-hd-visual="110"] .hd-furniture[data-type="mirror"]{z-index:14!important}.hd-overlay[data-hd-visual="110"] .hd-furniture[data-type="lamp"],.hd-overlay[data-hd-visual="110"] .hd-furniture[data-type="tablelamp"],.hd-overlay[data-hd-visual="110"] .hd-furniture[data-type="desklamp"],.hd-overlay[data-hd-visual="110"] .hd-furniture[data-type="pendant"]{filter:drop-shadow(0 0 12px rgba(255,218,145,.48)) drop-shadow(0 12px 8px rgba(42,29,21,.2))}
+
+/* life-mode placed objects: keep interactions visible but do not touch any legacy game UI */
+.hd-life-layer .hd-furniture{filter:drop-shadow(0 10px 7px rgba(40,29,23,.22));}.hd-life-layer .hd-main-item:before{background:rgba(239,225,208,.27);backdrop-filter:blur(8px);border-radius:24px}
+
+@media(max-width:1200px){
+ .hd110-person img{height:155px}.hd110-pet img{height:62px}
+ .hd-overlay[data-hd-visual="110"] .hd-stage-wrap{padding-left:96px;padding-right:92px}.hd-overlay[data-hd-visual="110"] .hd-room-name{left:108px}
+ .hd-overlay[data-hd-visual="110"] .hd-card{flex-basis:142px}
+}
+@media(max-width:850px){
+ .hd-overlay[data-hd-visual="110"] .hd-brand{display:none}.hd-overlay[data-hd-visual="110"] .hd-stage-wrap{padding:82px 66px 8px 66px;bottom:194px}.hd-overlay[data-hd-visual="110"] .hd-left{left:6px;top:92px;width:54px}.hd-overlay[data-hd-visual="110"] .hd-left button{min-height:52px}.hd-overlay[data-hd-visual="110"] .hd-left button span{display:none}.hd-overlay[data-hd-visual="110"] .hd-right{right:5px;width:50px;top:100px}.hd-overlay[data-hd-visual="110"] .hd-right button{min-height:54px;font-size:18px}.hd-overlay[data-hd-visual="110"] .hd-right button span{display:none}.hd-overlay[data-hd-visual="110"] .hd-room-name{left:72px;top:92px;max-width:240px}.hd-overlay[data-hd-visual="110"] .hd-room-name span{display:none}.hd110-person img{height:130px}.hd110-pet img{height:52px}.hd-overlay[data-hd-visual="110"] .hd-dock{height:176px;grid-template-columns:1fr 112px}.hd-overlay[data-hd-visual="110"] .hd-card{flex-basis:122px;grid-template-rows:70px auto 28px}.hd-overlay[data-hd-visual="110"] .hd-thumb svg{width:95px;height:67px}
+}

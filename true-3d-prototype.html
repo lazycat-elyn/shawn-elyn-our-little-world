@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shawn & Elyn · True 3D Living Room Prototype</title>
+  <link rel="stylesheet" href="./true-3d-prototype.css" />
+</head>
+<body>
+  <div id="app3d">
+    <canvas id="game3d" aria-label="True 3D living room prototype"></canvas>
+
+    <header class="topbar panel">
+      <div class="brand">
+        <b>Shawn & Elyn</b>
+        <span>TRUE 3D · Living Room Prototype</span>
+      </div>
+      <nav class="room-tabs" aria-label="Rooms">
+        <button class="active">客厅</button>
+        <button disabled>厨房</button>
+        <button disabled>卧室</button>
+        <button disabled>浴室</button>
+        <button disabled>书房</button>
+        <button disabled>阳台</button>
+      </nav>
+      <div class="stats">
+        <span>Lv.1</span><span>🪙 1280</span><span>✨ 0/250</span><span>❤️ 120/1000</span>
+      </div>
+      <a class="back" href="./index.html">← 主游戏</a>
+    </header>
+
+    <aside class="needs panel">
+      <article><div class="avatar elyn">E</div><div><b>Elyn</b><small>开心</small></div></article>
+      <div class="meter"><span>心情</span><i><b style="width:90%"></b></i><em>90</em></div>
+      <div class="meter"><span>饱腹</span><i><b style="width:64%"></b></i><em>64</em></div>
+      <div class="meter"><span>清洁</span><i><b style="width:88%"></b></i><em>88</em></div>
+      <article><div class="avatar shawn">S</div><div><b>Shawn</b><small>开心</small></div></article>
+      <div class="meter"><span>心情</span><i><b style="width:86%"></b></i><em>86</em></div>
+      <div class="meter"><span>饱腹</span><i><b style="width:56%"></b></i><em>56</em></div>
+    </aside>
+
+    <div class="hint panel" id="hint">
+      <b>真正 3D 空间</b>
+      <span>WASD 移动 · Q/E 转镜头 · 滚轮缩放 · 点击地板自动走</span>
+    </div>
+
+    <div class="interaction panel hidden" id="interaction">
+      <b id="interactionTitle">沙发</b>
+      <button id="interactBtn">互动</button>
+    </div>
+
+    <div class="joystick panel">
+      <span>W</span>
+      <div><span>A</span><span>S</span><span>D</span></div>
+      <small>只可以在地板行走</small>
+    </div>
+
+    <div class="camera panel">
+      <button id="camLeft">↶<span>左转</span></button>
+      <button id="camRight">↷<span>右转</span></button>
+      <button id="camNear">＋<span>拉近</span></button>
+      <button id="camFar">－<span>拉远</span></button>
+    </div>
+
+    <footer class="bottom panel">
+      <div class="chat"><b>Elyn</b><span id="statusText">在真正的 3D 客厅里走走看 ♡</span></div>
+      <div class="bottom-actions"><button>切换人物</button><button>背包</button><button>手机</button><button>地图</button></div>
+    </footer>
+
+    <div class="loading" id="loading"><b>正在建造 3D 客厅…</b><span>家具、光影、碰撞和镜头都是真 3D</span></div>
+  </div>
+  <script type="module" src="./true-3d-prototype.js"></script>
+</body>
+</html>

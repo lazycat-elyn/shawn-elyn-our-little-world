@@ -1,9 +1,9 @@
 {
   "project": "Shawn & Elyn — Our Little World",
-  "master_version": "3.4.1",
-  "milestone": "HOME DECOR 1.1 — visual rebuild while preserving real purchase / replace / save",
-  "baseline": "MASTER 3.4.0 — HOME DECOR 1.0",
-  "home_decor_version": "1.1",
+  "master_version": "3.4.2",
+  "milestone": "HOME DECOR 1.2 — true room shell + independent furniture layers",
+  "baseline": "MASTER 3.4.1 — HOME DECOR 1.1 visual rebuild",
+  "home_decor_version": "1.2",
   "decor_rooms": [
     "living",
     "kitchen",
@@ -32,13 +32,15 @@
     "coop"
   ],
   "rules": [
-    "Home Decor remains additive only",
-    "app.js remains untouched by Home Decor 1.1",
-    "Furniture still uses the existing coin balance and save data",
-    "Owned and placed furniture persist inside worldRebuild1",
-    "Study room still supports two desks for Elyn and Shawn",
-    "Visual rebuild adds characters/pets into editor, larger stage, premium catalog cards and placement controls",
-    "Legacy Fishing / Kitchen / Racing / Go Out and other protected systems are not rewritten"
+    "Home Decor remains additive; app.js is unchanged",
+    "Entering Home Decor converts that eligible room to a true structural room shell",
+    "Baked room furniture is removed for converted rooms so saved furniture becomes the visible furniture layer",
+    "Original-style starter layouts are migrated into independent owned furniture at no coin cost",
+    "New furniture still uses the existing coin balance, Owned and Placed inventories, replacement groups and worldRebuild1 save",
+    "Study room starts with two independent desks and two chairs for Elyn and Shawn",
+    "Kitchen structural cook/wash stations remain fixed so Cooking, Fridge, Dining and Washing gameplay stay available",
+    "Saved interactive replacement furniture keeps compatible hotspot anchoring",
+    "Garage, Garden and Lake keep their original scenes and gameplay"
   ],
-  "next": "HOME DECOR 1.2 — replace baked room furniture with true room-shell + independent furniture asset layers room-by-room"
+  "next": "HOME DECOR 1.3 — dedicated high-detail furniture art assets, better occlusion/anchor tuning and room-specific placement zones without touching protected gameplay"
 }

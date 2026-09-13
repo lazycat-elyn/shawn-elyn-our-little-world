@@ -1,0 +1,21 @@
+#scene.movement3-enabled{overflow:hidden;background-size:cover;background-position:calc(50% + var(--m3-cam-x,0px)) calc(50% + var(--m3-cam-y,0px));transition:background-position .08s linear}
+#scene.movement3-enabled #interactionLayer,
+#scene.movement3-enabled #destination,
+#scene.movement3-enabled > .actor,
+#scene.movement3-enabled > .pet-sprite,
+#scene.movement3-enabled > .movement3-proximity,
+#scene.movement3-enabled > .movement3-quick-menu{translate:var(--m3-cam-x,0px) var(--m3-cam-y,0px)}
+#scene.movement3-enabled .hotspot{opacity:0!important;pointer-events:none!important}
+#scene.movement3-enabled .actor,#scene.movement3-enabled .pet-sprite{transition:left .045s linear,top .045s linear,translate .08s linear;will-change:left,top,translate}
+#scene.movement3-enabled .actor.movement3-moving .base-sprite{animation:m3WalkBob .34s ease-in-out infinite alternate;filter:drop-shadow(0 8px 8px rgba(48,31,18,.24))}
+#scene.movement3-enabled .actor.movement3-running .base-sprite{animation-duration:.22s}
+@keyframes m3WalkBob{from{transform:translateY(0) scale(1)}to{transform:translateY(-3px) scale(1.012)}}
+.movement3-proximity{position:absolute;z-index:55;transform:translate(-50%,-115%);display:flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid rgba(255,255,255,.78);border-radius:999px;background:rgba(255,248,242,.92);box-shadow:0 8px 24px rgba(50,32,21,.16);backdrop-filter:blur(9px);font:700 13px/1.1 system-ui,-apple-system,"Segoe UI",sans-serif;white-space:nowrap;cursor:pointer;transition:left .12s linear,top .12s linear,translate .08s linear,transform .15s ease}
+.movement3-proximity:hover{transform:translate(-50%,-118%) scale(1.035)}
+.movement3-proximity[hidden]{display:none!important}
+.movement3-proximity kbd{min-width:21px;height:21px;display:grid;place-items:center;border-radius:7px;background:rgba(58,47,42,.88);color:#fff;font:800 11px/1 system-ui}
+.movement3-quick-menu{position:absolute;z-index:58;transform:translate(-50%,0);display:flex;gap:7px;padding:7px;border-radius:15px;background:rgba(255,250,247,.95);box-shadow:0 12px 30px rgba(45,27,18,.2);backdrop-filter:blur(10px)}
+.movement3-quick-menu button{border:0;border-radius:11px;padding:9px 12px;background:#fff;box-shadow:0 2px 8px rgba(60,38,28,.08);font-weight:800;cursor:pointer}
+.movement3-hud{position:absolute;right:22px;bottom:116px;z-index:65;display:flex;align-items:center;gap:10px;max-width:min(560px,46vw);padding:9px 10px 9px 13px;border:1px solid rgba(255,255,255,.72);border-radius:16px;background:rgba(252,246,241,.82);box-shadow:0 10px 28px rgba(47,29,18,.13);backdrop-filter:blur(11px);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;pointer-events:auto}
+.movement3-hud div{display:flex;flex-direction:column;gap:2px;min-width:0}.movement3-hud b{font-size:12px}.movement3-hud span{font-size:10px;opacity:.68;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.movement3-hud button{border:0;border-radius:10px;padding:7px 9px;background:rgba(255,255,255,.88);font-weight:800;font-size:10px;white-space:nowrap;cursor:pointer}
+@media(max-width:900px){.movement3-hud{right:12px;bottom:104px;max-width:68vw}.movement3-hud span{display:none}}

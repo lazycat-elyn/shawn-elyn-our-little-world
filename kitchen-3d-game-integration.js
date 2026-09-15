@@ -29,9 +29,9 @@
     frame=document.createElement('iframe');
     frame.className='k3d-game-frame';
     frame.title='Kitchen 3D Modular Editor 1.2';
-    frame.src='./kitchen-3d-modular-1-2.html?embed=1';
+    frame.src='./kitchen-3d-modular-1-2.html?embed=1&v=1201';
     frame.allow='fullscreen';
-    frame.addEventListener('load',()=>setTimeout(()=>sendState(frame.contentWindow),60));
+    frame.addEventListener('load',()=>setTimeout(()=>sendState(frame.contentWindow),100));
     badge=document.createElement('div');
     badge.className='k3d-game-badge';
     badge.textContent='3D MODULAR KITCHEN 1.2 · 🛍️ Shop · 📦 Inventory · 每件物件独立';
@@ -79,5 +79,5 @@
   new MutationObserver(sync).observe(tabs,{subtree:true,attributes:true,attributeFilter:['class']});
   setInterval(sync,500);
   setTimeout(sync,50);
-  window.KITCHEN_3D_GAME_INTEGRATION={version:'1.2',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
+  window.KITCHEN_3D_GAME_INTEGRATION={version:'1.2.1',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
 })();

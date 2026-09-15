@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kitchen 3D Modular 1.1</title>
   <link rel="stylesheet" href="./kitchen-3d-modular-1-1.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.167.1/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
   <main class="app">
@@ -52,6 +60,9 @@
       <div id="toast" class="toast"></div>
     </section>
   </main>
+  <script>
+    if(new URLSearchParams(location.search).get('embed')==='1') document.documentElement.classList.add('embed');
+  </script>
   <script type="module" src="./kitchen-3d-modular-1-1.js"></script>
 </body>
 </html>

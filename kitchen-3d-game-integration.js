@@ -28,13 +28,13 @@
     if(frame)return;
     frame=document.createElement('iframe');
     frame.className='k3d-game-frame';
-    frame.title='Kitchen 3D Modular Editor 1.2';
-    frame.src='./kitchen-3d-modular-1-2.html?embed=1&v=1201';
+    frame.title='Kitchen 3D Modular Editor 1.3';
+    frame.src='./kitchen-3d-modular-1-2.html?embed=1&v=1300';
     frame.allow='fullscreen';
     frame.addEventListener('load',()=>setTimeout(()=>sendState(frame.contentWindow),100));
     badge=document.createElement('div');
     badge.className='k3d-game-badge';
-    badge.textContent='3D MODULAR KITCHEN 1.2 · 🛍️ Shop · 📦 Inventory · 每件物件独立';
+    badge.textContent='3D MODULAR KITCHEN 1.3 · ♡ Life Mode · 🛍️ Shop · 📦 Inventory';
     scene.append(frame,badge);
   }
   function showKitchen3D(){ensureFrame();scene.classList.add('k3d-game-active');frame.style.display='block';badge.style.display='block';sendState()}
@@ -71,7 +71,9 @@
     if(d.type==='kitchen-appliance-use'){
       const id=d.id;
       if(typeof recordEvent==='function')recordEvent('useKitchenAppliance',1);
-      if(typeof toast==='function')toast(`${LABEL[id]||'厨房电器'} · 使用中 ♡`);
+      if(typeof toast==='function')toast(`${LABEL[id]||'厨房电器'} · 准备使用 ♡`);
+      // Connect the new 3D appliance to the existing Kitchen cooking gameplay.
+      if(typeof openCookingLegacy==='function')setTimeout(()=>openCookingLegacy(),180);
     }
   });
 
@@ -79,5 +81,5 @@
   new MutationObserver(sync).observe(tabs,{subtree:true,attributes:true,attributeFilter:['class']});
   setInterval(sync,500);
   setTimeout(sync,50);
-  window.KITCHEN_3D_GAME_INTEGRATION={version:'1.2.1',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
+  window.KITCHEN_3D_GAME_INTEGRATION={version:'1.3',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
 })();

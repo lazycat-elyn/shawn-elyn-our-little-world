@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitchen 3D Modular 1.1</title>
+  <link rel="stylesheet" href="./kitchen-3d-modular-1-1.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">SHAWN & ELYN · OUR LITTLE WORLD</div>
+        <h1>Kitchen 3D Modular 1.1</h1>
+        <p>每个主要 element 独立 · 可选择 · Move · Rotate · Hide · Use · Save</p>
+      </div>
+      <div class="actions">
+        <button id="assembledBtn" class="pill active">Assembled</button>
+        <button id="separateBtn" class="pill">Separate View</button>
+        <a class="pill ghost" href="./index.html">← 回游戏</a>
+      </div>
+    </header>
+
+    <section class="workarea">
+      <aside class="asset-panel">
+        <div class="panel-title">独立物件</div>
+        <div class="panel-sub">点这里选，不需要在画面里猜</div>
+        <div id="assetList" class="asset-list"></div>
+      </aside>
+
+      <div id="stage" class="stage"></div>
+
+      <aside class="editor-panel">
+        <div class="selected-label">SELECTED</div>
+        <div id="selectedName" class="selected-name">请选择一个物件</div>
+        <div id="selectedType" class="selected-type">—</div>
+
+        <div class="mode-row">
+          <button id="moveMode" class="tool active">↔ Move</button>
+          <button id="rotateMode" class="tool">⟳ Rotate</button>
+        </div>
+        <div class="tool-grid">
+          <button data-act="left">←</button><button data-act="forward">↑</button>
+          <button data-act="right">→</button><button data-act="back">↓</button>
+          <button data-act="rotateL">↶ 15°</button><button data-act="rotateR">15° ↷</button>
+          <button data-act="use" class="accent">Use</button><button data-act="hide">Hide / Show</button>
+          <button data-act="reset" class="wide">Reset this object</button>
+        </div>
+        <div class="note">拖动场景旋转视角；选中后会出现 gizmo。移动和旋转会自动保存。</div>
+      </aside>
+
+      <div id="toast" class="toast"></div>
+    </section>
+  </main>
+  <script type="module" src="./kitchen-3d-modular-1-1.js"></script>
+</body>
+</html>

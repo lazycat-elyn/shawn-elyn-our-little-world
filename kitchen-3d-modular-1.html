@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitchen 3D Modular Prototype 1.0</title>
+  <link rel="stylesheet" href="./kitchen-3d-modular-1.css" />
+</head>
+<body>
+  <main class="k3d-app">
+    <header class="k3d-topbar">
+      <div>
+        <div class="k3d-kicker">SHAWN & ELYN · OUR LITTLE WORLD</div>
+        <h1>Kitchen 3D Modular Prototype 1.0</h1>
+        <p>奶油白 · 暖木色 · 淡粉格纹 · 温暖治愈</p>
+      </div>
+      <div class="k3d-top-actions">
+        <button id="previewBtn" class="k3d-btn active">Preview</button>
+        <button id="editBtn" class="k3d-btn">Edit Room</button>
+        <a class="k3d-btn ghost" href="./index.html">← 回游戏</a>
+      </div>
+    </header>
+
+    <section class="k3d-stage-wrap">
+      <div id="kitchen3dStage" class="k3d-stage"></div>
+
+      <aside class="k3d-card k3d-info">
+        <b id="modeTitle">Preview Mode</b>
+        <span id="modeHint">拖动旋转视角 · 滚轮缩放 · 点击物件查看</span>
+      </aside>
+
+      <aside id="editPanel" class="k3d-card k3d-edit hidden">
+        <div class="k3d-edit-head">
+          <div>
+            <small>SELECTED</small>
+            <strong id="selectedName">未选择物件</strong>
+          </div>
+          <button id="closeEditPanel" class="k3d-icon-btn">×</button>
+        </div>
+        <div class="k3d-action-grid">
+          <button data-act="left">← Move</button>
+          <button data-act="right">Move →</button>
+          <button data-act="forward">↑ Forward</button>
+          <button data-act="back">↓ Back</button>
+          <button data-act="rotateL">↶ Rotate</button>
+          <button data-act="rotateR">↷ Rotate</button>
+          <button data-act="use" class="accent">Use</button>
+          <button data-act="reset">Reset</button>
+        </div>
+        <div class="k3d-mini-note">大型固定柜体只读；冰箱、烤箱、岛台、吧台椅等为独立 object。</div>
+      </aside>
+
+      <div id="toast" class="k3d-toast"></div>
+    </section>
+
+    <footer class="k3d-bottom">
+      <div class="k3d-chip">独立物件：Fridge</div>
+      <div class="k3d-chip">Stove Oven</div>
+      <div class="k3d-chip">Sink</div>
+      <div class="k3d-chip">Peninsula</div>
+      <div class="k3d-chip">Bar Stool ×2</div>
+      <div class="k3d-chip soft">下一步：Air Fryer / Blender / Microwave</div>
+    </footer>
+  </main>
+
+  <script type="module" src="./kitchen-3d-modular-1.js"></script>
+</body>
+</html>

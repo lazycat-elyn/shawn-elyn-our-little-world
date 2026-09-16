@@ -1,0 +1,14 @@
+/* Kitchen 3D 2.7 — coherent reference-master presentation */
+body.k27-ready .stage canvas{filter:saturate(1.035) contrast(1.06) brightness(1.0)}
+body.k22-embedded:not(.k22-edit) .k22-dock{opacity:.58;transform:translateX(-50%) scale(.94);transition:opacity .18s ease,transform .18s ease}
+body.k22-embedded:not(.k22-edit) .k22-dock:hover{opacity:.94;transform:translateX(-50%) scale(1)}
+body.k22-embedded .k22-dock{background:rgba(255,249,241,.84);border-color:rgba(132,91,59,.12);box-shadow:0 10px 28px rgba(73,46,31,.11)}
+body.k22-embedded .k22-dock button{background:rgba(255,252,247,.94);color:#6f5648}
+body.k22-embedded .k22-dock button.active{background:#9a6950;color:#fff}
+.k27-fidelity-badge{position:absolute;left:18px;bottom:18px;z-index:8;padding:6px 10px;border-radius:999px;background:rgba(255,249,242,.72);border:1px solid rgba(122,82,55,.11);box-shadow:0 8px 22px rgba(73,46,31,.09);backdrop-filter:blur(12px);color:#765b4d;font:600 9px/1.2 system-ui;letter-spacing:.02em;pointer-events:none}
+body.k22-edit .k27-fidelity-badge{display:none}
+body.k13-night .k27-fidelity-badge{background:rgba(58,52,57,.72);color:#f7e7db;border-color:rgba(255,255,255,.1)}
+body.k22-embedded:not(.k22-edit) .stage{background:linear-gradient(180deg,#f8eee5 0%,#f3e2d5 100%)}
+body.k22-embedded.k22-edit .asset-panel,body.k22-embedded.k22-edit .editor-panel{background:rgba(255,249,243,.94)!important;border-color:rgba(127,88,61,.12)!important;box-shadow:0 18px 46px rgba(75,48,31,.16)!important}
+body.k22-embedded .drawer{background:rgba(255,250,245,.96)!important;border-color:rgba(130,89,61,.12)!important;box-shadow:0 24px 70px rgba(73,44,28,.22)!important}
+@media(max-width:900px){.k27-fidelity-badge{left:10px;bottom:10px;font-size:8px}body.k22-embedded:not(.k22-edit) .k22-dock{transform:translateX(-50%) scale(.9)}}

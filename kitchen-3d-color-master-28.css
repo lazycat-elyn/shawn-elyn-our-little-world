@@ -1,0 +1,16 @@
+/* Kitchen 3D 2.8 — Sunlit Cream-Peach Color Master */
+body.k28-ready .stage canvas{filter:saturate(1.075) contrast(1.085) brightness(.995)}
+body.k28-ready .workarea{background:radial-gradient(circle at 30% 12%,#fff8f0 0,#f7eadf 42%,#efddd1 100%)}
+body.k22-embedded .k22-dock{background:rgba(255,247,239,.9);border:1px solid rgba(168,109,78,.13);box-shadow:0 10px 30px rgba(101,67,46,.12)}
+body.k22-embedded .k22-dock button{background:rgba(255,251,247,.96);border-color:rgba(174,118,84,.12);color:#72584a}
+body.k22-embedded .k22-dock button:hover{background:#fff5ee}
+body.k22-embedded .k22-dock button.active{background:#a96f56;color:white;border-color:#a96f56}
+.k28-color-badge{position:absolute;left:18px;bottom:18px;z-index:8;padding:6px 10px;border-radius:999px;background:rgba(255,246,238,.78);border:1px solid rgba(146,92,63,.11);box-shadow:0 8px 22px rgba(78,49,32,.10);backdrop-filter:blur(12px);color:#775746;font:600 9px/1.2 system-ui;letter-spacing:.02em;pointer-events:none}
+body.k22-edit .k28-color-badge{display:none}
+body.k13-night .k28-color-badge{background:rgba(67,54,52,.76);color:#f8e4d8;border-color:rgba(255,255,255,.1)}
+body.k22-embedded .drawer,body.k22-embedded.k22-edit .asset-panel,body.k22-embedded.k22-edit .editor-panel{background:rgba(255,248,242,.965)!important;border-color:rgba(151,99,70,.13)!important;box-shadow:0 24px 72px rgba(78,48,31,.20)!important}
+body.k22-embedded .shop-card,body.k22-embedded .inventory-card,body.k22-embedded .asset-item{background:linear-gradient(180deg,#fffaf6,#f9eee6)!important;border-color:rgba(177,119,83,.12)!important}
+body.k22-embedded .shop-card .price,body.k22-embedded .balance{color:#9d684e!important}
+body.k22-embedded .accent,body.k22-embedded .shop-card button:not(.secondary){background:#a96f56!important;border-color:#a96f56!important;color:#fff!important}
+body.k22-embedded:not(.k22-edit) .stage{background:linear-gradient(180deg,#f7e9de 0%,#f1ddd0 100%)}
+@media(max-width:900px){.k28-color-badge{left:10px;bottom:10px;font-size:8px}}

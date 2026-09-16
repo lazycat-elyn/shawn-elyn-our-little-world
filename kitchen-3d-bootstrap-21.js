@@ -17,6 +17,7 @@ try{
   await import('./kitchen-3d-reference-master-27-hotfix.js?v=2900');
   await import('./kitchen-3d-color-master-28.js?v=2900');
   await import('./kitchen-3d-render-match-29.js?v=2900');
+  await import('./kitchen-3d-render-match-29-hotfix.js?v=2900');
 }finally{
   URL.revokeObjectURL(blobUrl);
 }

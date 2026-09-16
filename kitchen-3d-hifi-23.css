@@ -1,0 +1,14 @@
+/* Kitchen 3D 2.3 — softer, fuller, reference-focused presentation */
+body.k23-ready .stage canvas{filter:saturate(1.06) contrast(1.025) brightness(1.015)}
+body.k23-ready.k13-evening .stage canvas{filter:saturate(1.08) contrast(1.025) brightness(.96) sepia(.05)}
+body.k23-ready.k13-night .stage canvas{filter:saturate(.9) contrast(1.04) brightness(.78)}
+body.k22-embedded:not(.k22-edit) .k22-dock{top:14px;background:rgba(255,250,245,.78);border-color:rgba(138,94,73,.10);box-shadow:0 10px 32px rgba(83,53,35,.11)}
+body.k22-embedded:not(.k22-edit) .k22-dock button{background:rgba(255,252,248,.85)}
+body.k22-embedded:not(.k22-edit) .k22-dock button.active{background:#9a6a53;color:#fff}
+body.k22-embedded:not(.k22-edit) .k22-dock{transform:translateX(-50%) scale(.96);opacity:.7}
+body.k22-embedded:not(.k22-edit) .k22-dock:hover{opacity:.98;transform:translateX(-50%) scale(1)}
+body.k23-ready .drawer{background:linear-gradient(180deg,rgba(255,252,248,.98),rgba(249,238,228,.97))!important}
+body.k23-ready .glass-panel{background:rgba(255,250,245,.92)!important}
+.k23-fidelity-badge{position:absolute;right:18px;bottom:16px;z-index:8;padding:7px 11px;border-radius:999px;background:rgba(255,249,243,.78);border:1px solid rgba(123,82,57,.1);color:#76594a;font:600 10px/1.1 system-ui,sans-serif;backdrop-filter:blur(12px);box-shadow:0 8px 22px rgba(73,46,30,.08);pointer-events:none}
+body.k22-edit .k23-fidelity-badge{display:none}
+@media(max-width:900px){.k23-fidelity-badge{display:none}}

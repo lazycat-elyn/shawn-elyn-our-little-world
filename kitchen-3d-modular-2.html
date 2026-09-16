@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitchen 3D Visual Rebuild 2.0</title>
+  <link rel="stylesheet" href="./kitchen-3d-modular-1-2.css" />
+  <link rel="stylesheet" href="./kitchen-3d-polish-1.css?v=140" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.167.1/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">SHAWN & ELYN · OUR LITTLE WORLD</div>
+        <h1>Kitchen 3D Visual Rebuild 2.0</h1>
+        <p>更接近参考图 · 奶油白 · 暖木 · 粉格纹 · 田园暖阳 · 每件物件独立</p>
+      </div>
+      <div class="actions">
+        <button id="assembledBtn" class="pill active">Assembled</button>
+        <button id="separateBtn" class="pill">Separate View</button>
+        <button id="shopBtn" class="pill accent">🛍️ Shop</button>
+        <button id="inventoryBtn" class="pill">📦 Inventory</button>
+        <a class="pill ghost" href="./index.html">← 回游戏</a>
+      </div>
+    </header>
+
+    <section class="workarea">
+      <aside class="asset-panel glass-panel">
+        <div class="panel-title">独立物件</div>
+        <div class="panel-sub">柜体、冰箱、炉灶、灯、装饰、小家电都分开</div>
+        <div id="assetList" class="asset-list"></div>
+      </aside>
+
+      <div id="stage" class="stage"></div>
+
+      <aside class="editor-panel glass-panel">
+        <div class="selected-label">SELECTED</div>
+        <div id="selectedName" class="selected-name">请选择一个物件</div>
+        <div id="selectedType" class="selected-type">—</div>
+        <div class="mode-row">
+          <button id="moveMode" class="tool active">↔ Move</button>
+          <button id="rotateMode" class="tool">⟳ Rotate</button>
+        </div>
+        <div class="tool-grid">
+          <button data-act="left">←</button><button data-act="forward">↑</button>
+          <button data-act="right">→</button><button data-act="back">↓</button>
+          <button data-act="rotateL">↶ 15°</button><button data-act="rotateR">15° ↷</button>
+          <button data-act="use" class="accent">Use</button><button data-act="store">📦 Store</button>
+          <button data-act="hide">Hide / Show</button><button data-act="reset">Reset</button>
+        </div>
+        <div class="note">Decor Mode 可装修；Life Mode 可隐藏编辑面板，直接看完整厨房。</div>
+      </aside>
+
+      <section id="shopPanel" class="drawer hidden">
+        <div class="drawer-head"><div><small>KITCHEN APPLIANCE SHOP</small><h2>厨房小家电</h2></div><div class="balance">🪙 <span id="shopCoins">0</span></div><button class="close" data-close-drawer>×</button></div>
+        <div id="shopGrid" class="shop-grid"></div>
+      </section>
+
+      <section id="inventoryPanel" class="drawer hidden">
+        <div class="drawer-head"><div><small>MY KITCHEN</small><h2>已购买电器</h2></div><button class="close" data-close-drawer>×</button></div>
+        <div id="inventoryGrid" class="inventory-grid"></div>
+      </section>
+
+      <div id="toast" class="toast"></div>
+    </section>
+  </main>
+  <script type="module" src="./kitchen-3d-modular-2.js?v=200"></script>
+  <script src="./kitchen-3d-polish-1.js?v=140"></script>
+</body>
+</html>

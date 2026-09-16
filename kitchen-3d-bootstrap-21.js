@@ -14,6 +14,7 @@ try{
   await import('./kitchen-3d-hifi-25.js?v=2700');
   await import('./kitchen-3d-hifi-26.js?v=2700');
   await import('./kitchen-3d-reference-master-27.js?v=2700');
+  await import('./kitchen-3d-reference-master-27-hotfix.js?v=2700');
 }finally{
   URL.revokeObjectURL(blobUrl);
 }

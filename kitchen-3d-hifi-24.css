@@ -1,0 +1,12 @@
+/* Kitchen 3D 2.4 — Premium Cozy Pass */
+body.k24-ready .stage canvas{filter:saturate(1.055) contrast(1.025) brightness(1.01)}
+body.k22-embedded .k22-dock{top:10px;padding:6px 8px;gap:6px;background:rgba(255,249,243,.84);box-shadow:0 10px 28px rgba(73,46,31,.12)}
+body.k22-embedded .k22-dock button{font-size:9.5px;padding:6px 9px;background:rgba(255,251,247,.9)}
+body.k22-embedded:not(.k22-edit) .k22-dock{opacity:.7}.k22-dock:hover{opacity:1!important}
+.k24-fidelity-badge{position:absolute;left:18px;bottom:18px;z-index:8;padding:6px 10px;border-radius:999px;background:rgba(255,250,245,.78);border:1px solid rgba(120,82,57,.11);box-shadow:0 8px 22px rgba(74,47,31,.10);backdrop-filter:blur(12px);color:#775e4f;font:600 9px/1.2 system-ui;letter-spacing:.02em;pointer-events:none}
+body.k22-edit .k24-fidelity-badge{display:none}
+body.k13-night .k24-fidelity-badge{background:rgba(63,58,65,.7);color:#f9e8dc;border-color:rgba(255,255,255,.1)}
+body.k22-embedded .drawer{backdrop-filter:blur(18px);background:rgba(255,250,246,.94)!important;box-shadow:0 24px 70px rgba(73,44,28,.22)!important}
+body.k22-embedded.k22-edit .asset-panel,body.k22-embedded.k22-edit .editor-panel{background:rgba(255,250,246,.93)!important;backdrop-filter:blur(16px)}
+body.k22-embedded:not(.k22-edit) .stage{background:linear-gradient(180deg,#f9efe7 0%,#f6e5d8 100%)}
+@media(max-width:900px){.k24-fidelity-badge{left:10px;bottom:10px;font-size:8px}.k22-dock button{padding:5px 7px!important;font-size:8.5px!important}}

@@ -1,0 +1,16 @@
+/* Kitchen 3D 2.9 — reference render match */
+body.k29-ready .stage canvas{filter:saturate(1.045) contrast(1.15) brightness(.94)}
+body.k29-ready .workarea{background:radial-gradient(circle at 30% 10%,#f6eadf 0,#ead8ca 48%,#dbc6b7 100%)}
+body.k22-embedded:not(.k22-edit) .stage{background:linear-gradient(180deg,#ead7c8 0%,#dcc6b7 100%)}
+body.k22-embedded .k22-dock{background:rgba(251,243,235,.9);border-color:rgba(126,83,55,.15);box-shadow:0 10px 30px rgba(72,44,27,.14)}
+body.k22-embedded .k22-dock button{background:rgba(255,250,246,.95);border-color:rgba(160,107,75,.13);color:#6d5144}
+body.k22-embedded .k22-dock button:hover{background:#faeee5}
+body.k22-embedded .k22-dock button.active{background:#996a53;color:#fff;border-color:#996a53}
+.k29-render-badge{position:absolute;left:18px;bottom:18px;z-index:8;padding:6px 10px;border-radius:999px;background:rgba(249,239,231,.8);border:1px solid rgba(130,82,52,.12);box-shadow:0 8px 24px rgba(70,42,25,.12);backdrop-filter:blur(12px);color:#725344;font:600 9px/1.2 system-ui;letter-spacing:.02em;pointer-events:none}
+body.k22-edit .k29-render-badge{display:none}
+body.k13-night .k29-render-badge{background:rgba(59,47,44,.78);color:#f2ded2;border-color:rgba(255,255,255,.09)}
+body.k22-embedded .drawer,body.k22-embedded.k22-edit .asset-panel,body.k22-embedded.k22-edit .editor-panel{background:rgba(252,245,239,.965)!important;border-color:rgba(136,91,62,.14)!important;box-shadow:0 24px 72px rgba(72,44,28,.22)!important}
+body.k22-embedded .shop-card,body.k22-embedded .inventory-card,body.k22-embedded .asset-item{background:linear-gradient(180deg,#fffaf6,#f5e8df)!important;border-color:rgba(159,105,72,.13)!important}
+body.k22-embedded .shop-card .price,body.k22-embedded .balance{color:#976149!important}
+body.k22-embedded .accent,body.k22-embedded .shop-card button:not(.secondary){background:#9b6953!important;border-color:#9b6953!important;color:#fff!important}
+@media(max-width:900px){.k29-render-badge{left:10px;bottom:10px;font-size:8px}}

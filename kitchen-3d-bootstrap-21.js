@@ -1,4 +1,4 @@
-const coreUrl='./kitchen-3d-modular-2.js?v=2900';
+const coreUrl='./kitchen-3d-modular-2.js?v=2910';
 const source=await fetch(coreUrl,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`Kitchen core load failed: ${r.status}`);return r.text()});
 const marker='renderer.setAnimationLoop(()=>';
 if(!source.includes(marker))throw new Error('Kitchen 2.9 bootstrap could not find render loop marker');
@@ -7,17 +7,18 @@ const patched=source.replace(marker,expose+marker);
 const blobUrl=URL.createObjectURL(new Blob([patched],{type:'text/javascript'}));
 try{
   await import(blobUrl);
-  await import('./kitchen-3d-hifi-21.js?v=2900');
-  await import('./kitchen-3d-hifi-22.js?v=2900');
-  await import('./kitchen-3d-hifi-23.js?v=2900');
-  await import('./kitchen-3d-hifi-24.js?v=2900');
-  await import('./kitchen-3d-hifi-25.js?v=2900');
-  await import('./kitchen-3d-hifi-26.js?v=2900');
-  await import('./kitchen-3d-reference-master-27.js?v=2900');
-  await import('./kitchen-3d-reference-master-27-hotfix.js?v=2900');
-  await import('./kitchen-3d-color-master-28.js?v=2900');
-  await import('./kitchen-3d-render-match-29.js?v=2900');
-  await import('./kitchen-3d-render-match-29-hotfix.js?v=2900');
+  await import('./kitchen-3d-hifi-21.js?v=2910');
+  await import('./kitchen-3d-hifi-22.js?v=2910');
+  await import('./kitchen-3d-hifi-23.js?v=2910');
+  await import('./kitchen-3d-hifi-24.js?v=2910');
+  await import('./kitchen-3d-hifi-25.js?v=2910');
+  await import('./kitchen-3d-hifi-26.js?v=2910');
+  await import('./kitchen-3d-reference-master-27.js?v=2910');
+  await import('./kitchen-3d-reference-master-27-hotfix.js?v=2910');
+  await import('./kitchen-3d-color-master-28.js?v=2910');
+  await import('./kitchen-3d-render-match-29.js?v=2910');
+  await import('./kitchen-3d-render-match-29-hotfix.js?v=2910');
+  await import('./kitchen-3d-render-match-29-fidelity.js?v=2910');
 }finally{
   URL.revokeObjectURL(blobUrl);
 }

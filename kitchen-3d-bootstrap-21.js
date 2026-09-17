@@ -19,6 +19,7 @@ try{
   await import('./kitchen-3d-render-match-29.js?v=2910');
   await import('./kitchen-3d-render-match-29-hotfix.js?v=2910');
   await import('./kitchen-3d-render-match-29-fidelity.js?v=2910');
+  await import('./kitchen-3d-reference-match-30.js?v=3000');
 }finally{
   URL.revokeObjectURL(blobUrl);
 }

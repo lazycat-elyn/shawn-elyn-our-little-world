@@ -20,13 +20,13 @@
     if(frame)return;
     frame=document.createElement('iframe');
     frame.className='k3d-game-frame';
-    frame.title='Kitchen 3D Reference Rebuild 3.4';
-    frame.src='./kitchen-3d-modular-2.html?embed=1&v=3400';
+    frame.title='Kitchen 3D Reference Lighting 3.5';
+    frame.src='./kitchen-3d-modular-2.html?embed=1&v=3500';
     frame.allow='fullscreen';
     frame.addEventListener('load',()=>setTimeout(()=>sendState(frame.contentWindow),160));
     badge=document.createElement('div');
     badge.className='k3d-game-badge';
-    badge.textContent='KITCHEN 3D 3.4 · L-SHAPE REBUILD · 🛍️ Shop · 📦 Inventory';
+    badge.textContent='KITCHEN 3D 3.5 · LIGHTING & COLOR · 🛍️ Shop · 📦 Inventory';
     scene.append(frame,badge);
   }
   function showKitchen3D(){ensureFrame();scene.classList.add('k3d-game-active');frame.style.display='block';badge.style.display='block';sendState()}
@@ -61,5 +61,5 @@
   tabs.addEventListener('click',()=>setTimeout(sync,0));
   new MutationObserver(sync).observe(tabs,{subtree:true,attributes:true,attributeFilter:['class']});
   setInterval(sync,500);setTimeout(sync,50);
-  window.KITCHEN_3D_GAME_INTEGRATION={version:'3.4',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
+  window.KITCHEN_3D_GAME_INTEGRATION={version:'3.5',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
 })();

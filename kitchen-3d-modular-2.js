@@ -122,7 +122,27 @@ function syncOwnedAssets(){gameState.owned.forEach(ensureAppliance);renderAssetL
 
 assets.forEach(a=>{a.userData.homePos=a.position.clone();a.userData.homeRot=a.rotation.clone()});
 const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
-function select(root){selected=root;transform.detach();if(helper){scene.remove(helper);helper.geometry?.dispose?.()}helper=new THREE.BoxHelper(root,0xff8e84);scene.add(helper);selectedName.textContent=root.userData.displayName;selectedType.textContent=`${root.userData.type} · ${root.userData.actionLabel}${root.userData.storeable&&!root.userData.placed?' · Stored':''}`;document.querySelectorAll('.asset-item').forEach(b=>b.classList.toggle('active',b.dataset.asset===root.userData.assetId));if(!separated&&root.visible&&root.userData.placed!==false){transform.attach(root);transform.setMode(moveMode.classList.contains('active')?'translate':'rotate')}}
+function select(root){
+  selected=root;
+  const edit=document.body.classList.contains('k22-edit');
+  transform.detach();
+  if(helper){
+    scene.remove(helper);
+    helper.geometry?.dispose?.();
+    helper=null;
+  }
+  if(edit){
+    helper=new THREE.BoxHelper(root,0xff8e84);
+    scene.add(helper);
+  }
+  selectedName.textContent=root.userData.displayName;
+  selectedType.textContent=`${root.userData.type} · ${root.userData.actionLabel}${root.userData.storeable&&!root.userData.placed?' · Stored':''}`;
+  document.querySelectorAll('.asset-item').forEach(b=>b.classList.toggle('active',b.dataset.asset===root.userData.assetId));
+  if(edit&&!separated&&root.visible&&root.userData.placed!==false){
+    transform.attach(root);
+    transform.setMode(moveMode.classList.contains('active')?'translate':'rotate');
+  }
+}
 renderer.domElement.addEventListener('pointerdown',e=>{if(transform.dragging)return;const r=renderer.domElement.getBoundingClientRect();pointer.x=((e.clientX-r.left)/r.width)*2-1;pointer.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(pointer,camera);for(const h of raycaster.intersectObjects(kitchen.children,true)){let o=h.object;while(o&&o!==kitchen){if(o.userData.assetRoot){select(o.userData.assetRoot);return}o=o.parent}}});
 function renderAssetList(){assetList.innerHTML='';assets.forEach(a=>{if(a.userData.storeable&&!gameState.owned.includes(a.userData.assetId))return;const b=document.createElement('button');b.className=`asset-item${selected===a?' active':''}${a.userData.storeable&&!a.userData.placed?' stored':''}`;b.dataset.asset=a.userData.assetId;b.innerHTML=`<span class="asset-dot"></span><span><b>${a.userData.displayName}</b><small>${a.userData.type}${a.userData.storeable&&!a.userData.placed?' · Stored':''}</small></span>`;b.onclick=()=>select(a);assetList.appendChild(b)})}
 moveMode.onclick=()=>{moveMode.classList.add('active');rotateMode.classList.remove('active');if(selected&&!separated)transform.setMode('translate')};rotateMode.onclick=()=>{rotateMode.classList.add('active');moveMode.classList.remove('active');if(selected&&!separated)transform.setMode('rotate')};

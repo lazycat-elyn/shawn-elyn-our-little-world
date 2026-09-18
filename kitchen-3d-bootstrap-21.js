@@ -1,4 +1,4 @@
-const coreUrl='./kitchen-3d-modular-2.js?v=3400';
+const coreUrl='./kitchen-3d-modular-2.js?v=3500';
 const source=await fetch(coreUrl,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`Kitchen core load failed: ${r.status}`);return r.text()});
 const marker='renderer.setAnimationLoop(()=>';
 if(!source.includes(marker))throw new Error('Kitchen 2.9 bootstrap could not find render loop marker');
@@ -24,6 +24,7 @@ try{
   await import('./kitchen-3d-reference-match-32-modular.js?v=3200');
   await import('./kitchen-3d-reference-match-33-modular.js?v=3300');
   await import('./kitchen-3d-reference-match-34-hero-rebuild.js?v=3400');
+  await import('./kitchen-3d-reference-match-35-lighting-color.js?v=3500');
 }finally{
   URL.revokeObjectURL(blobUrl);
 }

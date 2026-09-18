@@ -20,13 +20,13 @@
     if(frame)return;
     frame=document.createElement('iframe');
     frame.className='k3d-game-frame';
-    frame.title='Kitchen 3D Reference Match 3.1';
-    frame.src='./kitchen-3d-modular-2.html?embed=1&v=3100';
+    frame.title='Kitchen 3D Modular Reference 3.2';
+    frame.src='./kitchen-3d-modular-2.html?embed=1&v=3200';
     frame.allow='fullscreen';
     frame.addEventListener('load',()=>setTimeout(()=>sendState(frame.contentWindow),160));
     badge=document.createElement('div');
     badge.className='k3d-game-badge';
-    badge.textContent='KITCHEN 3D 3.1 · REFERENCE FIX · 🛍️ Shop · 📦 Inventory';
+    badge.textContent='KITCHEN 3D 3.2 · MODULAR ELEMENTS · 🛍️ Shop · 📦 Inventory';
     scene.append(frame,badge);
   }
   function showKitchen3D(){ensureFrame();scene.classList.add('k3d-game-active');frame.style.display='block';badge.style.display='block';sendState()}
@@ -61,5 +61,5 @@
   tabs.addEventListener('click',()=>setTimeout(sync,0));
   new MutationObserver(sync).observe(tabs,{subtree:true,attributes:true,attributeFilter:['class']});
   setInterval(sync,500);setTimeout(sync,50);
-  window.KITCHEN_3D_GAME_INTEGRATION={version:'3.1',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
+  window.KITCHEN_3D_GAME_INTEGRATION={version:'3.2',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
 })();

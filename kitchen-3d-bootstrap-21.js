@@ -25,6 +25,7 @@ try{
   await import('./kitchen-3d-reference-match-33-modular.js?v=3300');
   await import('./kitchen-3d-reference-match-34-hero-rebuild.js?v=3400');
   await import('./kitchen-3d-reference-match-35-lighting-color.js?v=3500');
+  await import('./kitchen-3d-gameplay-50.js?v=5000');
 }finally{
   URL.revokeObjectURL(blobUrl);
 }

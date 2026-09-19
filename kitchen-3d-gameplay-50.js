@@ -140,7 +140,7 @@ function setFridgeDoor(which,open){
   const any=state50.fridge.top||state50.fridge.bottom;
   if(fridge.userData.k50.body){
     const body=fridge.userData.k50.body;
-    body.material.opacity=any?.18:1;
+    body.material.opacity=any?0.18:1;
     body.material.depthWrite=!any;
   }
 }
@@ -175,9 +175,8 @@ function setupAirFryer(){
 }
 function setAirDrawer(open){
   const a=setupAirFryer();if(!a)return;state50.airfryer.open=open;
-  tween(a.userData.k50Drawer.position,'z',open?.32:.34); // seed below adjusted in next line
-  const target=open?.66:.34;tween(a.userData.k50Drawer.position,'z',target);
-  tween(a.userData.k50DrawerHandle.position,'z',open?.89:.57);
+  const target=open?0.66:0.34;tween(a.userData.k50Drawer.position,'z',target);
+  tween(a.userData.k50DrawerHandle.position,'z',open?0.89:0.57);
 }
 function setupMicrowave(){
   const a=applianceAsset('microwave_01');if(!a)return null;

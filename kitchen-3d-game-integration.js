@@ -5,7 +5,7 @@
 
   const PRICE={airfryer_01:650,blender_01:520,microwave_01:780,ricecooker_01:600,coffee_01:900,kettle_01:350,toaster_01:420};
   const LABEL={airfryer_01:'空气炸锅',blender_01:'果汁机',microwave_01:'微波炉',ricecooker_01:'电饭锅',coffee_01:'咖啡机',kettle_01:'热水壶',toaster_01:'烤面包机'};
-  let frame=null,badge=null,lastRoom='';
+  let frame=null,badge=null,cookBtn=null,lastRoom='';
 
   function activeRoom(){return tabs.querySelector('button.active')?.dataset.room||''}
   function gameData(){
@@ -16,21 +16,33 @@
   }
   function sendToKitchen(payload,target){const w=target||frame?.contentWindow;if(w)w.postMessage({source:'shawn-elyn-parent',...payload},'*')}
   function sendState(target){const s=gameData();if(!s)return;sendToKitchen({type:'kitchen-appliance-state',coins:s.coins||0,owned:[...s.kitchenAppliancesOwned],layout:{...s.kitchenApplianceLayout}},target)}
+  function openCooking(tab='fridge'){
+    if(window.KITCHEN_COOKING_5?.open){window.KITCHEN_COOKING_5.open(tab);return}
+    if(typeof openCookingLegacy==='function')openCookingLegacy();
+  }
   function ensureFrame(){
     if(frame)return;
     frame=document.createElement('iframe');
     frame.className='k3d-game-frame';
-    frame.title='Kitchen 3D Reference Lighting 3.5';
-    frame.src='./kitchen-3d-modular-2.html?embed=1&v=3500';
+    frame.title='Kitchen 3D + Cooking 5.0';
+    frame.src='./kitchen-3d-modular-2.html?embed=1&v=5000';
     frame.allow='fullscreen';
     frame.addEventListener('load',()=>setTimeout(()=>sendState(frame.contentWindow),160));
+
     badge=document.createElement('div');
     badge.className='k3d-game-badge';
-    badge.textContent='KITCHEN 3D 3.5 · LIGHTING & COLOR · 🛍️ Shop · 📦 Inventory';
-    scene.append(frame,badge);
+    badge.textContent='KITCHEN 5.0 · 3D + FRIDGE + COOKING';
+
+    cookBtn=document.createElement('button');
+    cookBtn.type='button';
+    cookBtn.className='k3d-cook-btn';
+    cookBtn.innerHTML='🍳 Cook / Fridge';
+    cookBtn.addEventListener('click',()=>openCooking('fridge'));
+
+    scene.append(frame,badge,cookBtn);
   }
-  function showKitchen3D(){ensureFrame();scene.classList.add('k3d-game-active');frame.style.display='block';badge.style.display='block';sendState()}
-  function hideKitchen3D(){scene.classList.remove('k3d-game-active');if(frame)frame.style.display='none';if(badge)badge.style.display='none'}
+  function showKitchen3D(){ensureFrame();scene.classList.add('k3d-game-active');frame.style.display='block';badge.style.display='block';cookBtn.style.display='block';sendState()}
+  function hideKitchen3D(){scene.classList.remove('k3d-game-active');if(frame)frame.style.display='none';if(badge)badge.style.display='none';if(cookBtn)cookBtn.style.display='none';window.KITCHEN_COOKING_5?.close?.()}
   function sync(){const room=activeRoom();if(room===lastRoom)return;lastRoom=room;if(room==='kitchen')showKitchen3D();else hideKitchen3D()}
 
   window.addEventListener('message',e=>{
@@ -54,12 +66,12 @@
     if(d.type==='kitchen-appliance-use'){
       const id=d.id;if(typeof recordEvent==='function')recordEvent('useKitchenAppliance',1);
       if(typeof toast==='function')toast(`${LABEL[id]||'厨房电器'} · 准备使用 ♡`);
-      if(typeof openCookingLegacy==='function')setTimeout(()=>openCookingLegacy(),180);
+      setTimeout(()=>openCooking(id==='airfryer_01'?'recipes':'appliances'),120);
     }
   });
 
   tabs.addEventListener('click',()=>setTimeout(sync,0));
   new MutationObserver(sync).observe(tabs,{subtree:true,attributes:true,attributeFilter:['class']});
   setInterval(sync,500);setTimeout(sync,50);
-  window.KITCHEN_3D_GAME_INTEGRATION={version:'3.5',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState};
+  window.KITCHEN_3D_GAME_INTEGRATION={version:'5.0',show:showKitchen3D,hide:hideKitchen3D,syncState:sendState,openCooking};
 })();

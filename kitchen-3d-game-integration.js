@@ -49,6 +49,7 @@
     const d=e.data;if(!d||d.source!=='kitchen3d')return;
     const s=gameData();if(!s)return;
     if(d.type==='kitchen-appliance-query'){sendState(e.source);return}
+    if(d.type==='kitchen-cooking-open'){openCooking(d.tab||'fridge');return}
     if(d.type==='kitchen-appliance-buy'){
       const id=d.id,cost=PRICE[id];
       if(!cost){sendToKitchen({type:'kitchen-appliance-buy-result',ok:false,id,message:'找不到这个电器'},e.source);return}
